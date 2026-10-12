@@ -1,0 +1,11 @@
+{
+  "app": { "name": "Light Dey?", "tagline": "Light dey? Tell your neighbours." },
+  "status": { "on": "Light dey", "off": "No light", "weak": "Light dey but e weak", "unknown": "Nobody don talk" },
+  "since": { "on": "Light don stay {duration}", "off": "NEPA don take light since {time}", "weak": "Light dey weak for {duration}", "unknown": "Be the first to report" },
+  "buttons": { "on": "Light dey", "off": "No light", "weak": "Light dey but e weak" },
+  "thanks": { "on": "Oya, thank you! Your neighbours go dey happy.", "off": "NEPA don do am again 😩 Thanks for the gist.", "weak": "Weak light? Wahala. Thank you o." },
+  "stats": { "today": "Light today", "streak": "Days for row", "points": "Points" },
+  "nav": { "home": "Home", "explore": "Find area", "board": "Board", "profile": "Me" },
+  "lang": "English",
+  "demo": "Demo data"
+}

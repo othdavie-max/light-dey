@@ -1,0 +1,11 @@
+{
+  "app": { "name": "Light Dey?", "tagline": "Is there light? Tell your neighbours." },
+  "status": { "on": "There is light", "off": "No light", "weak": "Light, but weak", "unknown": "No reports yet" },
+  "since": { "on": "Light has been on for {duration}", "off": "No light since {time}", "weak": "Weak light for {duration}", "unknown": "Be the first to report" },
+  "buttons": { "on": "Light is on", "off": "No light", "weak": "Light is on but weak" },
+  "thanks": { "on": "Thank you! Your neighbours will be happy.", "off": "NEPA has done it again. Thanks for letting us know.", "weak": "Weak light? Thanks for reporting." },
+  "stats": { "today": "Light today", "streak": "Day streak", "points": "Points" },
+  "nav": { "home": "Home", "explore": "Explore", "board": "Board", "profile": "Profile" },
+  "lang": "Pidgin",
+  "demo": "Demo data"
+}
