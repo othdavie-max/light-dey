@@ -66,10 +66,13 @@ body {
 @keyframes weak-flicker { 0%,100%{opacity:.8} 6%{opacity:.5} 10%{opacity:.85} 38%{opacity:.7} 41%{opacity:.4} 46%{opacity:.8} 72%{opacity:.75} 75%{opacity:.55} 80%{opacity:.82} }
 .lit-on { animation: ignite .9s ease-out, breathe 5s ease-in-out .9s infinite; }
 .weak-flicker { animation: weak-flicker 2.6s linear infinite; }
+/* Gentler version for the bulb glass itself, so the dark glass never shows through */
+@keyframes weak-shimmer { 0%,100%{opacity:1} 6%{opacity:.86} 10%{opacity:1} 41%{opacity:.82} 46%{opacity:1} 75%{opacity:.9} 80%{opacity:1} }
+.weak-shimmer { animation: weak-shimmer 2.6s linear infinite; }
 .bloom-breathe { animation: bloom-breathe 5s ease-in-out infinite; }
 .press { transition: transform .12s ease, background-color .2s ease; }
 .press:active { transform: scale(.96); }
 
 @media (prefers-reduced-motion: reduce) {
-  .lit-on, .weak-flicker, .bloom-breathe { animation: none; }
+  .lit-on, .weak-flicker, .weak-shimmer, .bloom-breathe { animation: none; }
 }
