@@ -2,66 +2,72 @@
 
 /* Light Dey? design tokens. Dark is the default theme. */
 :root {
-  --bg: #0b1020;
-  --bg-glow: #0b1020;
-  --surface: #151c33;
-  --surface-2: #1d2645;
-  --text: #f4f6ff;
-  --muted: #9aa5c7;
+  --bg: #060a14;
+  --bg-glow: #0b1426;
+  --panel: rgba(255, 255, 255, 0.045);
+  --panel-strong: rgba(255, 255, 255, 0.08);
+  --panel-border: rgba(255, 255, 255, 0.08);
+  --text: #f5f7ff;
+  --muted: #8d97b5;
   --on: #ffc933;
   --on-text: #1a1200;
-  --off: #3b4a78;
+  --off: #55627f;
   --weak: #ff9a4d;
-  --unknown: #6b7391;
+  --ok: #34d399;
 }
 :root[data-theme="light"] {
-  --bg: #fff8e6;
-  --bg-glow: #fff8e6;
-  --surface: #ffffff;
-  --surface-2: #fdebb8;
-  --text: #1b2036;
-  --muted: #5a6385;
-  --off: #5b6a9a;
+  --bg: #f4efe6;
+  --bg-glow: #fbf6ea;
+  --panel: rgba(255, 255, 255, 0.7);
+  --panel-strong: rgba(255, 255, 255, 0.95);
+  --panel-border: rgba(20, 24, 50, 0.08);
+  --text: #171b30;
+  --muted: #5d6685;
+  --off: #6b7699;
 }
 
 /* Background shifts subtly with status */
-body[data-status="on"] { --bg-glow: #2a2208; }
-body[data-status="weak"] { --bg-glow: #2a1708; }
-body[data-status="off"] { --bg-glow: #060914; }
-:root[data-theme="light"] body[data-status="on"] { --bg-glow: #ffefb0; }
-:root[data-theme="light"] body[data-status="weak"] { --bg-glow: #ffe0c4; }
-:root[data-theme="light"] body[data-status="off"] { --bg-glow: #dfe4f5; }
+body[data-status="on"] { --bg-glow: #261c08; }
+body[data-status="weak"] { --bg-glow: #26150a; }
+body[data-status="off"] { --bg-glow: #0b1426; }
+:root[data-theme="light"] body[data-status="on"] { --bg-glow: #ffefb8; }
+:root[data-theme="light"] body[data-status="weak"] { --bg-glow: #ffe2c6; }
+:root[data-theme="light"] body[data-status="off"] { --bg-glow: #dfe4f3; }
 
 @theme inline {
   --color-bg: var(--bg);
-  --color-surface: var(--surface);
-  --color-surface2: var(--surface-2);
+  --color-panel: var(--panel);
   --color-ink: var(--text);
   --color-muted: var(--muted);
   --color-on: var(--on);
   --color-weak: var(--weak);
-  --font-sans: var(--font-nunito), system-ui, sans-serif;
+  --font-sans: var(--font-inter), system-ui, sans-serif;
 }
 
 body {
-  background: radial-gradient(ellipse at 50% 18%, var(--bg-glow) 0%, var(--bg) 70%) fixed;
+  background: radial-gradient(ellipse 90% 55% at 50% 22%, var(--bg-glow) 0%, var(--bg) 78%) fixed;
   color: var(--text);
-  font-family: var(--font-nunito), system-ui, sans-serif;
+  font-family: var(--font-inter), system-ui, sans-serif;
   overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
 }
 
-/* Bulb animations */
-@keyframes pulse-glow { 0%,100% { opacity: .85; transform: scale(1);} 50% { opacity: 1; transform: scale(1.06);} }
-@keyframes flicker { 0%,100%{opacity:.35} 8%{opacity:.15} 12%{opacity:.4} 50%{opacity:.3} 53%{opacity:.12} 58%{opacity:.35} }
+.panel {
+  background: var(--panel);
+  border: 1px solid var(--panel-border);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+}
+
 /* Real-bulb behaviour: a quick warm-up stutter when power returns, then a barely-there breathing */
 @keyframes ignite { 0%{opacity:0} 10%{opacity:1} 20%{opacity:.35} 34%{opacity:1} 44%{opacity:.7} 60%,100%{opacity:1} }
-@keyframes breathe { 0%,100%{opacity:1} 50%{opacity:.93} }
+@keyframes breathe { 0%,100%{opacity:1} 50%{opacity:.94} }
 @keyframes bloom-breathe { 0%,100%{transform:scale(1)} 50%{transform:scale(1.04)} }
 @keyframes weak-flicker { 0%,100%{opacity:.8} 6%{opacity:.5} 10%{opacity:.85} 38%{opacity:.7} 41%{opacity:.4} 46%{opacity:.8} 72%{opacity:.75} 75%{opacity:.55} 80%{opacity:.82} }
 .lit-on { animation: ignite .9s ease-out, breathe 5s ease-in-out .9s infinite; }
 .weak-flicker { animation: weak-flicker 2.6s linear infinite; }
 .bloom-breathe { animation: bloom-breathe 5s ease-in-out infinite; }
-.press { transition: transform .1s ease; }
+.press { transition: transform .12s ease, background-color .2s ease; }
 .press:active { transform: scale(.96); }
 
 @media (prefers-reduced-motion: reduce) {

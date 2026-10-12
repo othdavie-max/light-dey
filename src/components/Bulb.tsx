@@ -1,11 +1,9 @@
 export type Status = "on" | "off" | "weak" | "unknown";
 
-// Photoreal bulb built from stacked SVG layers (no images, no libraries):
-// bloom -> glass body -> lit glass (on / weak) -> stem + filament -> glass reflections -> metal cap.
+// Modern frosted-glass LED bulb with a brass screw base, built from stacked SVG layers:
+// floor glow -> bloom -> smoky glass (off) -> lit diffuser (on / weak) -> reflections -> brass base.
 const GLASS =
-  "M100 18C62 18 30 48 30 90C30 118 46 136 60 152C68 162 72 170 72 182L128 182C128 170 132 162 140 152C154 136 170 118 170 90C170 48 138 18 100 18Z";
-const COIL =
-  "M88 103c1.3-5 2.7-5 4 0s2.7 5 4 0 2.7-5 4 0 2.7 5 4 0 2.7-5 4 0 2.7 5 4 0";
+  "M100 14C61 14 30 44 30 86C30 112 44 128 58 148C67 160 72 170 72 184L128 184C128 170 133 160 142 148C156 128 170 112 170 86C170 44 139 14 100 14Z";
 
 export default function Bulb({ status }: { status: Status }) {
   const on = status === "on";
@@ -13,130 +11,134 @@ export default function Bulb({ status }: { status: Status }) {
   const lit = on || weak;
 
   return (
-    <div className="relative mx-auto h-60 w-[185px]" aria-hidden="true">
+    <div className="relative mx-auto h-[17.5rem] w-[207px]" aria-hidden="true">
+      {/* Glow pooling on the surface under the bulb */}
+      <div
+        className="pointer-events-none absolute -bottom-3 left-1/2 h-9 w-72 -translate-x-1/2 rounded-full blur-xl transition-opacity duration-700"
+        style={{ background: "radial-gradient(closest-side, rgba(255,190,90,.55), transparent)", opacity: on ? 1 : weak ? 0.55 : 0 }}
+      />
       {/* Bloom: light spilling into the room */}
       <div
-        className={`pointer-events-none absolute -inset-x-24 -inset-y-14 rounded-full transition-opacity duration-700 ${on ? "bloom-breathe" : ""}`}
+        className={`pointer-events-none absolute -inset-x-28 -inset-y-16 transition-opacity duration-700 ${on ? "bloom-breathe" : ""}`}
         style={{
-          background: "radial-gradient(closest-side, rgba(255,214,110,.62) 0%, rgba(255,176,56,.30) 38%, rgba(255,150,30,.10) 62%, transparent 100%)",
+          background: "radial-gradient(closest-side at 50% 38%, rgba(255,226,150,.55) 0%, rgba(255,184,70,.26) 40%, rgba(255,150,40,.08) 68%, transparent 100%)",
           opacity: on ? 1 : 0,
         }}
       />
       <div
-        className={`pointer-events-none absolute -inset-x-20 -inset-y-10 rounded-full transition-opacity duration-700 ${weak ? "weak-flicker" : ""}`}
+        className={`pointer-events-none absolute -inset-x-24 -inset-y-12 transition-opacity duration-700 ${weak ? "weak-flicker" : ""}`}
         style={{
-          background: "radial-gradient(closest-side, rgba(255,140,60,.42) 0%, rgba(230,100,40,.18) 45%, transparent 100%)",
+          background: "radial-gradient(closest-side at 50% 38%, rgba(255,150,70,.42) 0%, rgba(230,110,40,.16) 50%, transparent 100%)",
           opacity: weak ? 1 : 0,
         }}
       />
 
-      <svg viewBox="0 0 200 260" className="relative h-full w-full overflow-visible">
+      <svg viewBox="0 0 200 270" className="relative h-full w-full overflow-visible">
         <defs>
-          {/* Glass when off: faint, cool, thicker at the rim (Fresnel) */}
-          <radialGradient id="glassBody" cx="50%" cy="42%" r="62%">
-            <stop offset="0" stopColor="#c9d6ff" stopOpacity=".05" />
-            <stop offset=".7" stopColor="#aebdf0" stopOpacity=".12" />
-            <stop offset="1" stopColor="#e4ebff" stopOpacity=".34" />
+          {/* Off: smoky blue-grey glass */}
+          <radialGradient id="smoke" cx="42%" cy="34%" r="78%">
+            <stop offset="0" stopColor="#7384a3" stopOpacity=".6" />
+            <stop offset=".55" stopColor="#3c4862" stopOpacity=".55" />
+            <stop offset="1" stopColor="#141a29" stopOpacity=".85" />
           </radialGradient>
-          <linearGradient id="glassRim" x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0" stopColor="#fff" stopOpacity=".75" />
-            <stop offset=".5" stopColor="#fff" stopOpacity=".18" />
-            <stop offset="1" stopColor="#fff" stopOpacity=".4" />
+          {/* On: creamy white diffuser, warm at the crown */}
+          <linearGradient id="diffOn" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stopColor="#ffefbd" />
+            <stop offset=".32" stopColor="#fff8e4" />
+            <stop offset=".62" stopColor="#fffcf6" />
+            <stop offset="1" stopColor="#e6dac8" />
           </linearGradient>
-          {/* Glass lit white-hot at the filament, amber at the edge */}
-          <radialGradient id="litOn" cx="100" cy="102" r="88" gradientUnits="userSpaceOnUse">
-            <stop offset="0" stopColor="#ffffff" />
-            <stop offset=".1" stopColor="#fffbe2" />
-            <stop offset=".3" stopColor="#ffe790" />
-            <stop offset=".62" stopColor="#ffbf3c" />
-            <stop offset="1" stopColor="#ef8a1c" />
+          {/* Weak: amber crown fading into peach */}
+          <linearGradient id="diffWeak" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stopColor="#ffb257" />
+            <stop offset=".34" stopColor="#ffd09a" />
+            <stop offset=".66" stopColor="#f6d9c2" />
+            <stop offset="1" stopColor="#b79883" />
+          </linearGradient>
+          <radialGradient id="hotOn" cx="100" cy="86" r="68" gradientUnits="userSpaceOnUse">
+            <stop offset="0" stopColor="#fff" stopOpacity="1" />
+            <stop offset=".45" stopColor="#fffbe8" stopOpacity=".65" />
+            <stop offset="1" stopColor="#ffe9a8" stopOpacity="0" />
           </radialGradient>
-          <radialGradient id="litWeak" cx="100" cy="102" r="88" gradientUnits="userSpaceOnUse">
-            <stop offset="0" stopColor="#ffe9c9" />
-            <stop offset=".15" stopColor="#ffc890" />
-            <stop offset=".42" stopColor="#f48f4a" />
-            <stop offset=".75" stopColor="#b8521f" />
-            <stop offset="1" stopColor="#6e2c10" />
+          <radialGradient id="hotWeak" cx="100" cy="86" r="62" gradientUnits="userSpaceOnUse">
+            <stop offset="0" stopColor="#ffe3b8" stopOpacity=".95" />
+            <stop offset=".5" stopColor="#ffb870" stopOpacity=".5" />
+            <stop offset="1" stopColor="#ff9a4a" stopOpacity="0" />
           </radialGradient>
-          <linearGradient id="stemGlass" x1="0" x2="1">
-            <stop offset="0" stopColor="#fff" stopOpacity=".05" />
-            <stop offset=".4" stopColor="#fff" stopOpacity=".38" />
-            <stop offset="1" stopColor="#fff" stopOpacity=".06" />
+          {/* Volume: darken the sides so the glass reads as a sphere */}
+          <linearGradient id="edge" x1="0" x2="1">
+            <stop offset="0" stopColor="#1a1005" stopOpacity=".34" />
+            <stop offset=".2" stopColor="#1a1005" stopOpacity="0" />
+            <stop offset=".8" stopColor="#1a1005" stopOpacity="0" />
+            <stop offset="1" stopColor="#1a1005" stopOpacity=".34" />
+          </linearGradient>
+          <linearGradient id="rim" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stopColor="#fff" stopOpacity=".7" />
+            <stop offset=".5" stopColor="#fff" stopOpacity=".12" />
+            <stop offset="1" stopColor="#fff" stopOpacity=".35" />
           </linearGradient>
           <linearGradient id="streak" x1="0" y1="0" x2="0" y2="1">
             <stop offset="0" stopColor="#fff" stopOpacity="0" />
-            <stop offset=".35" stopColor="#fff" stopOpacity=".85" />
+            <stop offset=".35" stopColor="#fff" stopOpacity=".95" />
             <stop offset="1" stopColor="#fff" stopOpacity="0" />
           </linearGradient>
-          {/* Brushed aluminium screw cap */}
-          <linearGradient id="metal" x1="0" x2="1">
-            <stop offset="0" stopColor="#4b4e57" />
-            <stop offset=".13" stopColor="#b6bac3" />
-            <stop offset=".3" stopColor="#f7f8fb" />
-            <stop offset=".52" stopColor="#c5c9d1" />
-            <stop offset=".78" stopColor="#868a94" />
-            <stop offset="1" stopColor="#40434b" />
+          {/* Brass screw base */}
+          <linearGradient id="brass" x1="0" x2="1">
+            <stop offset="0" stopColor="#3a2c14" />
+            <stop offset=".14" stopColor="#a67c36" />
+            <stop offset=".32" stopColor="#f3d489" />
+            <stop offset=".52" stopColor="#b88a3e" />
+            <stop offset=".78" stopColor="#7d5a22" />
+            <stop offset="1" stopColor="#34270f" />
           </linearGradient>
           <linearGradient id="capWarm" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0" stopColor="#ffcf70" stopOpacity=".75" />
-            <stop offset="1" stopColor="#ffb040" stopOpacity="0" />
+            <stop offset="0" stopColor="#fff0c0" stopOpacity=".7" />
+            <stop offset="1" stopColor="#ffc060" stopOpacity="0" />
           </linearGradient>
-          <filter id="filGlow" x="-60%" y="-120%" width="220%" height="340%">
-            <feGaussianBlur stdDeviation="2.6" result="b" />
-            <feMerge><feMergeNode in="b" /><feMergeNode in="b" /><feMergeNode in="SourceGraphic" /></feMerge>
-          </filter>
-          <filter id="soft"><feGaussianBlur stdDeviation="1.2" /></filter>
-          <filter id="softer"><feGaussianBlur stdDeviation="3" /></filter>
+          <filter id="soft"><feGaussianBlur stdDeviation="1.4" /></filter>
+          <filter id="softer"><feGaussianBlur stdDeviation="3.2" /></filter>
           <clipPath id="glassClip"><path d={GLASS} /></clipPath>
         </defs>
 
-        {/* 1. Glass body */}
-        <path d={GLASS} fill="url(#glassBody)" />
+        {/* 1. Smoky glass (visible when off) */}
+        <path d={GLASS} fill="url(#smoke)" />
 
-        {/* 2. Lit glass */}
+        {/* 2. Lit diffuser */}
         <g className={on ? "lit-on" : ""} style={{ opacity: on ? 1 : 0, transition: "opacity .6s ease" }}>
-          <path d={GLASS} fill="url(#litOn)" />
+          <path d={GLASS} fill="url(#diffOn)" />
+          <path d={GLASS} fill="url(#hotOn)" />
+          <path d={GLASS} fill="url(#edge)" />
         </g>
         <g className={weak ? "weak-flicker" : ""} style={{ opacity: weak ? 1 : 0, transition: "opacity .6s ease" }}>
-          <path d={GLASS} fill="url(#litWeak)" />
+          <path d={GLASS} fill="url(#diffWeak)" />
+          <path d={GLASS} fill="url(#hotWeak)" />
+          <path d={GLASS} fill="url(#edge)" />
         </g>
 
-        {/* 3. Glass stem, support wires, filament */}
-        <path d="M89 182L93 138Q100 131 107 138L111 182Z" fill="url(#stemGlass)" />
-        <g fill="none" strokeLinecap="round" strokeLinejoin="round">
-          <path d="M96 140L88 103M104 140L112 103" stroke="#6b6f7a" strokeWidth="1.3" />
-          {/* cold filament */}
-          <path d={COIL} stroke="#2e323d" strokeWidth="1.8" style={{ opacity: lit ? 0 : 1, transition: "opacity .5s" }} />
-          {/* hot filament */}
-          <g className={on ? "lit-on" : weak ? "weak-flicker" : ""} style={{ opacity: lit ? 1 : 0, transition: "opacity .5s" }}>
-            <path d={COIL} stroke={on ? "#fffdf0" : "#ffcf9e"} strokeWidth="2" filter="url(#filGlow)" />
-          </g>
+        {/* 3. Reflections: bold when off, restrained when lit */}
+        <g clipPath="url(#glassClip)" style={{ opacity: lit ? 0.5 : 1, transition: "opacity .6s" }}>
+          <ellipse cx="70" cy="36" rx="19" ry="9" transform="rotate(-32 70 36)" fill="#fff" opacity=".7" filter="url(#soft)" />
+          <path d="M41 60C32 82 34 108 50 134" stroke="url(#streak)" strokeWidth="9" strokeLinecap="round" fill="none" opacity=".85" filter="url(#soft)" />
+          <path d="M160 62C168 82 166 106 156 126" stroke="url(#streak)" strokeWidth="4" strokeLinecap="round" fill="none" opacity=".4" filter="url(#soft)" />
+          <path d="M62 152C66 160 68 166 69 174" stroke="url(#streak)" strokeWidth="3" strokeLinecap="round" fill="none" opacity=".35" filter="url(#soft)" />
+          <ellipse cx="100" cy="172" rx="28" ry="9" fill="#fff" opacity=".1" filter="url(#softer)" />
         </g>
+        <path d={GLASS} fill="none" stroke="url(#rim)" strokeWidth="1.5" />
+        <path d={GLASS} fill="none" stroke="var(--muted)" strokeOpacity=".2" strokeWidth=".6" />
 
-        {/* 4. Reflections on the glass (always visible, stronger when off) */}
-        <g clipPath="url(#glassClip)">
-          <ellipse cx="68" cy="40" rx="17" ry="7.5" transform="rotate(-32 68 40)" fill="#fff" opacity=".6" filter="url(#soft)" />
-          <path d="M44 66C35 84 36 106 48 126" stroke="url(#streak)" strokeWidth="6" strokeLinecap="round" fill="none" opacity=".75" filter="url(#soft)" />
-          <path d="M158 66C166 84 164 104 154 122" stroke="url(#streak)" strokeWidth="3" strokeLinecap="round" fill="none" opacity=".4" filter="url(#soft)" />
-          <ellipse cx="100" cy="170" rx="26" ry="9" fill="#fff" opacity=".1" filter="url(#softer)" />
-        </g>
-        <path d={GLASS} fill="none" stroke="url(#glassRim)" strokeWidth="1.6" />
-        <path d={GLASS} fill="none" stroke="var(--muted)" strokeOpacity=".22" strokeWidth=".6" />
-
-        {/* 5. Metal screw cap */}
-        <rect x="70" y="179" width="60" height="12" rx="3" fill="url(#metal)" />
-        {[0, 1, 2, 3].map((i) => (
+        {/* 4. Brass screw base */}
+        {[0, 1, 2, 3, 4].map((i) => (
           <g key={i}>
-            <rect x={72 + i * 1.5} y={190 + i * 9.5} width={56 - i * 3} height="11" rx="5.5" fill="url(#metal)" />
-            <path d={`M${74 + i * 1.5} ${200 + i * 9.5}Q100 ${204 + i * 9.5} ${126 - i * 1.5} ${200 + i * 9.5}`} stroke="#23252b" strokeOpacity=".55" strokeWidth="1.4" fill="none" />
-            <path d={`M${75 + i * 1.5} ${192.5 + i * 9.5}Q100 ${195 + i * 9.5} ${125 - i * 1.5} ${192.5 + i * 9.5}`} stroke="#fff" strokeOpacity=".5" strokeWidth=".9" fill="none" />
+            <rect x={71 + i * 1.2} y={181 + i * 10} width={58 - i * 2.4} height="12.5" rx="6.2" fill="url(#brass)" />
+            <path d={`M${73 + i * 1.2} ${191.5 + i * 10}Q100 ${196 + i * 10} ${127 - i * 1.2} ${191.5 + i * 10}`} stroke="#150f05" strokeOpacity=".65" strokeWidth="1.5" fill="none" />
+            <path d={`M${75 + i * 1.2} ${183.5 + i * 10}Q100 ${186 + i * 10} ${125 - i * 1.2} ${183.5 + i * 10}`} stroke="#fff3c8" strokeOpacity=".55" strokeWidth=".9" fill="none" />
           </g>
         ))}
-        <rect x="83" y="229" width="34" height="6" rx="2" fill="#17181c" />
-        <path d="M88 235H112Q112 247 100 247T88 235Z" fill="url(#metal)" />
-        {/* warm light bouncing onto the cap */}
-        <g style={{ opacity: lit ? (on ? 0.85 : 0.35) : 0, transition: "opacity .7s" }}>
-          <rect x="70" y="179" width="60" height="38" rx="4" fill="url(#capWarm)" />
+        <rect x="83" y="232" width="34" height="6" rx="2" fill="#0f0f12" />
+        <path d="M88 238H112Q112 250 100 250T88 238Z" fill="url(#brass)" />
+        {/* warm light bouncing onto the base */}
+        <g style={{ opacity: lit ? (on ? 0.8 : 0.3) : 0, transition: "opacity .7s" }}>
+          <rect x="71" y="181" width="58" height="36" rx="5" fill="url(#capWarm)" />
         </g>
       </svg>
     </div>
