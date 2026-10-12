@@ -47,17 +47,23 @@ body {
   background: radial-gradient(ellipse at 50% 18%, var(--bg-glow) 0%, var(--bg) 70%) fixed;
   color: var(--text);
   font-family: var(--font-nunito), system-ui, sans-serif;
+  overflow-x: clip;
 }
 
 /* Bulb animations */
 @keyframes pulse-glow { 0%,100% { opacity: .85; transform: scale(1);} 50% { opacity: 1; transform: scale(1.06);} }
 @keyframes flicker { 0%,100%{opacity:.35} 8%{opacity:.15} 12%{opacity:.4} 50%{opacity:.3} 53%{opacity:.12} 58%{opacity:.35} }
-.glow-on { animation: pulse-glow 3s ease-in-out infinite; }
-.glow-weak { animation: flicker 2.2s linear infinite; }
-.glow-off { animation: flicker 6s linear infinite; }
+/* Real-bulb behaviour: a quick warm-up stutter when power returns, then a barely-there breathing */
+@keyframes ignite { 0%{opacity:0} 10%{opacity:1} 20%{opacity:.35} 34%{opacity:1} 44%{opacity:.7} 60%,100%{opacity:1} }
+@keyframes breathe { 0%,100%{opacity:1} 50%{opacity:.93} }
+@keyframes bloom-breathe { 0%,100%{transform:scale(1)} 50%{transform:scale(1.04)} }
+@keyframes weak-flicker { 0%,100%{opacity:.8} 6%{opacity:.5} 10%{opacity:.85} 38%{opacity:.7} 41%{opacity:.4} 46%{opacity:.8} 72%{opacity:.75} 75%{opacity:.55} 80%{opacity:.82} }
+.lit-on { animation: ignite .9s ease-out, breathe 5s ease-in-out .9s infinite; }
+.weak-flicker { animation: weak-flicker 2.6s linear infinite; }
+.bloom-breathe { animation: bloom-breathe 5s ease-in-out infinite; }
 .press { transition: transform .1s ease; }
 .press:active { transform: scale(.96); }
 
 @media (prefers-reduced-motion: reduce) {
-  .glow-on, .glow-weak, .glow-off { animation: none; }
+  .lit-on, .weak-flicker, .bloom-breathe { animation: none; }
 }
