@@ -1,0 +1,6 @@
+{
+  "_warning": "VERIFY these hours against NERC's current tariff order before launch. Edit here, then run the seed again.",
+  "effective_date": "2024-04-03",
+  "source_note": "Unverified draft values: Band A at least 20h/day, B 16h, C 12h, D 8h, E 4h. Check against the current NERC order.",
+  "bands": { "A": 20, "B": 16, "C": 12, "D": 8, "E": 4 }
+}

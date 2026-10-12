@@ -1,0 +1,39 @@
+{
+  "_readme": "Neighbourhoods per LGA. Add more by copying an entry. 'city' is what people call the place (used for city leaderboards). Karu/Mararaba are in Nasarawa State but are part of the Abuja metro, so they carry city 'Abuja'. Please review: neighbourhood-to-LGA placement is from general knowledge and should be checked by someone local.",
+  "entries": [
+    {
+      "state": "Federal Capital Territory", "lga": "AMAC", "city": "Abuja",
+      "areas": ["Wuse", "Wuse 2", "Garki", "Garki 2", "Maitama", "Asokoro", "Central Business District", "Jabi", "Utako", "Wuye", "Gwarinpa", "Lugbe", "Sabon Lugbe", "Lokogoma", "Apo", "Gudu", "Durumi", "Jahi", "Katampe", "Mabushi", "Kado", "Life Camp", "Dawaki", "Karmo", "Galadimawa", "Guzape", "Gaduwa", "Idu", "Karshi", "Nyanya", "Kabusa", "Dakibiyu"]
+    },
+    { "state": "Federal Capital Territory", "lga": "Bwari", "city": "Abuja", "areas": ["Kubwa", "Dutse", "Mpape", "Bwari", "Ushafa", "Dei-Dei", "Gwagwa"] },
+    { "state": "Federal Capital Territory", "lga": "Gwagwalada", "city": "Abuja", "areas": ["Gwagwalada", "Zuba"] },
+    { "state": "Federal Capital Territory", "lga": "Kuje", "city": "Abuja", "areas": ["Kuje"] },
+    { "state": "Federal Capital Territory", "lga": "Abaji", "city": "Abuja", "areas": ["Abaji"] },
+    { "state": "Federal Capital Territory", "lga": "Kwali", "city": "Abuja", "areas": ["Kwali"] },
+    { "state": "Nasarawa", "lga": "Karu", "city": "Abuja", "areas": ["Karu", "New Karu", "Mararaba", "Masaka"] },
+
+    {
+      "state": "Lagos", "lga": "Eti-Osa", "city": "Lagos",
+      "areas": ["Lekki Phase 1", "Lekki Phase 2", "Victoria Island", "Ikoyi", "Ikate", "Chevron", "Ajah", "Sangotedo", "Ikota", "Oniru", "Banana Island", "Osapa London", "Agungi", "Jakande"]
+    },
+    { "state": "Lagos", "lga": "Ibeju-Lekki", "city": "Lagos", "areas": ["Awoyaya", "Abijo", "Lakowe"] },
+    { "state": "Lagos", "lga": "Ikeja", "city": "Lagos", "areas": ["Ikeja GRA", "Allen Avenue", "Opebi", "Oregun", "Alausa", "Ogba", "Maryland", "Agidingbi"] },
+    { "state": "Lagos", "lga": "Surulere", "city": "Lagos", "areas": ["Surulere", "Aguda", "Itire", "Ijeshatedo"] },
+    { "state": "Lagos", "lga": "Lagos Mainland", "city": "Lagos", "areas": ["Yaba", "Ebute Metta", "Oyingbo", "Iddo"] },
+    { "state": "Lagos", "lga": "Alimosho", "city": "Lagos", "areas": ["Egbeda", "Ikotun", "Igando", "Idimu", "Ipaja", "Iyana Ipaja", "Akowonjo", "Ayobo", "Shasha"] },
+    { "state": "Lagos", "lga": "Kosofe", "city": "Lagos", "areas": ["Ketu", "Ojota", "Magodo", "Mile 12", "Ogudu", "Alapere", "Gbagada"] },
+    { "state": "Lagos", "lga": "Ikorodu", "city": "Lagos", "areas": ["Ikorodu", "Igbogbo", "Majidun", "Ijede"] },
+    { "state": "Lagos", "lga": "Amuwo-Odofin", "city": "Lagos", "areas": ["Festac Town", "Mile 2", "Satellite Town", "Amuwo Odofin"] },
+    { "state": "Lagos", "lga": "Apapa", "city": "Lagos", "areas": ["Apapa"] },
+    { "state": "Lagos", "lga": "Oshodi-Isolo", "city": "Lagos", "areas": ["Oshodi", "Isolo", "Ejigbo"] },
+    { "state": "Lagos", "lga": "Mushin", "city": "Lagos", "areas": ["Mushin", "Idi-Oro", "Papa Ajao"] },
+    { "state": "Lagos", "lga": "Agege", "city": "Lagos", "areas": ["Agege", "Dopemu"] },
+    { "state": "Lagos", "lga": "Ajeromi-Ifelodun", "city": "Lagos", "areas": ["Ajegunle"] },
+    { "state": "Lagos", "lga": "Ifako-Ijaiye", "city": "Lagos", "areas": ["Ojodu Berger", "Ifako", "Fagba"] },
+    { "state": "Lagos", "lga": "Ojo", "city": "Lagos", "areas": ["Ojo", "Alaba International", "Iba", "Okokomaiko"] },
+    { "state": "Lagos", "lga": "Badagry", "city": "Lagos", "areas": ["Badagry"] },
+    { "state": "Lagos", "lga": "Shomolu", "city": "Lagos", "areas": ["Shomolu", "Bariga", "Pedro"] },
+    { "state": "Lagos", "lga": "Lagos Island", "city": "Lagos", "areas": ["Lagos Island", "Marina", "Obalende", "Idumota"] },
+    { "state": "Lagos", "lga": "Epe", "city": "Lagos", "areas": ["Epe"] }
+  ]
+}

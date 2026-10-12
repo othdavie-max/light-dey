@@ -1,0 +1,7 @@
+[
+  { "code": "nepa_watchman", "name_en": "NEPA Watchman", "name_pcm": "NEPA Watchman", "description_en": "Reported light for 7 days in a row.", "description_pcm": "You report light 7 days for row. Oga watchman!" },
+  { "code": "generator_free_spirit", "name_en": "Generator Free Spirit", "name_pcm": "Generator Free Spirit", "description_en": "Reported 10 times that the light was on. Good vibes only.", "description_pcm": "You report say light dey 10 times. Generator dey rest!" },
+  { "code": "area_correspondent", "name_en": "Area Correspondent", "name_pcm": "Area Correspondent", "description_en": "Be the first to report a change in your area 10 times.", "description_pcm": "You don dey first to talk wetin happen for your area 10 times." },
+  { "code": "night_shift_reporter", "name_en": "Night Shift Reporter", "name_pcm": "Night Shift Reporter", "description_en": "Reported light between 10pm and 5am.", "description_pcm": "You report light between 10pm and 5am. No sleep for you!" },
+  { "code": "founding_reporter", "name_en": "Founding Reporter", "name_pcm": "Founding Reporter", "description_en": "One of the first 1,000 people to join Light Dey?", "description_pcm": "You be one of the first 1,000 people wey join Light Dey?" }
+]
