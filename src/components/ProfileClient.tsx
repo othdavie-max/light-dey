@@ -1,13 +1,15 @@
 "use client";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import en from "@/i18n/en/tabs.json";
 import pcm from "@/i18n/pcm/tabs.json";
 import BottomNav from "./BottomNav";
+import { supabase } from "@/lib/supabase/browser";
 import { useMyStats } from "@/lib/useMyStats";
 import { useLang, useTheme } from "@/lib/prefs";
 
 const dict = { en, pcm } as const;
+interface Badge { badge_code: string; badges: { name_en: string; name_pcm: string; description_en: string; description_pcm: string } | null }
 const row = "press panel flex min-h-14 items-center justify-between rounded-2xl px-4 text-[16px]";
 
 export default function ProfileClient() {
@@ -15,7 +17,18 @@ export default function ProfileClient() {
   const [theme, setTheme] = useTheme();
   const t = dict[lang].profile;
   const { points, streak, nickname } = useMyStats();
+  const [badges, setBadges] = useState<Badge[] | null>(null);
   useEffect(() => { document.documentElement.dataset.theme = theme; }, [theme]);
+  useEffect(() => {
+    (async () => {
+      const sb = supabase();
+      const { data: s } = await sb.auth.getSession();
+      const uid = s.session?.user.id;
+      if (!uid) { setBadges([]); return; }
+      const { data } = await sb.from("user_badges").select("badge_code,badges(name_en,name_pcm,description_en,description_pcm)").eq("user_id", uid).order("earned_at");
+      setBadges((data as unknown as Badge[] | null) ?? []);
+    })();
+  }, []);
 
   const seg = (on: boolean) => ({ background: on ? "var(--panel-strong)" : "transparent", color: on ? "var(--text)" : "var(--muted)", border: on ? "1px solid var(--panel-border)" : "1px solid transparent" });
   const arrow = <span aria-hidden="true" className="text-muted">→</span>;
@@ -28,6 +41,19 @@ export default function ProfileClient() {
       <section className="mt-5 grid grid-cols-2 gap-3 text-center">
         <div className="panel rounded-2xl p-4"><p className="text-[28px] font-light">{points}</p><p className="text-sm text-muted">{t.points}</p></div>
         <div className="panel rounded-2xl p-4"><p className="text-[28px] font-light">{streak}</p><p className="text-sm text-muted">{t.streak}</p></div>
+      </section>
+
+      <section className="mt-5">
+        <h2 className="text-[17px] font-medium">{t.badges}</h2>
+        {badges !== null && badges.length === 0 && <p className="mt-2 text-sm text-muted">{t.noBadges}</p>}
+        <ul className="mt-2 space-y-2">
+          {(badges ?? []).map((b) => (
+            <li key={b.badge_code} className="panel rounded-2xl px-4 py-3">
+              <p className="text-[16px] font-medium">{lang === "en" ? b.badges?.name_en : b.badges?.name_pcm}</p>
+              <p className="text-sm text-muted">{lang === "en" ? b.badges?.description_en : b.badges?.description_pcm}</p>
+            </li>
+          ))}
+        </ul>
       </section>
 
       <section className="mt-5 space-y-3">

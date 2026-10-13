@@ -139,7 +139,7 @@ npm run demo:clear    removes ALL of it
 Demo data lives in the live database while it exists, so people can see it. **Always run `npm run demo:clear` before real people use the app.** (The admin Overview has an "Include demo data" box if you want to see it.)
 
 ### I. Edit the database structure (rarely!)
-The database structure is defined in `supabase\migrations\` (numbered files `0001` to `0008`). A new change is a new numbered file. To apply one: open Supabase → **SQL Editor** → **New query**, paste the file's contents, press **Run**. Never edit tables by hand in Supabase's table viewer: the security rules and the code depend on the structure.
+The database structure is defined in `supabase\migrations\` (numbered files `0001` to `0009`). A new change is a new numbered file. To apply one: open Supabase → **SQL Editor** → **New query**, paste the file's contents, press **Run**. Never edit tables by hand in Supabase's table viewer: the security rules and the code depend on the structure.
 
 ---
 
@@ -223,7 +223,7 @@ light-dey/
 - **Status pages are drawn on the phone, not on the server.** That keeps them live and fast, but WhatsApp/X link previews and search engines see little. A public, preview-friendly version of area pages is planned for Phase 2. (The Privacy, Terms and How-it-works pages are server-drawn and preview well.)
 - **Size:** the home screen downloads about 150 KB of code (the target was about 150 KB). About 136 KB of that is the unavoidable framework floor (React and Next.js).
 - **Trust scores** are neutral for everyone and are changed only by admins today. Automatic adjustment (rising when reports match neighbours) is planned.
-- **Not built yet (Phase 2 and later):** Google and email sign-in for ordinary users, push notifications ("Light don come"), shareable report-card images, leaderboards, referrals, the map, WhatsApp alerts, Play Store app, airtime rewards.
+- **Not built yet (Phase 2 and later):** Google and email sign-in for ordinary users, push notifications ("Light don come"), shareable report-card images, referrals, the map, WhatsApp alerts, Play Store app, airtime rewards.
 - **Weekly stats are calculated live** from the supply history. That is fine for now; a scheduled job to precompute them comes with the Phase 3 performance work.
 - **Supabase's built-in email** only delivers to your team until you add a sender such as Resend.
 - **Band hours are drafts** you must verify against NERC.
@@ -250,6 +250,6 @@ light-dey/
 ## 11. Phases
 
 1. **Phase 1 (this): the MVP.** Location hierarchy, onboarding, anonymous reporting with offline queue, status calculation, supply sessions, home/spot/area pages, band check, English + Pidgin, dark/light theme, installable app, admin, Privacy/Terms/About, live on Vercel.
-2. **Phase 2: growth.** Sign-in, streaks/points/badges, follows and push notifications, shareable report cards, leaderboards, referral links, public SEO pages.
+2. **Phase 2: growth.** Sign-in, streaks/points/badges, follows and push notifications, shareable report cards, referral links, public SEO pages. (Leaderboards and badges are built.)
 3. **Phase 3: map and scale.** Live map, more cities, DisCo comparisons, performance tuning, privacy-friendly analytics.
 4. **Phase 4: later.** Play Store app, phone-number sign-in, WhatsApp alerts, airtime rewards, sponsored placements (clearly labelled), a data page for journalists and researchers.

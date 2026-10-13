@@ -115,14 +115,15 @@ export default function Bulb({ status }: { status: Status }) {
             <stop offset="0" stopColor="#ffcf7a" stopOpacity=".7" />
             <stop offset="1" stopColor="#ffb550" stopOpacity="0" />
           </linearGradient>
-          <filter id="halo" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="9" /></filter>
+          <radialGradient id="haloOn"><stop offset="0.55" stopColor="#ffd98e" stopOpacity="0.9" /><stop offset="1" stopColor="#ffd98e" stopOpacity="0" /></radialGradient>
+          <radialGradient id="haloWeak"><stop offset="0.55" stopColor="#ffa254" stopOpacity="0.9" /><stop offset="1" stopColor="#ffa254" stopOpacity="0" /></radialGradient>
           <filter id="soft"><feGaussianBlur stdDeviation="1.4" /></filter>
           <filter id="softer"><feGaussianBlur stdDeviation="3" /></filter>
           <clipPath id="glassClip"><path d={GLASS} /></clipPath>
         </defs>
 
         {/* 0. Halo: light bleeding just past the edge of the dome */}
-        <ellipse cx="100" cy="88" rx="92" ry="86" fill={on ? "#ffd98e" : "#ffa254"} filter="url(#halo)"
+        <ellipse cx="100" cy="88" rx="118" ry="110" fill={on ? "url(#haloOn)" : "url(#haloWeak)"}
           style={{ opacity: on ? 0.75 : weak ? 0.45 : 0, transition: "opacity .7s" }} />
 
         {/* 1. Smoky glass (off) */}

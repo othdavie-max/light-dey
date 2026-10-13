@@ -14,6 +14,7 @@ import { planSessionUpdate } from "@/lib/status/sessions";
 import { reporterTrust } from "@/lib/status/trust";
 import { resolveReportTime } from "@/lib/status/reportTime";
 import { applyReport } from "@/lib/rewards";
+import { badgesQualified } from "@/lib/badges";
 import type { ReportInput, ReportStatus, SpotState, SupplySession } from "@/lib/status/types";
 
 const STATUSES: ReportStatus[] = ["on", "off", "weak"];
@@ -186,8 +187,28 @@ export async function POST(req: Request) {
     points: reward.points, streak_current: reward.streakCurrent, streak_best: reward.streakBest, last_report_day: reward.lastReportDay,
   }).eq("id", user.id);
 
+  // 11. Badges. Never allowed to fail the report itself.
+  let newBadges: string[] = [];
+  try {
+    const [on, changes, held, me] = await Promise.all([
+      db.from("reports").select("id", { count: "exact", head: true }).eq("user_id", user.id).eq("status", "on"),
+      db.from("reports").select("id", { count: "exact", head: true }).eq("user_id", user.id).eq("is_confirmation", false),
+      db.from("user_badges").select("badge_code").eq("user_id", user.id),
+      db.from("profiles").select("created_at").eq("id", user.id).maybeSingle(),
+    ]);
+    const joined = me.data?.created_at;
+    const rank = joined ? ((await db.from("profiles").select("id", { count: "exact", head: true }).lte("created_at", joined)).count ?? 0) : 0;
+    const have = new Set((held.data ?? []).map((x) => x.badge_code));
+    newBadges = badgesQualified({
+      streakCurrent: reward.streakCurrent, onReports: on.count ?? 0, changeReports: changes.count ?? 0,
+      lastReport: { status: reported, at }, joinRank: rank,
+    }).filter((c) => !have.has(c));
+    if (newBadges.length) await db.from("user_badges").upsert(newBadges.map((badge_code) => ({ user_id: user.id, badge_code })), { onConflict: "user_id,badge_code", ignoreDuplicates: true });
+  } catch { newBadges = []; }
+
   return NextResponse.json({
     ok: true,
+    newBadges,
     status: computed.status,
     confidence: computed.confidence,
     since: ((changed && !late ? at : current.since) ?? at).toISOString(),

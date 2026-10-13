@@ -107,7 +107,7 @@ export const privacy: Doc = {
       id: "others",
       heading: "7. What other people can see",
       text: [
-        "Nobody can see who made a report. Other people see a spot's status, how long it has lasted, and things like \"Someone in Wuye reported light 4 minutes ago\". If we later show top reporters, only your chosen nickname appears, never a real name or phone number.",
+        "Nobody can see who made a report. Other people see a spot's status, how long it has lasted, and things like \"Someone in Wuye reported light 4 minutes ago\". On the Board (top reporters), only your automatic nickname appears, never a real name or phone number.",
       ],
     },
     {

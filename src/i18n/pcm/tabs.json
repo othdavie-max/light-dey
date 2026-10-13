@@ -8,8 +8,18 @@
   },
   "board": {
     "title": "Board",
-    "soon": "Leaderboard dey come soon.",
-    "body": "Soon you go see who dey report pass and the areas wey get plenty light. Keep reporting: your points and streak don dey count.",
+    "tabReporters": "Top reporters",
+    "tabAreas": "Most light",
+    "weekNote": "This week, from Monday till now.",
+    "areasNote": "Average hours of light per day for the last 7 days. Na only areas wey get enough reports dey show.",
+    "reports": "reports",
+    "hoursDay": "h/day",
+    "people": "reporters",
+    "empty": "Nobody yet. Be the first to report this week.",
+    "emptyAreas": "Reports never reach. Areas go show here when some neighbours don report.",
+    "you": "You",
+    "loading": "I dey load…",
+    "error": "We no fit load the board. Check your network.",
     "yourPoints": "Your points",
     "yourStreak": "Day streak"
   },
@@ -25,6 +35,8 @@
     "myData": "My data: download or delete",
     "about": "How e dey work",
     "privacy": "Privacy Policy",
-    "terms": "Terms of Use"
+    "terms": "Terms of Use",
+    "badges": "Badges",
+    "noBadges": "No badge yet. Keep reporting!"
   }
 }

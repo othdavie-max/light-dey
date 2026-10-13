@@ -8,8 +8,18 @@
   },
   "board": {
     "title": "Board",
-    "soon": "Leaderboards are coming soon.",
-    "body": "Soon you will see the most helpful reporters and the areas with the most light. Keep reporting: your points and streak already count.",
+    "tabReporters": "Top reporters",
+    "tabAreas": "Most light",
+    "weekNote": "This week, Monday to now.",
+    "areasNote": "Average hours of light a day over the last 7 days. Only areas with enough reports are listed.",
+    "reports": "reports",
+    "hoursDay": "h/day",
+    "people": "reporters",
+    "empty": "Nobody yet. Be the first to report this week.",
+    "emptyAreas": "Not enough reports yet. Areas appear here once a few neighbours report.",
+    "you": "You",
+    "loading": "Loading…",
+    "error": "Could not load the board. Check your network.",
     "yourPoints": "Your points",
     "yourStreak": "Day streak"
   },
@@ -25,6 +35,8 @@
     "myData": "My data: download or delete",
     "about": "How it works",
     "privacy": "Privacy Policy",
-    "terms": "Terms of Use"
+    "terms": "Terms of Use",
+    "badges": "Badges",
+    "noBadges": "No badges yet. Keep reporting!"
   }
 }
