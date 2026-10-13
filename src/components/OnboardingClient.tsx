@@ -1,8 +1,10 @@
 "use client";
 import { useEffect, useMemo, useRef, useState } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
-import en from "@/i18n/en.json";
-import pcm from "@/i18n/pcm.json";
+import { acceptConsent, hasConsent } from "@/lib/consent";
+import en from "@/i18n/en/onboarding.json";
+import pcm from "@/i18n/pcm/onboarding.json";
 import { supabase, ensureSession } from "@/lib/supabase/browser";
 import { useLang, setActiveSpot, type Lang } from "@/lib/prefs";
 import { searchAreas, type AreaLite } from "@/lib/search";
@@ -56,6 +58,7 @@ export default function OnboardingClient() {
   const t = dict[lang].onboarding;
   const [step, setStep] = useState<0 | 1 | 2>(0);
   const [adding, setAdding] = useState(false);
+  const [consentOnly, setConsentOnly] = useState(false);          // someone who already has a spot, just agreeing to the terms
 
   // ---- step 1 state ----
   const [areas, setAreas] = useState<AreaLite[]>([]);
@@ -84,9 +87,14 @@ export default function OnboardingClient() {
   const chosen = spots.find((s) => s.id === spotId) ?? null;
 
   useEffect(() => {
-    // "Add another spot" from the home screen skips the welcome screen
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    if (new URLSearchParams(window.location.search).get("add")) { setAdding(true); setStep(1); }
+    // "Add another spot" from the home screen skips the welcome screen. The address is only readable in the browser,
+    // so these are set once, here, after the page has loaded.
+    const params = new URLSearchParams(window.location.search);
+    /* eslint-disable react-hooks/set-state-in-effect */
+    if (params.get("add")) { setAdding(true); setStep(1); }
+    if (params.get("consent")) setConsentOnly(true);
+    else if (hasConsent()) setStep(1);                        // already agreed on this phone: no need to see the welcome again
+    /* eslint-enable react-hooks/set-state-in-effect */
     (async () => {
       const { data } = await supabase().from("areas").select("id,name,city,lat,lng,lgas(name,states(name))").order("name");
       setAreas((data ?? []).map((a) => {
@@ -250,7 +258,14 @@ export default function OnboardingClient() {
           <p className="mt-8 text-sm text-muted">{t.welcome.language}</p>
           <div className="mt-3 flex gap-3">{(["pcm", "en"] as Lang[]).map(toggleLang)}</div>
         </div>
-        <PrimaryButton onClick={() => setStep(1)}>{t.welcome.next}</PrimaryButton>
+        <p className="mb-4 mt-6 text-center text-xs leading-relaxed text-muted">
+          {t.welcome.consent.before}
+          <Link href="/terms" className="underline underline-offset-2">{t.welcome.consent.terms}</Link>
+          {t.welcome.consent.and}
+          <Link href="/privacy" className="underline underline-offset-2">{t.welcome.consent.privacy}</Link>
+          {t.welcome.consent.after}
+        </p>
+        <PrimaryButton onClick={() => { void acceptConsent(); if (consentOnly) router.push("/"); else setStep(1); }}>{t.welcome.next}</PrimaryButton>
       </main>
     );
   }

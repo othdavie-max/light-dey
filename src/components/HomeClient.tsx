@@ -2,11 +2,13 @@
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import en from "@/i18n/en.json";
-import pcm from "@/i18n/pcm.json";
+import en from "@/i18n/en/common.json";
+import pcm from "@/i18n/pcm/common.json";
 import Bulb, { type Status } from "./Bulb";
 import ConnectionStatus from "./ConnectionStatus";
 import InstallPrompt from "./InstallPrompt";
+import LegalLinks from "./LegalLinks";
+import { hasConsent, recordConsent } from "@/lib/consent";
 import { supabase, ensureSession } from "@/lib/supabase/browser";
 import { useLang, useTheme, getActiveSpot, setActiveSpot } from "@/lib/prefs";
 import { useSpotLive } from "@/lib/useSpotLive";
@@ -98,6 +100,9 @@ export default function HomeClient() {
   useEffect(() => {
     let cancelled = false;
     (async () => {
+      // Everyone agrees to the Terms and Privacy Policy first (people who joined before this existed see it once)
+      if (!hasConsent()) { router.replace("/onboarding?consent=1"); return; }
+      void recordConsent();                                      // keeps the account's record up to date; harmless to repeat
       const sb = supabase();
       const token = await ensureSession();
       const { data: s } = await sb.auth.getSession();           // read from the phone, works offline
@@ -256,12 +261,13 @@ export default function HomeClient() {
 
       {spot && (
         <Link href={`/spot/${spot.id}`} className="press panel mt-6 flex min-h-14 items-center justify-between rounded-2xl px-5 text-[16px] font-medium">
-          {t.spotPage.details}
+          {t.moreDetails}
           <span aria-hidden="true" className="text-muted">→</span>
         </Link>
       )}
 
       <InstallPrompt ready={points > 0} text={t.install} />
+      <LegalLinks />
 
       {/* Invisible bot check (Cloudflare Turnstile). Takes no space unless Cloudflare needs to ask something. */}
       <div ref={turnstileBox} className="mt-4 flex justify-center" />

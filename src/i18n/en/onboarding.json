@@ -1,0 +1,68 @@
+{
+  "onboarding": {
+    "back": "Back",
+    "welcome": {
+      "title": "Light dey? Tell your neighbours.",
+      "body": "Report in two taps whether there is light in your area. Together we see the real picture: when light comes, when it goes, and how many hours your area really gets.",
+      "language": "Choose your language",
+      "next": "Let's go",
+      "consent": {
+        "before": "By tapping Let's go you agree to our ",
+        "terms": "Terms",
+        "and": " and ",
+        "privacy": "Privacy Policy",
+        "after": ". You confirm you are 18 or older, or have a parent or guardian's permission."
+      }
+    },
+    "spot": {
+      "title": "Where do you want to track light?",
+      "search": "Search your area (e.g. Wuye, Lekki)",
+      "useLocation": "Use my location to suggest areas",
+      "locationNote": "Used only on your phone to suggest nearby areas. We never store or share where you are.",
+      "locating": "Finding areas near you…",
+      "locationDenied": "No problem. Search for your area instead.",
+      "locationNone": "We found no areas close to you yet. Search for yours instead.",
+      "nearby": "Near you",
+      "results": "Areas",
+      "noResults": "No area found. Try another spelling, or browse by state.",
+      "browse": "Browse by state",
+      "pickState": "Choose a state",
+      "pickLga": "Choose a local government (LGA)",
+      "noAreasYet": "We have not opened {lga} yet. Light Dey? starts in Abuja and Lagos, and more places are coming.",
+      "spots": "Pick a spot in {area}",
+      "wholeArea": "Whole area (best for most people)",
+      "pending": "New, being checked",
+      "addSpot": "My street or estate is not listed",
+      "newName": "Street, estate, close or compound",
+      "newHint": "Example: Sunshine Estate",
+      "create": "Add it and use it",
+      "didYouMean": "Did you mean one of these?",
+      "createAnyway": "No, mine is different",
+      "exists": "That spot already exists in this area. Choose it from the list.",
+      "nameShort": "Please type at least 3 letters.",
+      "label": "Save it as",
+      "labels": {
+        "home": "Home",
+        "office": "Office",
+        "family": "Mum's house",
+        "other": "Other"
+      },
+      "full": "You already saved 3 spots. Remove one from the home screen first.",
+      "continue": "Continue",
+      "saving": "Saving…",
+      "error": "Could not save. Please try again."
+    },
+    "extras": {
+      "title": "A few optional details",
+      "disco": "Who supplies your light? (DisCo)",
+      "discoUnknown": "I don't know",
+      "band": "Your tariff band",
+      "bandHelp": "You can find it on your electricity bill or meter. Not sure? Skip it.",
+      "alreadySet": "This spot already has these details. Thank you!",
+      "notify": "Get a ping when light comes back",
+      "notifyNote": "Light alerts are coming soon. iPhone users will need to add the app to the Home Screen first.",
+      "skip": "Skip",
+      "done": "Start reporting"
+    }
+  }
+}

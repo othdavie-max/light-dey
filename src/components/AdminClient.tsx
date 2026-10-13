@@ -2,8 +2,10 @@
 // The admin area. English only: it is an internal tool for you and your team, not for the public.
 // Every request goes to /api/admin, which checks on the server that the caller is a real admin.
 import { useCallback, useEffect, useState } from "react";
-import { supabase } from "@/lib/supabase/browser";
+import { fullClient } from "@/lib/supabase/full";
 import { agoShort, suspicionReasons } from "@/lib/admin";
+import { useTurnstile } from "@/lib/useTurnstile";
+import { appConfig } from "../../config/app.config";
 
 type Tab = "overview" | "spots" | "flags" | "reporters" | "reference";
 type Gate = "loading" | "out" | "denied" | "ok";
@@ -42,7 +44,7 @@ const btnDanger = { background: "color-mix(in srgb, #ef4444 20%, transparent)", 
 const plural = (n: number, one: string, many = `${one}s`) => `${n} ${n === 1 ? one : many}`;
 
 async function api(method: "GET" | "POST", path: string, body?: unknown) {
-  const { data } = await supabase().auth.getSession();
+  const { data } = await fullClient().auth.getSession();
   const res = await fetch(`/api/admin${path}`, {
     method, cache: "no-store",
     headers: { "content-type": "application/json", authorization: `Bearer ${data.session?.access_token ?? ""}` },
@@ -71,6 +73,7 @@ export default function AdminClient() {
   const [areas, setAreas] = useState<AreaRef[]>([]);
   const [areaQuery, setAreaQuery] = useState("");
   const [now, setNow] = useState(0);
+  const { box: captchaBox, getToken: getCaptcha } = useTurnstile(process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY || appConfig.turnstileSiteKey);
 
   const say = (m: string) => { setToast(m); setTimeout(() => setToast(null), 4000); };
 
@@ -78,7 +81,7 @@ export default function AdminClient() {
   useEffect(() => {
     let alive = true;
     (async () => {
-      const { data } = await supabase().auth.getSession();
+      const { data } = await fullClient().auth.getSession();
       if (!data.session || data.session.user.is_anonymous) { if (alive) setGate("out"); return; }
       const r = await api("GET", "?view=overview");
       if (!alive) return;
@@ -136,10 +139,11 @@ export default function AdminClient() {
 
   async function sendLink() {
     setSignInMsg(null);
-    const { error } = await supabase().auth.signInWithOtp({ email: email.trim(), options: { shouldCreateUser: false, emailRedirectTo: `${window.location.origin}/admin` } });
+    const captchaToken = await getCaptcha();                      // needed when CAPTCHA protection is on in Supabase
+    const { error } = await fullClient().auth.signInWithOtp({ email: email.trim(), options: { shouldCreateUser: false, emailRedirectTo: `${window.location.origin}/admin`, captchaToken: captchaToken ?? undefined } });
     setSignInMsg(error ? `Could not send the link: ${error.message}` : "Check your email for the sign-in link, then come back to this page.");
   }
-  async function signOut() { await supabase().auth.signOut(); window.location.reload(); }
+  async function signOut() { await fullClient().auth.signOut(); window.location.reload(); }
 
   // ---------------------------------------------------------------- gates
   if (gate === "loading") return <main className="mx-auto max-w-md px-5 pt-16 text-center text-muted">Checking who you are…</main>;
@@ -159,6 +163,7 @@ export default function AdminClient() {
             <input type="email" autoComplete="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="you@example.com" className={`${input} mt-5`} aria-label="Email" />
             <button disabled={!email.includes("@")} onClick={sendLink} className={`${btn} mt-3 w-full disabled:opacity-50`} style={btnGold}>Email me a sign-in link</button>
             {signInMsg && <p className="mt-4 text-sm" role="status">{signInMsg}</p>}
+            <div ref={captchaBox} className="mt-3 flex justify-center" />
           </>
         )}
       </main>

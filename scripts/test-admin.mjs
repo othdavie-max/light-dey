@@ -1,9 +1,10 @@
 // End-to-end check of /api/admin against the real database with throwaway users, spots and reference rows
 // (everything is removed at the end). Needs a server running with Cloudflare's always-pass Turnstile test keys. Run:
-//   BASE_URL=http://localhost:3100 node --env-file=.env.local scripts/test-admin.mjs
+//   BASE_URL=http://localhost:3000 node --env-file=.env.local scripts/test-admin.mjs
 import { createClient } from "@supabase/supabase-js";
+import { makeTestUser } from "./lib/testUser.mjs";
 
-const BASE = process.env.BASE_URL ?? "http://localhost:3100";
+const BASE = process.env.BASE_URL ?? "http://localhost:3000";
 const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const db = createClient(url, process.env.SUPABASE_SERVICE_ROLE_KEY, { auth: { persistSession: false } });
 const anon = () => createClient(url, process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY, { auth: { persistSession: false } });
@@ -19,25 +20,19 @@ const post = (t, b) => call(t, "POST", "", b);
 
 const created = { users: [], spots: [], discos: [], bands: [], area: null };
 const started = new Date().toISOString();
-async function makeUser(tag) {
-  const email = `ld-test-${tag}-${Date.now()}@example.com`, password = `Tmp-${crypto.randomUUID()}`;
-  const { data, error } = await db.auth.admin.createUser({ email, password, email_confirm: true });
-  if (error) throw error;
-  created.users.push(data.user.id);
-  const { data: s, error: e2 } = await anon().auth.signInWithPassword({ email, password });
-  if (e2) throw e2;
-  return { id: data.user.id, token: s.session.access_token };
-}
+// Throwaway signed-in user (no password, so this still works when CAPTCHA protection is on in Supabase)
+const makeUser = (tag) => makeTestUser(tag, created);
 
 try {
   const ADMIN = await makeUser("admin"), NORMAL = await makeUser("normal");
   await db.from("profiles").update({ is_admin: true }).eq("id", ADMIN.id);
-  const { data: anonSession } = await anon().auth.signInAnonymously();
-  if (anonSession.user) created.users.push(anonSession.user.id);
+  const { data: anonSession, error: anonErr } = await anon().auth.signInAnonymously();
+  if (anonSession?.user) created.users.push(anonSession.user.id);
 
   // ---------- who may use it ----------
   check("no sign-in is refused (401)", (await get(null, "?view=overview")).status === 401);
-  check("an anonymous visitor is refused (401)", (await get(anonSession.session.access_token, "?view=overview")).status === 401);
+  if (anonErr) console.log(`SKIP  an anonymous visitor is refused (401)  (could not create an anonymous test visitor: ${anonErr.message})`);
+  else check("an anonymous visitor is refused (401)", (await get(anonSession.session.access_token, "?view=overview")).status === 401);
   check("a normal signed-in person is refused (403)", (await get(NORMAL.token, "?view=overview")).status === 403);
   check("a normal person cannot make changes either (403)", (await post(NORMAL.token, { action: "user.ban", id: ADMIN.id })).status === 403);
   check("a normal person cannot call the database functions directly", !!(await anon().rpc("admin_overview", {})).error);

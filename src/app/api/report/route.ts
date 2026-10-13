@@ -104,6 +104,9 @@ export async function POST(req: Request) {
   });
   if (!limit.allowed) return fail(429, limit.reason ?? "rate_limited", { retryAfterSeconds: limit.retryAfterSeconds });
   await db.from("rate_limit_hits").insert([keys.user, keys.device, keys.ip].map((key) => ({ key })));
+  // Housekeeping promised in the Privacy Policy: spam-control records are cleared within about a day.
+  // Done now and then (1 report in 50) so it needs no scheduled job.
+  if (Math.random() < 0.02) await db.from("rate_limit_hits").delete().lt("hit_at", new Date(now.getTime() - 24 * 3_600_000).toISOString());
 
   // 7. Current status, then save the report with the weight it carries (trust, boosted if signed in).
   const { data: row } = await db.from("spot_status").select("*").eq("spot_id", spotId).maybeSingle();

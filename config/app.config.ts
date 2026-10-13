@@ -1,5 +1,16 @@
 // Every limit and threshold lives here so you can change it without touching logic.
 export const appConfig = {
+  // Details shown on the Privacy, Terms and About pages. Anything in [square brackets] is a placeholder:
+  // replace it with your real details before launch (`npm run launch-check` lists what is still missing).
+  legal: {
+    operatorName: "[Your registered business name]",
+    contactEmail: "[your contact email address]",
+    address: "[Your business address, Nigeria]",
+    governingCity: "[Lagos or Abuja]",              // whose courts handle disputes
+    effectiveDate: "2026-10-14",                    // change when the text changes
+    version: "2026-10-14",                          // people agree to a version; bump it when the text changes
+  },
+
   // Cloudflare Turnstile SITE key. Public by design (it sits in the web page); the SECRET key never goes here.
   // NEXT_PUBLIC_TURNSTILE_SITE_KEY, if set, takes priority.
   turnstileSiteKey: "0x4AAAAAAFVjYUjMWxYVwnFa",

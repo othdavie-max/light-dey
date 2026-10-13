@@ -1,5 +1,6 @@
 "use client";
 import { useCallback, useEffect, useRef } from "react";
+import { setCaptchaProvider } from "./supabase/browser";
 
 type TurnstileApi = {
   render: (el: HTMLElement, opts: Record<string, unknown>) => string;
@@ -65,6 +66,13 @@ export function useTurnstile(siteKey: string | undefined) {
       waiting.current.push((t) => { clearTimeout(timer); resolve(t ? use(t) : null); });
     });
   }, []);
+
+  // New sign-ins can need a Turnstile token too (when CAPTCHA protection is on in Supabase): offer this widget for that.
+  useEffect(() => {
+    if (!siteKey) return;
+    setCaptchaProvider(getToken);
+    return () => setCaptchaProvider(null);
+  }, [siteKey, getToken]);
 
   return { box, getToken };
 }

@@ -1,0 +1,22 @@
+{
+  "myData": {
+    "title": "My data",
+    "intro": "Light Dey? no get your name, phone number or email. For here you fit see everything wey we get for you, and delete am.",
+    "downloadTitle": "Download my data",
+    "downloadBody": "One file wey get your settings, saved spots, points and every report wey you don make.",
+    "downloadButton": "Download",
+    "downloading": "I dey prepare am…",
+    "deleteTitle": "Delete my account and data",
+    "deleteBody": "This one go remove your account, settings, saved spots, points and streak. Your old reports go still dey inside the area numbers but nobody go fit connect dem to you. You no fit undo am.",
+    "deleteStart": "Delete everything",
+    "deleteConfirm": "Yes, I understand say I no fit undo am",
+    "deleteButton": "Delete my account now",
+    "deleting": "I dey delete…",
+    "deleted": "Done. We don delete your account and data.",
+    "deletedHome": "Go back to start",
+    "error": "Something happen. Try again.",
+    "noAccount": "No account dey this phone yet, so nothing dey to show or delete.",
+    "admin": "This one na administrator account. Another administrator go remove am.",
+    "privacy": "Read the Privacy Policy"
+  }
+}

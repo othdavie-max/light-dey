@@ -75,7 +75,8 @@ export function useSpotLive(spotId: string | null, days = 7) {
   useEffect(() => {
     if (!spotId) return;
     const sb = supabase();
-    let channel: ReturnType<typeof sb.channel> | null = null;
+    let stopLive: (() => void) | null = null;
+    let liveTimer: ReturnType<typeof setTimeout> | null = null;
     let cancelled = false;
 
     (async () => {
@@ -118,20 +119,31 @@ export function useSpotLive(spotId: string | null, days = 7) {
       setData(fresh);
       writeCache(fresh);
 
-      channel = sb.channel(`spot-${spotId}`)
-        .on("postgres_changes", { event: "*", schema: "public", table: "spot_status", filter: `spot_id=eq.${spotId}` }, (p) => {
-          const n = p.new as { status: SpotState; since: string | null; last_report_at: string | null };
-          setData((d) => {
-            if (!d || d.spotId !== spotId) return d;
-            const next = { ...d, row: { status: n.status, since: n.since ? new Date(n.since) : null, lastReportAt: n.last_report_at ? new Date(n.last_report_at) : null } };
-            writeCache(next);
-            return next;
-          });
-        })
-        .subscribe();
+      // Live updates (when anyone's report changes this spot). They need the full Supabase library (~60 KB), so it is
+      // loaded a moment AFTER the screen is already showing, never as part of the first load.
+      liveTimer = setTimeout(async () => {
+        if (cancelled) return;
+        try {
+          const { fullClient } = await import("./supabase/full");
+          if (cancelled) return;
+          const live = fullClient();
+          const channel = live.channel(`spot-${spotId}`)
+            .on("postgres_changes", { event: "*", schema: "public", table: "spot_status", filter: `spot_id=eq.${spotId}` }, (p) => {
+              const n = p.new as { status: SpotState; since: string | null; last_report_at: string | null };
+              setData((d) => {
+                if (!d || d.spotId !== spotId) return d;
+                const next = { ...d, row: { status: n.status, since: n.since ? new Date(n.since) : null, lastReportAt: n.last_report_at ? new Date(n.last_report_at) : null } };
+                writeCache(next);
+                return next;
+              });
+            })
+            .subscribe();
+          stopLive = () => { void live.removeChannel(channel); };
+        } catch { /* no network: the screen simply stays as it is until the next load */ }
+      }, 1500);
     })();
 
-    return () => { cancelled = true; if (channel) sb.removeChannel(channel); };
+    return () => { cancelled = true; if (liveTimer) clearTimeout(liveTimer); stopLive?.(); };
   }, [spotId, days, nonce]);
 
   const current = data && data.spotId === spotId ? data : null;

@@ -1,6 +1,6 @@
 "use client";
-import en from "@/i18n/en.json";
-import pcm from "@/i18n/pcm.json";
+import en from "@/i18n/en/common.json";
+import pcm from "@/i18n/pcm/common.json";
 import { useLang } from "@/lib/prefs";
 
 const dict = { en, pcm } as const;

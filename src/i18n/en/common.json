@@ -1,0 +1,87 @@
+{
+  "app": {
+    "name": "Light Dey?",
+    "tagline": "Is there light? Tell your neighbours."
+  },
+  "status": {
+    "on": "There is light",
+    "off": "No light",
+    "weak": "Light, but weak",
+    "mixed": "Mixed reports",
+    "unknown": "No reports yet"
+  },
+  "since": {
+    "on": "Light has been on for {duration}",
+    "off": "No light since {time}",
+    "weak": "Weak light for {duration}",
+    "mixed": "Neighbours are reporting different things",
+    "unknown": "Be the first to report",
+    "stale": "Last confirmed {ago} ago",
+    "loading": "Checking the light…"
+  },
+  "buttons": {
+    "on": "Light is on",
+    "off": "No light",
+    "weak": "Light is on but weak"
+  },
+  "thanks": {
+    "on": "Thank you! Your neighbours will be happy.",
+    "off": "NEPA has done it again. Thanks for letting us know.",
+    "weak": "Weak light? Thanks for reporting.",
+    "confirm": "Thanks for confirming!"
+  },
+  "errors": {
+    "cooldown": "Thanks! You can report here again in {mins} min.",
+    "limit": "Too many reports from this phone. Please try again later.",
+    "offline": "No network right now. Please try again.",
+    "bot": "We could not confirm you are a person. Refresh the page and try again.",
+    "generic": "Something went wrong. Please try again."
+  },
+  "offline": {
+    "banner": "No network. You can still report: we will send it when you are back online.",
+    "queued": "Saved on your phone. We will send it when the network comes back.",
+    "sent": "Back online! Your saved report was sent.",
+    "waiting": "{n} report waiting for network",
+    "waitingMany": "{n} reports waiting for network",
+    "showing": "Showing what we last knew",
+    "page": {
+      "title": "No network",
+      "body": "Light Dey? could not reach the internet, and this page was not saved on your phone yet. Reports you make will be sent when the network is back.",
+      "retry": "Try again"
+    }
+  },
+  "install": {
+    "title": "Put Light Dey? on your home screen",
+    "body": "It opens faster, and you can report even when your network is bad.",
+    "button": "Install",
+    "ios": "On iPhone: tap the Share button, then Add to Home Screen.",
+    "dismiss": "Not now"
+  },
+  "stats": {
+    "today": "Light today",
+    "streak": "Day streak",
+    "points": "Points"
+  },
+  "nav": {
+    "home": "Home",
+    "explore": "Explore",
+    "board": "Board",
+    "profile": "Profile"
+  },
+  "lang": "Pidgin",
+  "spots": {
+    "title": "Your spots",
+    "add": "Add another spot",
+    "remove": "Remove",
+    "full": "You can save up to 3 spots. Remove one to add another.",
+    "empty": "No saved spots yet.",
+    "close": "Close"
+  },
+  "legal": {
+    "about": "How it works",
+    "privacy": "Privacy",
+    "terms": "Terms",
+    "myData": "My data"
+  },
+  "moreDetails": "More details"
+}

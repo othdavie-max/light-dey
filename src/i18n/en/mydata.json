@@ -1,0 +1,22 @@
+{
+  "myData": {
+    "title": "My data",
+    "intro": "Light Dey? has no name, phone number or email for you. Here you can see everything we hold, and delete it.",
+    "downloadTitle": "Download my data",
+    "downloadBody": "A file with your settings, saved spots, points and every report you made.",
+    "downloadButton": "Download",
+    "downloading": "Preparing…",
+    "deleteTitle": "Delete my account and data",
+    "deleteBody": "This removes your account, settings, saved spots, points and streak. Your past reports stay in the area statistics but are no longer connected to you. This cannot be undone.",
+    "deleteStart": "Delete everything",
+    "deleteConfirm": "Yes, I understand this cannot be undone",
+    "deleteButton": "Delete my account now",
+    "deleting": "Deleting…",
+    "deleted": "Done. Your account and data have been deleted.",
+    "deletedHome": "Back to the start",
+    "error": "Something went wrong. Please try again.",
+    "noAccount": "There is no account on this phone yet, so there is nothing to show or delete.",
+    "admin": "This is an administrator account. Another administrator has to remove it.",
+    "privacy": "Read the Privacy Policy"
+  }
+}

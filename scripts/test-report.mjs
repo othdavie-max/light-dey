@@ -2,8 +2,9 @@
 // test users (all deleted at the end). Needs a dev server running with Cloudflare's always-pass Turnstile
 // test keys, see scripts/test-report.ps1. Run with: node --env-file=.env.local scripts/test-report.mjs
 import { createClient } from "@supabase/supabase-js";
+import { makeTestUser } from "./lib/testUser.mjs";
 
-const BASE = process.env.BASE_URL ?? "http://localhost:3100";
+const BASE = process.env.BASE_URL ?? "http://localhost:3000";
 const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const admin = createClient(url, process.env.SUPABASE_SERVICE_ROLE_KEY, { auth: { persistSession: false } });
 const anon = () => createClient(url, process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY, { auth: { persistSession: false } });
@@ -21,15 +22,8 @@ const post = (token, body, headers = {}) =>
   }).then(async (r) => ({ status: r.status, json: await r.json() }));
 
 const created = { users: [], spot: null };
-async function makeUser(tag) {
-  const email = `ld-test-${tag}-${Date.now()}@example.com`, password = `Tmp-${crypto.randomUUID()}`;
-  const { data, error } = await admin.auth.admin.createUser({ email, password, email_confirm: true });
-  if (error) throw error;
-  created.users.push(data.user.id);
-  const { data: s, error: e2 } = await anon().auth.signInWithPassword({ email, password });
-  if (e2) throw e2;
-  return { id: data.user.id, token: s.session.access_token };
-}
+// Throwaway signed-in user (no password, so this still works when CAPTCHA protection is on in Supabase)
+const makeUser = (tag) => makeTestUser(tag, created);
 
 try {
   const { data: area } = await admin.from("areas").select("id").eq("slug", "wuye").single();

@@ -1,8 +1,10 @@
 "use client";
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
-import en from "@/i18n/en.json";
-import pcm from "@/i18n/pcm.json";
+import enCommon from "@/i18n/en/common.json";
+import enSpot from "@/i18n/en/spot.json";
+import pcmCommon from "@/i18n/pcm/common.json";
+import pcmSpot from "@/i18n/pcm/spot.json";
 import Bulb, { type Status } from "./Bulb";
 import Timeline from "./Timeline";
 import WeekChart from "./WeekChart";
@@ -18,7 +20,7 @@ import { dataQuality } from "@/lib/quality";
 import { formatAgo, formatDuration, formatHours, formatLagosTime } from "@/lib/format";
 import type { ReportStatus } from "@/lib/status/types";
 
-const dict = { en, pcm } as const;
+const dict = { en: { ...enCommon, ...enSpot }, pcm: { ...pcmCommon, ...pcmSpot } } as const;
 const BANDS: Band[] = ["A", "B", "C", "D", "E"];
 
 const fmt = (s: string, v: Record<string, string>) => s.replace(/\{(\w+)\}/g, (_, k) => v[k] ?? "");
