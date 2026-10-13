@@ -34,6 +34,8 @@ export function checkReportCooldown(
 
 export interface ReportAttempt {
   now: Date;
+  /** When the report was actually made (earlier than `now` for reports saved while offline). Used for the cooldown. */
+  eventAt?: Date;
   lastReportAtForSpot: Date | null;       // this user/device, this spot
   userHits: Date[];
   deviceHits: Date[];
@@ -43,7 +45,7 @@ export interface ReportAttempt {
 /** Applies the cooldown and the per-user, per-device and per-IP rules; the strictest answer wins. */
 export function evaluateReportAttempt(a: ReportAttempt): RateResult & { reason?: "cooldown" | "user" | "device" | "ip" } {
   const checks: [("cooldown" | "user" | "device" | "ip"), RateResult][] = [
-    ["cooldown", checkReportCooldown(a.lastReportAtForSpot, a.now)],
+    ["cooldown", checkReportCooldown(a.lastReportAtForSpot, a.eventAt ?? a.now)],
     ["user", slidingWindow(a.userHits, a.now, appConfig.rateLimits.perUser)],
     ["device", slidingWindow(a.deviceHits, a.now, appConfig.rateLimits.perDevice)],
     ["ip", slidingWindow(a.ipHits, a.now, appConfig.rateLimits.perIp)],

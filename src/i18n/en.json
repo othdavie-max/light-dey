@@ -24,6 +24,26 @@
     "bot": "We could not confirm you are a person. Refresh the page and try again.",
     "generic": "Something went wrong. Please try again."
   },
+  "offline": {
+    "banner": "No network. You can still report: we will send it when you are back online.",
+    "queued": "Saved on your phone. We will send it when the network comes back.",
+    "sent": "Back online! Your saved report was sent.",
+    "waiting": "{n} report waiting for network",
+    "waitingMany": "{n} reports waiting for network",
+    "showing": "Showing what we last knew",
+    "page": {
+      "title": "No network",
+      "body": "Light Dey? could not reach the internet, and this page was not saved on your phone yet. Reports you make will be sent when the network is back.",
+      "retry": "Try again"
+    }
+  },
+  "install": {
+    "title": "Put Light Dey? on your home screen",
+    "body": "It opens faster, and you can report even when your network is bad.",
+    "button": "Install",
+    "ios": "On iPhone: tap the Share button, then Add to Home Screen.",
+    "dismiss": "Not now"
+  },
   "stats": { "today": "Light today", "streak": "Day streak", "points": "Points" },
   "nav": { "home": "Home", "explore": "Explore", "board": "Board", "profile": "Profile" },
   "lang": "Pidgin",

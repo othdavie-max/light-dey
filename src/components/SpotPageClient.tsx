@@ -6,6 +6,7 @@ import pcm from "@/i18n/pcm.json";
 import Bulb, { type Status } from "./Bulb";
 import Timeline from "./Timeline";
 import WeekChart from "./WeekChart";
+import ConnectionStatus from "./ConnectionStatus";
 import { supabase, ensureSession } from "@/lib/supabase/browser";
 import { useLang } from "@/lib/prefs";
 import { useSpotLive } from "@/lib/useSpotLive";
@@ -38,7 +39,7 @@ export default function SpotPageClient({ id }: { id: string }) {
   const t = dict[lang];
   const p = t.spotPage;
   const { loaded, spot, row, sessions, setRow } = useSpotLive(id);
-  const { report, busy, message, turnstileBox } = useReport({ spot, row, setRow, t });
+  const { report, busy, message, turnstileBox, pending } = useReport({ spot, row, setRow, t });
 
   const [now, setNow] = useState(0);
   const [thresholds, setThresholds] = useState<Partial<Record<Band, number>>>({});
@@ -148,6 +149,11 @@ export default function SpotPageClient({ id }: { id: string }) {
           <p className="truncate text-sm text-muted">{subline}</p>
         </div>
       </header>
+
+      <ConnectionStatus
+        offlineText={t.offline.banner}
+        waitingText={pending > 0 ? fmt(pending === 1 ? t.offline.waiting : t.offline.waitingMany, { n: String(pending) }) : null}
+      />
 
       {/* Live status */}
       <section className="panel mt-4 flex items-center gap-3 rounded-[28px] p-4">

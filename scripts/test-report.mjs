@@ -84,11 +84,64 @@ try {
   // Profile points
   const { data: prof } = await admin.from("profiles").select("points,streak_current").eq("id", A.id).single();
   check("points and streak saved to the profile", prof.points === 15 && prof.streak_current === 1, JSON.stringify(prof));
+
+  // ---------- Reports made while offline: saved on the phone, sent later ----------
+  const { data: spot2 } = await admin.from("spots").insert({ area_id: area.id, name: `TEST OFFLINE ${Date.now()}`, status_flag: "approved", is_demo: true }).select("id").single();
+  created.spot2 = spot2.id;
+  const C = await makeUser("c"), D = await makeUser("d");
+  const minsAgo = (m) => Date.now() - m * 60_000;
+  const pre = { spotId: spot2.id, turnstileToken: TOKEN };
+
+  check("offline: rejects a malformed client id", (await post(C.token, { ...pre, status: "on", clientId: "nope" }, dev)).status === 400);
+  check("offline: rejects a time too far back (7 hours)", (await post(C.token, { ...pre, status: "on", reportedAt: minsAgo(7 * 60) }, dev)).json.error === "too_old");
+  check("offline: rejects a time in the future", (await post(C.token, { ...pre, status: "on", reportedAt: Date.now() + 30 * 60_000 }, dev)).json.error === "bad_time");
+  check("offline: rejects a time that is not a number", (await post(C.token, { ...pre, status: "on", reportedAt: "yesterday" }, dev)).json.error === "bad_time");
+
+  // A report made 20 minutes ago, arriving now
+  const cid = crypto.randomUUID();
+  const sent = await post(C.token, { ...pre, status: "on", clientId: cid, reportedAt: minsAgo(20) }, dev);
+  check("offline: a report made 20 minutes ago is accepted", sent.status === 200 && sent.json.ok && sent.json.delayed === true, JSON.stringify(sent));
+  const { data: lateRows } = await admin.from("reports").select("created_at,client_id").eq("spot_id", spot2.id);
+  const ageMin = (Date.now() - new Date(lateRows[0].created_at).getTime()) / 60_000;
+  check("offline: it is recorded as of when it was MADE (about 20 min ago), not when it arrived", lateRows.length === 1 && ageMin > 19 && ageMin < 21, `age ${ageMin}`);
+  const { data: sess } = await admin.from("supply_sessions").select("started_at,status").eq("spot_id", spot2.id);
+  const sessAge = (Date.now() - new Date(sess[0].started_at).getTime()) / 60_000;
+  check("offline: the supply session starts at that earlier time", sess.length === 1 && sessAge > 19 && sessAge < 21, `session age ${sessAge}`);
+  check("offline: it reports the right status 'since' time", Math.abs((Date.now() - new Date(sent.json.since).getTime()) / 60_000 - 20) < 1);
+
+  // The same report sent again (the reply was lost): counted once
+  const again = await post(C.token, { ...pre, status: "on", clientId: cid, reportedAt: minsAgo(20) }, dev);
+  const { data: afterDup } = await admin.from("reports").select("id").eq("spot_id", spot2.id);
+  check("offline: sending the same report again is recognised, not counted twice", again.status === 200 && again.json.duplicate === true && afterDup.length === 1, JSON.stringify(again));
+  const { data: profC } = await admin.from("profiles").select("points").eq("id", C.id).single();
+  check("offline: and it does not earn points twice", profC.points === 15, `points ${profC.points}`);
+
+  // Cannot slip a report in before one's own earlier one
+  const back = await post(C.token, { ...pre, status: "off", clientId: crypto.randomUUID(), reportedAt: minsAgo(60) }, dev);
+  check("offline: cooldown counts from when it was made (cannot back-date past your own report)", back.status === 429 && back.json.error === "cooldown", JSON.stringify(back));
+
+  // Another person's saved report made 5 minutes ago: NEWER than the last one (20 min ago), so it changes the status
+  // at that moment (a quiet spot can be changed by one fresh trusted report)
+  const newer = await post(D.token, { ...pre, status: "off", clientId: crypto.randomUUID(), reportedAt: minsAgo(5) }, { "x-device-id": crypto.randomUUID() });
+  check("offline: a newer saved report is accepted and changes the status", newer.status === 200 && newer.json.status === "off", JSON.stringify(newer));
+  const { data: sessN } = await admin.from("supply_sessions").select("status,started_at,ended_at").eq("spot_id", spot2.id).order("started_at");
+  const endedAgo = sessN[0].ended_at ? (Date.now() - new Date(sessN[0].ended_at).getTime()) / 60_000 : null;
+  check("offline: the old session ends at the time the change HAPPENED (about 5 min ago)", sessN.length === 2 && endedAgo > 4 && endedAgo < 6 && sessN[1].status === "off" && sessN[1].ended_at === null, JSON.stringify(sessN));
+
+  // A third person's saved report made 25 minutes ago: OLDER than the newest report, so it is only a vote and cannot rewrite history
+  const E = await makeUser("e");
+  const late = await post(E.token, { ...pre, status: "on", clientId: crypto.randomUUID(), reportedAt: minsAgo(25) }, { "x-device-id": crypto.randomUUID() });
+  check("offline: a report older than the newest one is accepted", late.status === 200 && late.json.ok, JSON.stringify(late));
+  const { data: sess3 } = await admin.from("supply_sessions").select("status,ended_at").eq("spot_id", spot2.id);
+  check("offline: but it cannot create or end supply sessions in the past", sess3.length === 2, JSON.stringify(sess3));
+  const { data: lateRow } = await admin.from("reports").select("created_at").eq("spot_id", spot2.id).eq("user_id", E.id);
+  check("offline: the late vote is stored at its own time (about 25 min ago)", lateRow.length === 1 && Math.abs((Date.now() - new Date(lateRow[0].created_at).getTime()) / 60_000 - 25) < 1);
 } catch (e) {
   console.error("TEST CRASHED:", e);
   failures++;
 } finally {
   if (created.spot) await admin.from("spots").delete().eq("id", created.spot);
+  if (created.spot2) await admin.from("spots").delete().eq("id", created.spot2);
   for (const id of created.users) await admin.auth.admin.deleteUser(id);
   console.log(failures ? `\n${failures} check(s) FAILED` : "\nAll checks passed. Test data cleaned up.");
   process.exit(failures ? 1 : 0);

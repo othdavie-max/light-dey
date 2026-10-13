@@ -54,6 +54,15 @@ export const appConfig = {
     perIp:     { windowSeconds: 3600, max: 60 },
   },
 
+  // Reports made while offline are saved on the phone and sent when the network returns.
+  offline: {
+    maxAgeHours: 6,                  // older than this, a saved report is dropped (it no longer describes the present)
+    maxQueue: 20,                    // most reports kept waiting
+    maxAttempts: 4,                  // tries before a stuck report is dropped
+    retryEverySeconds: 15,           // how often to try again while reports are waiting
+    futureToleranceMinutes: 5,       // a phone clock this far ahead is treated as "now"
+  },
+
   // Data quality: fewer reporters than this in a week = "limited data"
   minReportersForConfidentStats: 3,
   dataQuality: {

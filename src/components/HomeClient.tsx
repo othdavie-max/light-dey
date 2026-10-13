@@ -5,6 +5,8 @@ import { useRouter } from "next/navigation";
 import en from "@/i18n/en.json";
 import pcm from "@/i18n/pcm.json";
 import Bulb, { type Status } from "./Bulb";
+import ConnectionStatus from "./ConnectionStatus";
+import InstallPrompt from "./InstallPrompt";
 import { supabase, ensureSession } from "@/lib/supabase/browser";
 import { useLang, useTheme, getActiveSpot, setActiveSpot } from "@/lib/prefs";
 import { useSpotLive } from "@/lib/useSpotLive";
@@ -17,6 +19,20 @@ import { appConfig } from "../../config/app.config";
 const dict = { en, pcm } as const;
 
 interface SavedSpot { id: string; label: string | null; name: string }
+
+// Small copies kept on the phone so the home screen can open with no network
+function readSaved(): SavedSpot[] {
+  try { const v = JSON.parse(localStorage.getItem("ld_saved") ?? "[]"); return Array.isArray(v) ? v : []; } catch { return []; }
+}
+function writeSaved(list: SavedSpot[]) {
+  try { localStorage.setItem("ld_saved", JSON.stringify(list)); } catch { /* storage blocked */ }
+}
+function readStats(): { points: number; streak: number } | null {
+  try { const v = JSON.parse(localStorage.getItem("ld_stats") ?? "null"); return v && typeof v.points === "number" ? v : null; } catch { return null; }
+}
+function writeStats(points: number, streak: number) {
+  try { localStorage.setItem("ld_stats", JSON.stringify({ points, streak })); } catch { /* storage blocked */ }
+}
 
 function fmt(s: string, vars: Record<string, string>) {
   return s.replace(/\{(\w+)\}/g, (_, k) => vars[k] ?? "");
@@ -62,9 +78,9 @@ export default function HomeClient() {
   const t = dict[lang];
 
   const { loaded, spot, row, sessions, setRow } = useSpotLive(activeId);
-  const { report, busy, message, turnstileBox } = useReport({
+  const { report, busy, message, turnstileBox, pending } = useReport({
     spot, row, setRow, t,
-    onAwarded: (r) => { setPoints(r.points); setStreak(r.streak); },
+    onAwarded: (r) => { setPoints(r.points); setStreak(r.streak); writeStats(r.points, r.streak); },
   });
 
   // A ticking clock (updated from timers, never during render)
@@ -78,26 +94,42 @@ export default function HomeClient() {
   useEffect(() => { document.documentElement.dataset.theme = theme; }, [theme]);
 
   // Who is this, which spots have they saved, and which one are we showing?
+  // The answer is also kept on the phone, so the app opens straight to the right spot with no network.
   useEffect(() => {
     let cancelled = false;
     (async () => {
       const sb = supabase();
       const token = await ensureSession();
-      const { data: u } = await sb.auth.getUser();
+      const { data: s } = await sb.auth.getSession();           // read from the phone, works offline
+      const uid = s.session?.user.id;
       if (cancelled) return;
-      let list: SavedSpot[] = [];
-      if (token && u.user) {
-        const [{ data: rows }, prof] = await Promise.all([
-          sb.from("saved_spots").select("spot_id,label,position,spots(name)").eq("user_id", u.user.id).order("position"),
-          sb.from("profiles").select("points,streak_current").eq("id", u.user.id).maybeSingle(),
+      let list: SavedSpot[] | null = null;                      // null = we could not find out (no network)
+      if (token && uid) {
+        const [rows, prof] = await Promise.all([
+          sb.from("saved_spots").select("spot_id,label,position,spots(name)").eq("user_id", uid).order("position"),
+          sb.from("profiles").select("points,streak_current").eq("id", uid).maybeSingle(),
         ]);
-        list = (rows ?? []).map((r) => ({ id: r.spot_id, label: r.label, name: (r.spots as unknown as { name: string } | null)?.name ?? "" }));
-        if (prof.data) { setPoints(prof.data.points); setStreak(prof.data.streak_current); }
+        if (!rows.error) {
+          list = (rows.data ?? []).map((r) => ({ id: r.spot_id, label: r.label, name: (r.spots as unknown as { name: string } | null)?.name ?? "" }));
+          writeSaved(list);
+        }
+        if (prof.data) {
+          setPoints(prof.data.points); setStreak(prof.data.streak_current);
+          writeStats(prof.data.points, prof.data.streak_current);
+        }
       }
       if (cancelled) return;
-      setSaved(list);
+      const unknown = list === null;
+      if (unknown) {
+        list = readSaved();
+        const st = readStats();
+        if (st) { setPoints(st.points); setStreak(st.streak); }
+      }
+      const known = list ?? [];
+      setSaved(known);
       const remembered = getActiveSpot();
-      const pick = list.find((s) => s.id === remembered)?.id ?? list[0]?.id ?? null;
+      // Only send someone to onboarding when we KNOW they have no spot, never just because the network is down
+      const pick = known.find((x) => x.id === remembered)?.id ?? known[0]?.id ?? (unknown ? remembered : null);
       if (!pick) { router.replace("/onboarding"); return; }
       setActiveSpot(pick);
       setActiveId(pick);
@@ -177,6 +209,11 @@ export default function HomeClient() {
         </div>
       </header>
 
+      <ConnectionStatus
+        offlineText={t.offline.banner}
+        waitingText={pending > 0 ? fmt(pending === 1 ? t.offline.waiting : t.offline.waitingMany, { n: String(pending) }) : null}
+      />
+
       <section className="mt-3 text-center">
         <Bulb status={bulb} />
         <p className="mt-5 min-h-[22px] text-[15px] text-muted">{subline}</p>
@@ -223,6 +260,8 @@ export default function HomeClient() {
           <span aria-hidden="true" className="text-muted">→</span>
         </Link>
       )}
+
+      <InstallPrompt ready={points > 0} text={t.install} />
 
       {/* Invisible bot check (Cloudflare Turnstile). Takes no space unless Cloudflare needs to ask something. */}
       <div ref={turnstileBox} className="mt-4 flex justify-center" />

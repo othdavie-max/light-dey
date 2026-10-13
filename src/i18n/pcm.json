@@ -24,6 +24,26 @@
     "bot": "We no sure say na person. Refresh the page and try again.",
     "generic": "Something happen. Try again."
   },
+  "offline": {
+    "banner": "No network. You fit still report: we go send am when network come back.",
+    "queued": "We don save am for your phone. We go send am when network come back.",
+    "sent": "Network don come! We don send your saved report.",
+    "waiting": "{n} report dey wait for network",
+    "waitingMany": "{n} reports dey wait for network",
+    "showing": "Na wetin we last know",
+    "page": {
+      "title": "No network",
+      "body": "Light Dey? no fit reach internet, and this page never save for your phone. Any report wey you make go send when network come back.",
+      "retry": "Try again"
+    }
+  },
+  "install": {
+    "title": "Put Light Dey? for your home screen",
+    "body": "E go open quick, and you fit report even when network bad.",
+    "button": "Install",
+    "ios": "If na iPhone: tap the Share button, then Add to Home Screen.",
+    "dismiss": "Later"
+  },
   "stats": { "today": "Light today", "streak": "Days for row", "points": "Points" },
   "nav": { "home": "Home", "explore": "Find area", "board": "Board", "profile": "Me" },
   "lang": "English",

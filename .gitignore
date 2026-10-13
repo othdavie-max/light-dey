@@ -47,3 +47,5 @@ install.log
 !.env.example
 
 dev3100.log
+
+start3100.log
