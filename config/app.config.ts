@@ -56,7 +56,17 @@ export const appConfig = {
     report: 10,
     confirmation: 2,                 // same status as already showing
     firstToReportChange: 5,          // bonus for being the one whose report changed the status
+    referralBonus: 20,               // given to BOTH people when an invited friend makes their first report
+    referralMaxRewarded: 20,         // most friends one person can earn the bonus for (stops invite farming)
   },
+
+  // Push alerts ("Light don come")
+  push: {
+    cooldownMinutes: 30,             // the same person is never alerted about the same spot more often than this
+    maxFollowsPerPerson: 3,
+  },
+
+  siteUrl: "https://light-dey-umber.vercel.app",
 
   // Rate limits. Each rule: at most `max` reports per `windowSeconds`.
   rateLimits: {

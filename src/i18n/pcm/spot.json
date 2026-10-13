@@ -65,5 +65,17 @@
     "pending": "New, we dey check am",
     "empty": "No spot dey here yet.",
     "back": "Go back"
+  },
+  "follow": {
+    "title": "Light alert",
+    "body": "Make phone tell you when light change for here.",
+    "enable": "Tell me when light come",
+    "on": "Alert don on",
+    "goToo": "Tell me when light go too",
+    "off": "Off the alert",
+    "denied": "Notification dey blocked for this phone. Allow am for your browser settings, then try again.",
+    "unsupported": "This phone or browser no fit show alert. For iPhone, first add Light Dey? to Home Screen.",
+    "full": "You fit follow 3 spots. Off one first.",
+    "error": "We no fit on the alert. Try again."
   }
 }

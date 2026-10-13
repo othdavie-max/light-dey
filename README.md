@@ -46,6 +46,9 @@ Your computer holds a file called `.env.local` in this folder. It contains the k
 | `SUPABASE_SERVICE_ROLE_KEY` | **A master key to your whole database** | **YES, never share it** |
 | `TURNSTILE_SECRET_KEY` | Lets your server check the bot test | **YES** |
 | `IP_HASH_SALT` | A long private phrase used to scramble network addresses before storing them | **YES** |
+| `NEXT_PUBLIC_VAPID_PUBLIC_KEY` | The public half of the key pair that lets your server send phone alerts | No |
+| `VAPID_PRIVATE_KEY` | The private half: **anyone holding it can send alerts as you** | **YES** |
+| `VAPID_SUBJECT` | Your site address, sent to the phone makers' alert servers so they know who is sending | No |
 
 **The golden rule:** never paste a secret key into a chat, an email, a screenshot, a public website, or the code. If one ever leaks, replace it straight away (Supabase: Project Settings → API Keys; Cloudflare: Turnstile → your widget → rotate the secret) and update `.env.local` and Vercel.
 
@@ -141,6 +144,14 @@ Demo data lives in the live database while it exists, so people can see it. **Al
 ### I. Edit the database structure (rarely!)
 The database structure is defined in `supabase\migrations\` (numbered files `0001` to `0009`). A new change is a new numbered file. To apply one: open Supabase → **SQL Editor** → **New query**, paste the file's contents, press **Run**. Never edit tables by hand in Supabase's table viewer: the security rules and the code depend on the structure.
 
+### J. Phone alerts, invites, share cards, map, sign-in (how they work)
+
+- **Alerts ("Light don come").** On a spot page, a person taps "Alert me when light comes". Their phone asks permission, and from then on it gets a notification when that spot goes from no light to light (and optionally when light goes). Rules, set in `config/app.config.ts` (`push`): at most 3 followed spots, never more than one alert per spot per 30 minutes, and no alerts 23:00 to 06:00 Lagos time (each person can change that later). The reporter is never alerted about their own report. On iPhones, alerts only work after the app is added to the Home Screen. Alerts need the three `VAPID` keys, in `.env.local` **and** in Vercel.
+- **Invite links.** Profile has "Share my invite link". When a friend joins through it and makes their first report, both get 20 points (`points.referralBonus`). One person can earn this for at most 20 friends (`points.referralMaxRewarded`), and a friend can only be invited once.
+- **Share cards.** The Share button on the home and spot pages sends a picture ("Wuye: There is light, since 14:20") plus a link. The same picture is the preview when the link is pasted into WhatsApp, X or Telegram. The picture is made live by `/api/card`.
+- **Live map.** `/map` (a button on Find area). Each dot is an area, coloured by its current status. Map tiles come from OpenStreetMap, which is free for light use; if the app gets very busy, move to a paid tile provider.
+- **Keep my points (sign-in).** Profile lets a person add an email or Google to the account they already have, so points follow them to a new phone, or sign in to an account made on another phone. **Google needs one-time setup, see launch checklist item 10.** The email link needs a working email sender (item 8).
+
 ---
 
 ## 4. Checking that everything is healthy
@@ -149,7 +160,7 @@ The database structure is defined in `supabase\migrations\` (numbered files `000
 |---|---|---|
 | `npm test` | About 190 quick automatic checks of the logic (status calculation, hours, offline queue, rate limits, the service worker…) | Before every publish |
 | `npm run lint` | Checks the code for mistakes and untidiness | Before every publish |
-| `npm run test:e2e` | Builds a private test copy of the app and runs about 120 real checks against your database using throwaway users (all cleaned up afterwards), including security checks. Takes a few minutes. Needs nothing else running on port 3000. | Before bigger changes and before launch |
+| `npm run test:e2e` | Builds a private test copy of the app and runs about 150 real checks against your database using throwaway users (all cleaned up afterwards), including security checks. Takes a few minutes. Needs nothing else running on port 3000. | Before bigger changes and before launch |
 | `npm run launch-check` | A pre-launch checklist that tests real things: placeholders left in the legal text, demo data, whether an admin exists, **whether bot protection is really on** | Before launch, and after any setting change |
 
 ---
@@ -167,6 +178,13 @@ Run `npm run launch-check` and clear every **BLOCKER**. In plain words:
 7. **Supabase address settings:** Authentication → URL Configuration → set **Site URL** to `https://light-dey-umber.vercel.app` (or your own domain) and add `https://light-dey-umber.vercel.app/**` and `http://localhost:3000/**` to **Redirect URLs**. Without this, the admin sign-in link will not land on your site.
 8. **Upgrade Supabase** to Pro (about $25/month) and set up a proper email sender (for example Resend) so sign-in emails reach anyone.
 9. **Test on a real phone,** including airplane mode (report offline, then switch it off and watch it send).
+10. **Turn on Google sign-in (optional but recommended).**
+    1. In Google Cloud Console (console.cloud.google.com) create a project, then APIs & Services > OAuth consent screen (External; app name "Light Dey?"; your email) and publish it.
+    2. Credentials > Create credentials > OAuth client ID > Web application. Under "Authorized redirect URIs" add `https://fprskwddgiwtpyinowym.supabase.co/auth/v1/callback`.
+    3. Copy the **Client ID** and **Client secret** (keep the secret private).
+    4. In Supabase: Authentication > Sign In / Providers > Google > turn on, paste both, save. Also turn on **Allow manual linking** (Authentication > Sign In / Providers, under "User Signups"), otherwise adding Google to an existing account will fail.
+11. **Add the alert keys to Vercel:** Project > Settings > Environment Variables: add `NEXT_PUBLIC_VAPID_PUBLIC_KEY`, `VAPID_PRIVATE_KEY` and `VAPID_SUBJECT` with the same values as in `.env.local`, then redeploy. Until you do, the live site shows the alert button but alerts cannot be sent.
+12. **Apply the two newest database changes** (`0009_leaderboards.sql`, `0010_growth.sql`) if you have not: SQL Editor > New query > paste > Run. (Both are already applied to your live database.)
 
 ---
 
@@ -220,10 +238,13 @@ light-dey/
 
 ## 9. Known limits (honest list)
 
-- **Status pages are drawn on the phone, not on the server.** That keeps them live and fast, but WhatsApp/X link previews and search engines see little. A public, preview-friendly version of area pages is planned for Phase 2. (The Privacy, Terms and How-it-works pages are server-drawn and preview well.)
-- **Size:** the home screen downloads about 150 KB of code (the target was about 150 KB). About 136 KB of that is the unavoidable framework floor (React and Next.js).
+- **Status pages are drawn on the phone, not on the server.** That keeps them live and fast, but WhatsApp/X link previews and search engines see little. (The Privacy, Terms and How-it-works pages are server-drawn and preview well.)
+- **Size:** the home screen downloads about 150 KB of code (the target was about 150 KB). The map page loads its map library only when opened. About 136 KB of that is the unavoidable framework floor (React and Next.js).
 - **Trust scores** are neutral for everyone and are changed only by admins today. Automatic adjustment (rising when reports match neighbours) is planned.
-- **Not built yet (Phase 2 and later):** Google and email sign-in for ordinary users, push notifications ("Light don come"), shareable report-card images, referrals, the map, WhatsApp alerts, Play Store app, airtime rewards.
+- **Not built yet (Phase 3 and later):** WhatsApp alerts, Play Store app, airtime rewards, phone-number sign-in, sponsored placements.
+- **Google sign-in** works only after the one-time setup in launch checklist item 10; the email option needs a working email sender.
+- **Alerts on iPhone** need the app added to the Home Screen first (Apple's rule).
+- **Link previews** show the picture and the place name, but the status words on the page itself are still drawn on the phone.
 - **Weekly stats are calculated live** from the supply history. That is fine for now; a scheduled job to precompute them comes with the Phase 3 performance work.
 - **Supabase's built-in email** only delivers to your team until you add a sender such as Resend.
 - **Band hours are drafts** you must verify against NERC.

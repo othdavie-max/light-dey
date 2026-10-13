@@ -10,6 +10,8 @@ import ConnectionStatus from "./ConnectionStatus";
 import InstallPrompt from "./InstallPrompt";
 import LegalLinks from "./LegalLinks";
 import { hasConsent, recordConsent } from "@/lib/consent";
+import { claimInvite } from "@/lib/invite";
+import { shareWithCard } from "@/lib/share";
 import { supabase, ensureSession } from "@/lib/supabase/browser";
 import { useLang, useTheme, getActiveSpot, setActiveSpot } from "@/lib/prefs";
 import { useSpotLive } from "@/lib/useSpotLive";
@@ -75,6 +77,7 @@ export default function HomeClient() {
   const [now, setNow] = useState(0);
   const [streak, setStreak] = useState(0);
   const [points, setPoints] = useState(0);
+  const [copied, setCopied] = useState(false);
   const t = dict[lang];
 
   const { loaded, spot, row, sessions, setRow } = useSpotLive(activeId);
@@ -103,6 +106,7 @@ export default function HomeClient() {
       void recordConsent();                                      // keeps the account's record up to date; harmless to repeat
       const sb = supabase();
       const token = await ensureSession();
+      void claimInvite(token);                                  // joined through a friend's link? tell the server once
       const { data: s } = await sb.auth.getSession();           // read from the phone, works offline
       const uid = s.session?.user.id;
       if (cancelled) return;
@@ -164,6 +168,13 @@ export default function HomeClient() {
   const shown = useMemo(() => computeStatus([], row, new Date(now || 0)), [row, now]);
   const bulb: Status = shown.status === "mixed" ? "unknown" : shown.status;
   useEffect(() => { document.body.dataset.status = bulb; }, [bulb]);
+
+  async function share() {
+    if (!spot) return;
+    const text = fmt(t.share.text, { spot: shortName(spot.name), status: t.status[shown.status] });
+    const out = await shareWithCard({ path: `/spot/${spot.id}`, text, cardQuery: `spot=${spot.id}&lang=${lang}` });
+    if (out === "copied") { setCopied(true); setTimeout(() => setCopied(false), 2500); }
+  }
 
   const lightToday = useMemo(() => {
     if (!now) return null;
@@ -255,10 +266,13 @@ export default function HomeClient() {
       </section>
 
       {spot && (
-        <Link href={`/spot/${spot.id}`} className="press panel mt-6 flex min-h-14 items-center justify-between rounded-2xl px-5 text-[16px] font-medium">
-          {t.moreDetails}
-          <span aria-hidden="true" className="text-muted">→</span>
-        </Link>
+        <div className="mt-6 grid grid-cols-[1fr_auto] gap-3">
+          <Link href={`/spot/${spot.id}`} className="press panel flex min-h-14 items-center justify-between rounded-2xl px-5 text-[16px] font-medium">
+            {t.moreDetails}
+            <span aria-hidden="true" className="text-muted">→</span>
+          </Link>
+          <button onClick={share} className="press panel min-h-14 rounded-2xl px-5 text-[16px] font-medium">{copied ? t.share.copied : `↗ ${t.share.button}`}</button>
+        </div>
       )}
 
       <InstallPrompt ready={points > 0} text={t.install} />

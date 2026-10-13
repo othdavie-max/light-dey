@@ -1,39 +1,1023 @@
 {
-  "_readme": "Neighbourhoods per LGA. Add more by copying an entry. 'city' is what people call the place (used for city leaderboards). Karu/Mararaba are in Nasarawa State but are part of the Abuja metro, so they carry city 'Abuja'. Please review: neighbourhood-to-LGA placement is from general knowledge and should be checked by someone local.",
+  "_readme": "Neighbourhoods per LGA. Add more by copying an entry. 'city' is what people call the place (used for city leaderboards). Karu/Mararaba are in Nasarawa State but are part of the Abuja metro, so they carry city 'Abuja'. Please review: neighbourhood-to-LGA placement and the approximate coordinates (1-5 km) are from general knowledge and should be checked by someone local; add more by copying an entry.",
   "entries": [
     {
-      "state": "Federal Capital Territory", "lga": "AMAC", "city": "Abuja",
-      "areas": ["Wuse", "Wuse 2", "Garki", "Garki 2", "Maitama", "Asokoro", "Central Business District", "Jabi", "Utako", "Wuye", "Gwarinpa", "Lugbe", "Sabon Lugbe", "Lokogoma", "Apo", "Gudu", "Durumi", "Jahi", "Katampe", "Mabushi", "Kado", "Life Camp", "Dawaki", "Karmo", "Galadimawa", "Guzape", "Gaduwa", "Idu", "Karshi", "Nyanya", "Kabusa", "Dakibiyu"]
+      "state": "Federal Capital Territory",
+      "lga": "AMAC",
+      "city": "Abuja",
+      "areas": [
+        "Wuse",
+        "Wuse 2",
+        "Garki",
+        "Garki 2",
+        "Maitama",
+        "Asokoro",
+        "Central Business District",
+        "Jabi",
+        "Utako",
+        "Wuye",
+        "Gwarinpa",
+        "Lugbe",
+        "Sabon Lugbe",
+        "Lokogoma",
+        "Apo",
+        "Gudu",
+        "Durumi",
+        "Jahi",
+        "Katampe",
+        "Mabushi",
+        "Kado",
+        "Life Camp",
+        "Dawaki",
+        "Karmo",
+        "Galadimawa",
+        "Guzape",
+        "Gaduwa",
+        "Idu",
+        "Karshi",
+        "Nyanya",
+        "Kabusa",
+        "Dakibiyu"
+      ]
     },
-    { "state": "Federal Capital Territory", "lga": "Bwari", "city": "Abuja", "areas": ["Kubwa", "Dutse", "Mpape", "Bwari", "Ushafa", "Dei-Dei", "Gwagwa"] },
-    { "state": "Federal Capital Territory", "lga": "Gwagwalada", "city": "Abuja", "areas": ["Gwagwalada", "Zuba"] },
-    { "state": "Federal Capital Territory", "lga": "Kuje", "city": "Abuja", "areas": ["Kuje"] },
-    { "state": "Federal Capital Territory", "lga": "Abaji", "city": "Abuja", "areas": ["Abaji"] },
-    { "state": "Federal Capital Territory", "lga": "Kwali", "city": "Abuja", "areas": ["Kwali"] },
-    { "state": "Nasarawa", "lga": "Karu", "city": "Abuja", "areas": ["Karu", "New Karu", "Mararaba", "Masaka"] },
-
     {
-      "state": "Lagos", "lga": "Eti-Osa", "city": "Lagos",
-      "areas": ["Lekki Phase 1", "Lekki Phase 2", "Victoria Island", "Ikoyi", "Ikate", "Chevron", "Ajah", "Sangotedo", "Ikota", "Oniru", "Banana Island", "Osapa London", "Agungi", "Jakande"]
+      "state": "Federal Capital Territory",
+      "lga": "Bwari",
+      "city": "Abuja",
+      "areas": [
+        "Kubwa",
+        "Dutse",
+        "Mpape",
+        "Bwari",
+        "Ushafa",
+        "Dei-Dei",
+        "Gwagwa"
+      ]
     },
-    { "state": "Lagos", "lga": "Ibeju-Lekki", "city": "Lagos", "areas": ["Awoyaya", "Abijo", "Lakowe"] },
-    { "state": "Lagos", "lga": "Ikeja", "city": "Lagos", "areas": ["Ikeja GRA", "Allen Avenue", "Opebi", "Oregun", "Alausa", "Ogba", "Maryland", "Agidingbi"] },
-    { "state": "Lagos", "lga": "Surulere", "city": "Lagos", "areas": ["Surulere", "Aguda", "Itire", "Ijeshatedo"] },
-    { "state": "Lagos", "lga": "Lagos Mainland", "city": "Lagos", "areas": ["Yaba", "Ebute Metta", "Oyingbo", "Iddo"] },
-    { "state": "Lagos", "lga": "Alimosho", "city": "Lagos", "areas": ["Egbeda", "Ikotun", "Igando", "Idimu", "Ipaja", "Iyana Ipaja", "Akowonjo", "Ayobo", "Shasha"] },
-    { "state": "Lagos", "lga": "Kosofe", "city": "Lagos", "areas": ["Ketu", "Ojota", "Magodo", "Mile 12", "Ogudu", "Alapere", "Gbagada"] },
-    { "state": "Lagos", "lga": "Ikorodu", "city": "Lagos", "areas": ["Ikorodu", "Igbogbo", "Majidun", "Ijede"] },
-    { "state": "Lagos", "lga": "Amuwo-Odofin", "city": "Lagos", "areas": ["Festac Town", "Mile 2", "Satellite Town", "Amuwo Odofin"] },
-    { "state": "Lagos", "lga": "Apapa", "city": "Lagos", "areas": ["Apapa"] },
-    { "state": "Lagos", "lga": "Oshodi-Isolo", "city": "Lagos", "areas": ["Oshodi", "Isolo", "Ejigbo"] },
-    { "state": "Lagos", "lga": "Mushin", "city": "Lagos", "areas": ["Mushin", "Idi-Oro", "Papa Ajao"] },
-    { "state": "Lagos", "lga": "Agege", "city": "Lagos", "areas": ["Agege", "Dopemu"] },
-    { "state": "Lagos", "lga": "Ajeromi-Ifelodun", "city": "Lagos", "areas": ["Ajegunle"] },
-    { "state": "Lagos", "lga": "Ifako-Ijaiye", "city": "Lagos", "areas": ["Ojodu Berger", "Ifako", "Fagba"] },
-    { "state": "Lagos", "lga": "Ojo", "city": "Lagos", "areas": ["Ojo", "Alaba International", "Iba", "Okokomaiko"] },
-    { "state": "Lagos", "lga": "Badagry", "city": "Lagos", "areas": ["Badagry"] },
-    { "state": "Lagos", "lga": "Shomolu", "city": "Lagos", "areas": ["Shomolu", "Bariga", "Pedro"] },
-    { "state": "Lagos", "lga": "Lagos Island", "city": "Lagos", "areas": ["Lagos Island", "Marina", "Obalende", "Idumota"] },
-    { "state": "Lagos", "lga": "Epe", "city": "Lagos", "areas": ["Epe"] }
+    {
+      "state": "Federal Capital Territory",
+      "lga": "Gwagwalada",
+      "city": "Abuja",
+      "areas": [
+        "Gwagwalada",
+        "Zuba"
+      ]
+    },
+    {
+      "state": "Federal Capital Territory",
+      "lga": "Kuje",
+      "city": "Abuja",
+      "areas": [
+        "Kuje"
+      ]
+    },
+    {
+      "state": "Federal Capital Territory",
+      "lga": "Abaji",
+      "city": "Abuja",
+      "areas": [
+        "Abaji"
+      ]
+    },
+    {
+      "state": "Federal Capital Territory",
+      "lga": "Kwali",
+      "city": "Abuja",
+      "areas": [
+        "Kwali"
+      ]
+    },
+    {
+      "state": "Nasarawa",
+      "lga": "Karu",
+      "city": "Abuja",
+      "areas": [
+        "Karu",
+        "New Karu",
+        "Mararaba",
+        "Masaka"
+      ]
+    },
+    {
+      "state": "Lagos",
+      "lga": "Eti-Osa",
+      "city": "Lagos",
+      "areas": [
+        "Lekki Phase 1",
+        "Lekki Phase 2",
+        "Victoria Island",
+        "Ikoyi",
+        "Ikate",
+        "Chevron",
+        "Ajah",
+        "Sangotedo",
+        "Ikota",
+        "Oniru",
+        "Banana Island",
+        "Osapa London",
+        "Agungi",
+        "Jakande"
+      ]
+    },
+    {
+      "state": "Lagos",
+      "lga": "Ibeju-Lekki",
+      "city": "Lagos",
+      "areas": [
+        "Awoyaya",
+        "Abijo",
+        "Lakowe"
+      ]
+    },
+    {
+      "state": "Lagos",
+      "lga": "Ikeja",
+      "city": "Lagos",
+      "areas": [
+        "Ikeja GRA",
+        "Allen Avenue",
+        "Opebi",
+        "Oregun",
+        "Alausa",
+        "Ogba",
+        "Maryland",
+        "Agidingbi"
+      ]
+    },
+    {
+      "state": "Lagos",
+      "lga": "Surulere",
+      "city": "Lagos",
+      "areas": [
+        "Surulere",
+        "Aguda",
+        "Itire",
+        "Ijeshatedo"
+      ]
+    },
+    {
+      "state": "Lagos",
+      "lga": "Lagos Mainland",
+      "city": "Lagos",
+      "areas": [
+        "Yaba",
+        "Ebute Metta",
+        "Oyingbo",
+        "Iddo"
+      ]
+    },
+    {
+      "state": "Lagos",
+      "lga": "Alimosho",
+      "city": "Lagos",
+      "areas": [
+        "Egbeda",
+        "Ikotun",
+        "Igando",
+        "Idimu",
+        "Ipaja",
+        "Iyana Ipaja",
+        "Akowonjo",
+        "Ayobo",
+        "Shasha"
+      ]
+    },
+    {
+      "state": "Lagos",
+      "lga": "Kosofe",
+      "city": "Lagos",
+      "areas": [
+        "Ketu",
+        "Ojota",
+        "Magodo",
+        "Mile 12",
+        "Ogudu",
+        "Alapere",
+        "Gbagada"
+      ]
+    },
+    {
+      "state": "Lagos",
+      "lga": "Ikorodu",
+      "city": "Lagos",
+      "areas": [
+        "Ikorodu",
+        "Igbogbo",
+        "Majidun",
+        "Ijede"
+      ]
+    },
+    {
+      "state": "Lagos",
+      "lga": "Amuwo-Odofin",
+      "city": "Lagos",
+      "areas": [
+        "Festac Town",
+        "Mile 2",
+        "Satellite Town",
+        "Amuwo Odofin"
+      ]
+    },
+    {
+      "state": "Lagos",
+      "lga": "Apapa",
+      "city": "Lagos",
+      "areas": [
+        "Apapa"
+      ]
+    },
+    {
+      "state": "Lagos",
+      "lga": "Oshodi-Isolo",
+      "city": "Lagos",
+      "areas": [
+        "Oshodi",
+        "Isolo",
+        "Ejigbo"
+      ]
+    },
+    {
+      "state": "Lagos",
+      "lga": "Mushin",
+      "city": "Lagos",
+      "areas": [
+        "Mushin",
+        "Idi-Oro",
+        "Papa Ajao"
+      ]
+    },
+    {
+      "state": "Lagos",
+      "lga": "Agege",
+      "city": "Lagos",
+      "areas": [
+        "Agege",
+        "Dopemu"
+      ]
+    },
+    {
+      "state": "Lagos",
+      "lga": "Ajeromi-Ifelodun",
+      "city": "Lagos",
+      "areas": [
+        "Ajegunle"
+      ]
+    },
+    {
+      "state": "Lagos",
+      "lga": "Ifako-Ijaiye",
+      "city": "Lagos",
+      "areas": [
+        "Ojodu Berger",
+        "Ifako",
+        "Fagba"
+      ]
+    },
+    {
+      "state": "Lagos",
+      "lga": "Ojo",
+      "city": "Lagos",
+      "areas": [
+        "Ojo",
+        "Alaba International",
+        "Iba",
+        "Okokomaiko"
+      ]
+    },
+    {
+      "state": "Lagos",
+      "lga": "Badagry",
+      "city": "Lagos",
+      "areas": [
+        "Badagry"
+      ]
+    },
+    {
+      "state": "Lagos",
+      "lga": "Shomolu",
+      "city": "Lagos",
+      "areas": [
+        "Shomolu",
+        "Bariga",
+        "Pedro"
+      ]
+    },
+    {
+      "state": "Lagos",
+      "lga": "Lagos Island",
+      "city": "Lagos",
+      "areas": [
+        "Lagos Island",
+        "Marina",
+        "Obalende",
+        "Idumota"
+      ]
+    },
+    {
+      "state": "Lagos",
+      "lga": "Epe",
+      "city": "Lagos",
+      "areas": [
+        "Epe"
+      ]
+    },
+    {
+      "state": "Rivers",
+      "lga": "Port Harcourt",
+      "city": "Port Harcourt",
+      "areas": [
+        "Old GRA",
+        "D-Line",
+        "Diobu",
+        "Mile 1",
+        "Mile 3",
+        "Borokiri"
+      ]
+    },
+    {
+      "state": "Rivers",
+      "lga": "Obio/Akpor",
+      "city": "Port Harcourt",
+      "areas": [
+        "Rumuola",
+        "Rumuokoro",
+        "Rumuigbo",
+        "Ada George",
+        "Eliozu",
+        "Woji",
+        "Trans-Amadi",
+        "Rumuokwuta"
+      ]
+    },
+    {
+      "state": "Rivers",
+      "lga": "Ikwerre",
+      "city": "Port Harcourt",
+      "areas": [
+        "Choba",
+        "Aluu"
+      ]
+    },
+    {
+      "state": "Rivers",
+      "lga": "Oyigbo",
+      "city": "Port Harcourt",
+      "areas": [
+        "Oyigbo"
+      ]
+    },
+    {
+      "state": "Oyo",
+      "lga": "Ibadan North",
+      "city": "Ibadan",
+      "areas": [
+        "Bodija",
+        "Agodi",
+        "Samonda",
+        "Sango",
+        "University of Ibadan"
+      ]
+    },
+    {
+      "state": "Oyo",
+      "lga": "Ibadan North-East",
+      "city": "Ibadan",
+      "areas": [
+        "Iwo Road"
+      ]
+    },
+    {
+      "state": "Oyo",
+      "lga": "Ibadan South-West",
+      "city": "Ibadan",
+      "areas": [
+        "Ring Road",
+        "Mokola",
+        "Challenge",
+        "Dugbe"
+      ]
+    },
+    {
+      "state": "Oyo",
+      "lga": "Ibadan South-East",
+      "city": "Ibadan",
+      "areas": [
+        "Mapo",
+        "Molete"
+      ]
+    },
+    {
+      "state": "Oyo",
+      "lga": "Oluyole",
+      "city": "Ibadan",
+      "areas": [
+        "Apata",
+        "Akobo"
+      ]
+    },
+    {
+      "state": "Oyo",
+      "lga": "Egbeda",
+      "city": "Ibadan",
+      "areas": [
+        "Egbeda"
+      ]
+    },
+    {
+      "state": "Oyo",
+      "lga": "Ido",
+      "city": "Ibadan",
+      "areas": [
+        "Eleyele"
+      ]
+    },
+    {
+      "state": "Kano",
+      "lga": "Kano Municipal",
+      "city": "Kano",
+      "areas": [
+        "Kofar Mata",
+        "Bompai"
+      ]
+    },
+    {
+      "state": "Kano",
+      "lga": "Fagge",
+      "city": "Kano",
+      "areas": [
+        "Sabon Gari"
+      ]
+    },
+    {
+      "state": "Kano",
+      "lga": "Nasarawa",
+      "city": "Kano",
+      "areas": [
+        "Nassarawa GRA"
+      ]
+    },
+    {
+      "state": "Kano",
+      "lga": "Tarauni",
+      "city": "Kano",
+      "areas": [
+        "Tarauni",
+        "Hotoro"
+      ]
+    },
+    {
+      "state": "Kano",
+      "lga": "Gwale",
+      "city": "Kano",
+      "areas": [
+        "Gwale"
+      ]
+    },
+    {
+      "state": "Kano",
+      "lga": "Dala",
+      "city": "Kano",
+      "areas": [
+        "Dala"
+      ]
+    },
+    {
+      "state": "Kano",
+      "lga": "Kumbotso",
+      "city": "Kano",
+      "areas": [
+        "Kumbotso"
+      ]
+    },
+    {
+      "state": "Kaduna",
+      "lga": "Kaduna North",
+      "city": "Kaduna",
+      "areas": [
+        "Ungwan Rimi",
+        "Kawo"
+      ]
+    },
+    {
+      "state": "Kaduna",
+      "lga": "Kaduna South",
+      "city": "Kaduna",
+      "areas": [
+        "Barnawa",
+        "Kakuri",
+        "Television"
+      ]
+    },
+    {
+      "state": "Kaduna",
+      "lga": "Igabi",
+      "city": "Kaduna",
+      "areas": [
+        "Rigasa"
+      ]
+    },
+    {
+      "state": "Kaduna",
+      "lga": "Zaria",
+      "city": "Zaria",
+      "areas": [
+        "Samaru",
+        "Zaria City"
+      ]
+    },
+    {
+      "state": "Enugu",
+      "lga": "Enugu North",
+      "city": "Enugu",
+      "areas": [
+        "GRA Enugu",
+        "Ogui"
+      ]
+    },
+    {
+      "state": "Enugu",
+      "lga": "Enugu South",
+      "city": "Enugu",
+      "areas": [
+        "Independence Layout",
+        "Achara Layout",
+        "Uwani"
+      ]
+    },
+    {
+      "state": "Enugu",
+      "lga": "Enugu East",
+      "city": "Enugu",
+      "areas": [
+        "Trans Ekulu",
+        "Abakpa Nike"
+      ]
+    },
+    {
+      "state": "Enugu",
+      "lga": "Nsukka",
+      "city": "Nsukka",
+      "areas": [
+        "Nsukka"
+      ]
+    },
+    {
+      "state": "Edo",
+      "lga": "Oredo",
+      "city": "Benin City",
+      "areas": [
+        "GRA Benin",
+        "Sapele Road",
+        "Ring Road Benin",
+        "Uselu"
+      ]
+    },
+    {
+      "state": "Edo",
+      "lga": "Egor",
+      "city": "Benin City",
+      "areas": [
+        "Ugbowo",
+        "Egor"
+      ]
+    },
+    {
+      "state": "Edo",
+      "lga": "Ikpoba Okha",
+      "city": "Benin City",
+      "areas": [
+        "Ikpoba Hill",
+        "Okha"
+      ]
+    },
+    {
+      "state": "Plateau",
+      "lga": "Jos North",
+      "city": "Jos",
+      "areas": [
+        "Terminus",
+        "Angwan Rukuba",
+        "Tudun Wada Jos"
+      ]
+    },
+    {
+      "state": "Plateau",
+      "lga": "Jos South",
+      "city": "Jos",
+      "areas": [
+        "Rayfield",
+        "Bukuru"
+      ]
+    },
+    {
+      "state": "Ogun",
+      "lga": "Abeokuta South",
+      "city": "Abeokuta",
+      "areas": [
+        "Oke-Ilewo",
+        "Kuto",
+        "Sapon",
+        "Idi-Aba"
+      ]
+    },
+    {
+      "state": "Ogun",
+      "lga": "Abeokuta North",
+      "city": "Abeokuta",
+      "areas": [
+        "Lafenwa"
+      ]
+    },
+    {
+      "state": "Ogun",
+      "lga": "Ado-Odo/Ota",
+      "city": "Ota",
+      "areas": [
+        "Ota",
+        "Sango Ota"
+      ]
+    },
+    {
+      "state": "Ogun",
+      "lga": "Ifo",
+      "city": "Ifo",
+      "areas": [
+        "Ifo"
+      ]
+    },
+    {
+      "state": "Ogun",
+      "lga": "Obafemi Owode",
+      "city": "Mowe",
+      "areas": [
+        "Mowe",
+        "Ofada"
+      ]
+    },
+    {
+      "state": "Ogun",
+      "lga": "Shagamu",
+      "city": "Sagamu",
+      "areas": [
+        "Sagamu"
+      ]
+    },
+    {
+      "state": "Ogun",
+      "lga": "Ijebu Ode",
+      "city": "Ijebu Ode",
+      "areas": [
+        "Ijebu Ode"
+      ]
+    },
+    {
+      "state": "Delta",
+      "lga": "Uvwie",
+      "city": "Warri",
+      "areas": [
+        "Effurun"
+      ]
+    },
+    {
+      "state": "Delta",
+      "lga": "Warri South",
+      "city": "Warri",
+      "areas": [
+        "Okumagba",
+        "Airport Road Warri",
+        "DSC Express"
+      ]
+    },
+    {
+      "state": "Delta",
+      "lga": "Udu",
+      "city": "Warri",
+      "areas": [
+        "Ovwian"
+      ]
+    },
+    {
+      "state": "Delta",
+      "lga": "Oshimili South",
+      "city": "Asaba",
+      "areas": [
+        "Asaba GRA",
+        "Cable Point",
+        "Okpanam Road"
+      ]
+    },
+    {
+      "state": "Delta",
+      "lga": "Sapele",
+      "city": "Sapele",
+      "areas": [
+        "Sapele"
+      ]
+    },
+    {
+      "state": "Delta",
+      "lga": "Ughelli North",
+      "city": "Ughelli",
+      "areas": [
+        "Ughelli"
+      ]
+    },
+    {
+      "state": "Anambra",
+      "lga": "Onitsha North",
+      "city": "Onitsha",
+      "areas": [
+        "Fegge",
+        "GRA Onitsha"
+      ]
+    },
+    {
+      "state": "Anambra",
+      "lga": "Awka South",
+      "city": "Awka",
+      "areas": [
+        "Awka",
+        "Amawbia"
+      ]
+    },
+    {
+      "state": "Anambra",
+      "lga": "Nnewi North",
+      "city": "Nnewi",
+      "areas": [
+        "Nnewi"
+      ]
+    },
+    {
+      "state": "Imo",
+      "lga": "Owerri Municipal",
+      "city": "Owerri",
+      "areas": [
+        "Ikenegbu",
+        "New Owerri",
+        "Aladinma"
+      ]
+    },
+    {
+      "state": "Imo",
+      "lga": "Owerri North",
+      "city": "Owerri",
+      "areas": [
+        "Orji"
+      ]
+    },
+    {
+      "state": "Imo",
+      "lga": "Owerri West",
+      "city": "Owerri",
+      "areas": [
+        "Umuguma"
+      ]
+    },
+    {
+      "state": "Cross River",
+      "lga": "Calabar Municipal",
+      "city": "Calabar",
+      "areas": [
+        "Marian",
+        "State Housing"
+      ]
+    },
+    {
+      "state": "Cross River",
+      "lga": "Calabar South",
+      "city": "Calabar",
+      "areas": [
+        "Calabar South"
+      ]
+    },
+    {
+      "state": "Akwa Ibom",
+      "lga": "Uyo",
+      "city": "Uyo",
+      "areas": [
+        "Ikot Ekpene Road",
+        "Aka Road",
+        "Ewet Housing"
+      ]
+    },
+    {
+      "state": "Akwa Ibom",
+      "lga": "Eket",
+      "city": "Eket",
+      "areas": [
+        "Eket"
+      ]
+    },
+    {
+      "state": "Kwara",
+      "lga": "Ilorin West",
+      "city": "Ilorin",
+      "areas": [
+        "GRA Ilorin",
+        "Ipata",
+        "Challenge Ilorin"
+      ]
+    },
+    {
+      "state": "Kwara",
+      "lga": "Ilorin East",
+      "city": "Ilorin",
+      "areas": [
+        "Fate"
+      ]
+    },
+    {
+      "state": "Kwara",
+      "lga": "Ilorin South",
+      "city": "Ilorin",
+      "areas": [
+        "Tanke",
+        "Adewole"
+      ]
+    },
+    {
+      "state": "Ondo",
+      "lga": "Akure South",
+      "city": "Akure",
+      "areas": [
+        "Alagbaka",
+        "Oba-Ile",
+        "Ijapo",
+        "Oke-Aro"
+      ]
+    },
+    {
+      "state": "Borno",
+      "lga": "Maiduguri",
+      "city": "Maiduguri",
+      "areas": [
+        "GRA Maiduguri",
+        "Bulumkutu",
+        "Gwange",
+        "Polo"
+      ]
+    },
+    {
+      "state": "Sokoto",
+      "lga": "Sokoto North",
+      "city": "Sokoto",
+      "areas": [
+        "Mabera"
+      ]
+    },
+    {
+      "state": "Sokoto",
+      "lga": "Sokoto South",
+      "city": "Sokoto",
+      "areas": [
+        "Gidan Igwai"
+      ]
+    },
+    {
+      "state": "Niger",
+      "lga": "Chanchaga",
+      "city": "Minna",
+      "areas": [
+        "Tunga",
+        "Maitumbi"
+      ]
+    },
+    {
+      "state": "Niger",
+      "lga": "Bosso",
+      "city": "Minna",
+      "areas": [
+        "Bosso"
+      ]
+    },
+    {
+      "state": "Benue",
+      "lga": "Makurdi",
+      "city": "Makurdi",
+      "areas": [
+        "High Level",
+        "Wadata",
+        "North Bank"
+      ]
+    },
+    {
+      "state": "Kogi",
+      "lga": "Lokoja",
+      "city": "Lokoja",
+      "areas": [
+        "Felele",
+        "Adankolo"
+      ]
+    },
+    {
+      "state": "Adamawa",
+      "lga": "Yola North",
+      "city": "Yola",
+      "areas": [
+        "Jimeta"
+      ]
+    },
+    {
+      "state": "Adamawa",
+      "lga": "Yola South",
+      "city": "Yola",
+      "areas": [
+        "Karewa",
+        "Bachure"
+      ]
+    },
+    {
+      "state": "Bauchi",
+      "lga": "Bauchi",
+      "city": "Bauchi",
+      "areas": [
+        "Wunti",
+        "Yelwa"
+      ]
+    },
+    {
+      "state": "Gombe",
+      "lga": "Gombe",
+      "city": "Gombe",
+      "areas": [
+        "Pantami",
+        "Jekadafari"
+      ]
+    },
+    {
+      "state": "Osun",
+      "lga": "Osogbo",
+      "city": "Osogbo",
+      "areas": [
+        "Dugbe Osogbo"
+      ]
+    },
+    {
+      "state": "Ekiti",
+      "lga": "Ado Ekiti",
+      "city": "Ado-Ekiti",
+      "areas": [
+        "Ajilosun",
+        "Okeyinmi"
+      ]
+    },
+    {
+      "state": "Katsina",
+      "lga": "Katsina",
+      "city": "Katsina",
+      "areas": [
+        "Kofar Marusa"
+      ]
+    },
+    {
+      "state": "Abia",
+      "lga": "Aba South",
+      "city": "Aba",
+      "areas": [
+        "Ariaria"
+      ]
+    },
+    {
+      "state": "Abia",
+      "lga": "Aba North",
+      "city": "Aba",
+      "areas": [
+        "Osusu"
+      ]
+    },
+    {
+      "state": "Abia",
+      "lga": "Umuahia North",
+      "city": "Umuahia",
+      "areas": [
+        "Isi Gate"
+      ]
+    },
+    {
+      "state": "Ebonyi",
+      "lga": "Abakaliki",
+      "city": "Abakaliki",
+      "areas": [
+        "Presco"
+      ]
+    },
+    {
+      "state": "Bayelsa",
+      "lga": "Yenagoa",
+      "city": "Yenagoa",
+      "areas": [
+        "Ovom",
+        "Swali"
+      ]
+    },
+    {
+      "state": "Nasarawa",
+      "lga": "Lafia",
+      "city": "Lafia",
+      "areas": [
+        "Shabu"
+      ]
+    }
   ]
 }

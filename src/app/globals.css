@@ -81,3 +81,8 @@ body {
 @media (prefers-reduced-motion: reduce) {
   .lit-on, .weak-flicker, .weak-shimmer, .bloom-breathe { animation: none; }
 }
+
+/* Leaflet map tiles must not be shrunk by the page's image reset */
+.leaflet-container img, .leaflet-container .leaflet-tile { max-width: none !important; max-height: none !important; }
+.leaflet-container { font-family: inherit; }
+.leaflet-popup-content a { color: #1b4fd8; }

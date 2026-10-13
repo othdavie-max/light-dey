@@ -2,16 +2,21 @@ import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import ServiceWorkerRegister from "@/components/ServiceWorkerRegister";
+import InviteCapture from "@/components/InviteCapture";
+import { appConfig } from "../../config/app.config";
 
 // One variable font, so thin (300) through bold (800) cost a single download.
 const inter = Inter({ variable: "--font-inter", subsets: ["latin"], display: "swap" });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? appConfig.siteUrl),
   title: "Light Dey?",
   description: "Tell your neighbours. Two taps to report if light dey or not.",
   applicationName: "Light Dey?",
   appleWebApp: { capable: true, title: "Light Dey?", statusBarStyle: "black-translucent" },
   formatDetection: { telephone: false },
+  openGraph: { siteName: "Light Dey?", type: "website", title: "Light Dey?", description: "Is there light in your area? Tell your neighbours.", images: [{ url: "/api/card?lang=en", width: 1200, height: 630 }] },
+  twitter: { card: "summary_large_image" },
 };
 export const viewport: Viewport = { themeColor: "#060a14", width: "device-width", initialScale: 1 };
 
@@ -25,6 +30,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body data-status="unknown" className="min-h-dvh">
         {children}
         <ServiceWorkerRegister />
+        <InviteCapture />
       </body>
     </html>
   );

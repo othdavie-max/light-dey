@@ -4,7 +4,8 @@
     "placeholder": "Search area, city or state",
     "none": "We no see the area. Try another spelling.",
     "loading": "I dey load areas…",
-    "all": "All areas"
+    "all": "All areas",
+    "map": "Map"
   },
   "board": {
     "title": "Board",
@@ -38,5 +39,41 @@
     "terms": "Terms of Use",
     "badges": "Badges",
     "noBadges": "No badge yet. Keep reporting!"
+  },
+  "account": {
+    "title": "Keep my points",
+    "keepBody": "Add your email or Google so your points, streak and badges go follow you to new phone. We no dey post anything.",
+    "email": "Your email address",
+    "saveEmail": "Email me confirmation link",
+    "google": "Continue with Google",
+    "checkEmail": "Check your email and tap the link to finish.",
+    "signedInAs": "Signed in as",
+    "signOut": "Sign out",
+    "signOutNote": "If you sign out, this phone go remove your spots until you sign in again.",
+    "haveAccount": "You get account for another phone?",
+    "signIn": "Email me sign-in link",
+    "signInGoogle": "Sign in with Google",
+    "busy": "Wait small…",
+    "error": "E no work. Check the address and try again.",
+    "exists": "Another Light Dey? account don use that email or Google. Use \"Sign in\" instead.",
+    "or": "or"
+  },
+  "invite": {
+    "title": "Invite friends",
+    "body": "When your friend join with your link and make first report, una two go get {n} points.",
+    "button": "Share my invite link"
+  },
+  "map": {
+    "title": "Live map",
+    "list": "List",
+    "loading": "I dey load the map…",
+    "error": "We no fit load the map. Check your network.",
+    "status": {
+      "on": "Light dey",
+      "weak": "E weak",
+      "off": "No light",
+      "mixed": "Mixed",
+      "unknown": "No report"
+    }
   }
 }

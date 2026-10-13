@@ -65,5 +65,17 @@
     "pending": "New, being checked",
     "empty": "No spots here yet.",
     "back": "Back"
+  },
+  "follow": {
+    "title": "Light alerts",
+    "body": "Get a phone alert when the light changes here.",
+    "enable": "Alert me when light comes",
+    "on": "Alerts are on",
+    "goToo": "Also tell me when light goes",
+    "off": "Turn alerts off",
+    "denied": "Notifications are blocked on this phone. Allow them in your browser settings, then try again.",
+    "unsupported": "This phone or browser cannot show alerts. On iPhone, first add Light Dey? to your Home Screen.",
+    "full": "You can follow up to 3 spots. Turn one off first.",
+    "error": "Could not turn alerts on. Try again."
   }
 }

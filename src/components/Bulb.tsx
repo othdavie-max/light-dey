@@ -23,19 +23,14 @@ export default function Bulb({ status }: { status: Status }) {
           opacity: on ? 1 : weak ? 0.6 : 0.8,
         }}
       />
-      {/* Bloom around the dome */}
+      {/* Soft glow around the dome: one plain gradient, no filters, kept inside the bulb's own box */}
       <div
-        className={`pointer-events-none absolute -inset-x-28 -top-20 h-[330px] transition-opacity duration-700 ${on ? "bloom-breathe" : ""}`}
+        className="pointer-events-none absolute inset-x-[-40px] top-[-30px] h-[300px] transition-opacity duration-500"
         style={{
-          background: "radial-gradient(closest-side at 50% 42%, rgba(255,222,150,.6) 0%, rgba(255,182,70,.28) 42%, rgba(255,150,40,.08) 70%, transparent 100%)",
-          opacity: on ? 1 : 0,
-        }}
-      />
-      <div
-        className={`pointer-events-none absolute -inset-x-24 -top-16 h-[300px] transition-opacity duration-700 ${weak ? "weak-flicker" : ""}`}
-        style={{
-          background: "radial-gradient(closest-side at 50% 42%, rgba(255,160,70,.45) 0%, rgba(230,110,40,.16) 52%, transparent 100%)",
-          opacity: weak ? 1 : 0,
+          background: weak
+            ? "radial-gradient(closest-side at 50% 42%, rgba(255,160,70,.40) 0%, rgba(230,110,40,.14) 55%, transparent 100%)"
+            : "radial-gradient(closest-side at 50% 42%, rgba(255,222,150,.55) 0%, rgba(255,182,70,.24) 45%, rgba(255,150,40,.07) 72%, transparent 100%)",
+          opacity: lit ? 1 : 0,
         }}
       />
 
@@ -117,9 +112,7 @@ export default function Bulb({ status }: { status: Status }) {
           </linearGradient>
           <radialGradient id="haloOn"><stop offset="0.55" stopColor="#ffd98e" stopOpacity="0.9" /><stop offset="1" stopColor="#ffd98e" stopOpacity="0" /></radialGradient>
           <radialGradient id="haloWeak"><stop offset="0.55" stopColor="#ffa254" stopOpacity="0.9" /><stop offset="1" stopColor="#ffa254" stopOpacity="0" /></radialGradient>
-          <filter id="soft"><feGaussianBlur stdDeviation="1.4" /></filter>
-          <filter id="softer"><feGaussianBlur stdDeviation="3" /></filter>
-          <clipPath id="glassClip"><path d={GLASS} /></clipPath>
+                              <clipPath id="glassClip"><path d={GLASS} /></clipPath>
         </defs>
 
         {/* 0. Halo: light bleeding just past the edge of the dome */}
@@ -142,16 +135,16 @@ export default function Bulb({ status }: { status: Status }) {
           <g style={{ opacity: lit ? 1 : 0, transition: "opacity .6s" }}>
             <rect x="0" y={SEAM_Y - 12} width="200" height={234 - SEAM_Y} fill="url(#edge)" mask="url(#bodyMask)" />
             {/* faint seam between diffuser dome and body */}
-            <rect x="0" y={SEAM_Y + 2} width="200" height="2" fill="#b9a383" opacity=".16" filter="url(#soft)" />
+            <rect x="0" y={SEAM_Y + 2} width="200" height="2" fill="#b9a383" opacity=".16" />
           </g>
         </g>
 
         {/* 3. Reflections: bold on smoky glass, a soft gloss when lit */}
         <g clipPath="url(#glassClip)" style={{ opacity: lit ? 0.45 : 1, transition: "opacity .6s" }}>
-          <path d="M30 70C34 42 56 22 84 16C62 30 46 50 42 80C40 96 42 110 47 122C36 110 28 92 30 70Z" fill="url(#crescent)" opacity=".75" filter="url(#soft)" />
-          <ellipse cx="66" cy="36" rx="9" ry="5" transform="rotate(-38 66 36)" fill="#fff" opacity=".9" filter="url(#soft)" />
-          <path d="M172 66C180 86 178 110 166 132" stroke="url(#streak)" strokeWidth="4" strokeLinecap="round" fill="none" opacity=".45" filter="url(#soft)" />
-          <path d="M57 166C63 176 66 186 67 204" stroke="url(#streak)" strokeWidth="3" strokeLinecap="round" fill="none" opacity=".35" filter="url(#soft)" />
+          <path d="M30 70C34 42 56 22 84 16C62 30 46 50 42 80C40 96 42 110 47 122C36 110 28 92 30 70Z" fill="url(#crescent)" opacity=".75" />
+          <ellipse cx="66" cy="36" rx="9" ry="5" transform="rotate(-38 66 36)" fill="#fff" opacity=".9" />
+          <path d="M172 66C180 86 178 110 166 132" stroke="url(#streak)" strokeWidth="4" strokeLinecap="round" fill="none" opacity=".45" />
+          <path d="M57 166C63 176 66 186 67 204" stroke="url(#streak)" strokeWidth="3" strokeLinecap="round" fill="none" opacity=".35" />
           <rect x="88" y="214" width="24" height="2" rx="1" fill="#fff" opacity=".25" />
         </g>
         <path d={GLASS} fill="none" stroke="url(#rim)" strokeWidth="1.4" />

@@ -32,7 +32,10 @@ export default function ExploreClient() {
 
   return (
     <main className="mx-auto min-h-dvh max-w-md px-5 pb-32 pt-6">
-      <h1 className="text-[28px] font-light tracking-tight">{t.title}</h1>
+      <div className="flex items-center justify-between gap-3">
+        <h1 className="text-[28px] font-light tracking-tight">{t.title}</h1>
+        <Link href="/map" className="press panel grid min-h-11 place-items-center rounded-full px-4 text-[14px] font-medium">{t.map}</Link>
+      </div>
       <input
         type="search" value={query} onChange={(e) => setQuery(e.target.value)} placeholder={t.placeholder} aria-label={t.placeholder}
         className="panel mt-4 min-h-12 w-full rounded-2xl px-4 text-[16px] outline-none"

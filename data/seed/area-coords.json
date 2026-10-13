@@ -1,73 +1,1135 @@
 {
   "_readme": "Approximate [latitude, longitude] of the middle of an area, keyed by 'city/area-slug'. Accurate to roughly 1-3 km, which is enough to suggest nearby areas. Areas without an entry still work everywhere; they just are not suggested from 'Use my location'. Please have someone local correct any that look off, then run 'npm run seed' again.",
-  "abuja/wuse": [9.0640, 7.4720],
-  "abuja/wuse-2": [9.0790, 7.4730],
-  "abuja/garki": [9.0270, 7.4900],
-  "abuja/maitama": [9.0900, 7.4930],
-  "abuja/asokoro": [9.0420, 7.5280],
-  "abuja/central-business-district": [9.0580, 7.4890],
-  "abuja/jabi": [9.0640, 7.4260],
-  "abuja/utako": [9.0670, 7.4400],
-  "abuja/wuye": [9.0830, 7.4450],
-  "abuja/gwarinpa": [9.1100, 7.4000],
-  "abuja/lugbe": [8.9770, 7.3700],
-  "abuja/lokogoma": [8.9660, 7.4480],
-  "abuja/apo": [8.9970, 7.4880],
-  "abuja/gudu": [9.0210, 7.4710],
-  "abuja/durumi": [9.0050, 7.4650],
-  "abuja/jahi": [9.0970, 7.4410],
-  "abuja/katampe": [9.1090, 7.4650],
-  "abuja/mabushi": [9.0780, 7.4570],
-  "abuja/kado": [9.0950, 7.4650],
-  "abuja/life-camp": [9.0990, 7.4070],
-  "abuja/guzape": [9.0120, 7.5120],
-  "abuja/nyanya": [9.0090, 7.5740],
-  "abuja/kubwa": [9.1500, 7.3400],
-  "abuja/mpape": [9.1200, 7.5000],
-  "abuja/bwari": [9.2800, 7.3800],
-  "abuja/gwagwalada": [8.9400, 7.0800],
-  "abuja/kuje": [8.8800, 7.2400],
-  "abuja/karu": [9.0000, 7.5900],
-  "abuja/new-karu": [9.0000, 7.5900],
-  "abuja/mararaba": [9.0150, 7.6120],
-  "lagos/lekki-phase-1": [6.4470, 3.4700],
-  "lagos/victoria-island": [6.4281, 3.4219],
-  "lagos/ikoyi": [6.4500, 3.4350],
-  "lagos/ajah": [6.4690, 3.5690],
-  "lagos/sangotedo": [6.4710, 3.6180],
-  "lagos/oniru": [6.4310, 3.4540],
-  "lagos/banana-island": [6.4560, 3.4400],
-  "lagos/ikeja-gra": [6.5800, 3.3470],
-  "lagos/allen-avenue": [6.6010, 3.3560],
-  "lagos/opebi": [6.5970, 3.3500],
-  "lagos/oregun": [6.6100, 3.3700],
-  "lagos/alausa": [6.6160, 3.3570],
-  "lagos/ogba": [6.6370, 3.3400],
-  "lagos/maryland": [6.5700, 3.3640],
-  "lagos/surulere": [6.5000, 3.3550],
-  "lagos/aguda": [6.4890, 3.3430],
-  "lagos/yaba": [6.5100, 3.3790],
-  "lagos/ebute-metta": [6.4850, 3.3800],
-  "lagos/egbeda": [6.6100, 3.2900],
-  "lagos/ikotun": [6.5500, 3.2700],
-  "lagos/igando": [6.5400, 3.2500],
-  "lagos/ipaja": [6.6000, 3.2700],
-  "lagos/ketu": [6.5900, 3.3900],
-  "lagos/ojota": [6.5900, 3.3800],
-  "lagos/magodo": [6.6150, 3.3900],
-  "lagos/gbagada": [6.5500, 3.3900],
-  "lagos/ikorodu": [6.6190, 3.5100],
-  "lagos/festac-town": [6.4650, 3.2800],
-  "lagos/apapa": [6.4480, 3.3590],
-  "lagos/oshodi": [6.5550, 3.3460],
-  "lagos/isolo": [6.5300, 3.3200],
-  "lagos/mushin": [6.5330, 3.3560],
-  "lagos/agege": [6.6190, 3.3200],
-  "lagos/ajegunle": [6.4600, 3.3300],
-  "lagos/ojo": [6.4680, 3.1800],
-  "lagos/badagry": [6.4150, 2.8800],
-  "lagos/bariga": [6.5400, 3.3900],
-  "lagos/shomolu": [6.5420, 3.3850],
-  "lagos/lagos-island": [6.4540, 3.3900],
-  "lagos/epe": [6.5840, 3.9750]
+  "abuja/wuse": [
+    9.064,
+    7.472
+  ],
+  "abuja/wuse-2": [
+    9.079,
+    7.473
+  ],
+  "abuja/garki": [
+    9.027,
+    7.49
+  ],
+  "abuja/maitama": [
+    9.09,
+    7.493
+  ],
+  "abuja/asokoro": [
+    9.042,
+    7.528
+  ],
+  "abuja/central-business-district": [
+    9.058,
+    7.489
+  ],
+  "abuja/jabi": [
+    9.064,
+    7.426
+  ],
+  "abuja/utako": [
+    9.067,
+    7.44
+  ],
+  "abuja/wuye": [
+    9.083,
+    7.445
+  ],
+  "abuja/gwarinpa": [
+    9.11,
+    7.4
+  ],
+  "abuja/lugbe": [
+    8.977,
+    7.37
+  ],
+  "abuja/lokogoma": [
+    8.966,
+    7.448
+  ],
+  "abuja/apo": [
+    8.997,
+    7.488
+  ],
+  "abuja/gudu": [
+    9.021,
+    7.471
+  ],
+  "abuja/durumi": [
+    9.005,
+    7.465
+  ],
+  "abuja/jahi": [
+    9.097,
+    7.441
+  ],
+  "abuja/katampe": [
+    9.109,
+    7.465
+  ],
+  "abuja/mabushi": [
+    9.078,
+    7.457
+  ],
+  "abuja/kado": [
+    9.095,
+    7.465
+  ],
+  "abuja/life-camp": [
+    9.099,
+    7.407
+  ],
+  "abuja/guzape": [
+    9.012,
+    7.512
+  ],
+  "abuja/nyanya": [
+    9.009,
+    7.574
+  ],
+  "abuja/kubwa": [
+    9.15,
+    7.34
+  ],
+  "abuja/mpape": [
+    9.12,
+    7.5
+  ],
+  "abuja/bwari": [
+    9.28,
+    7.38
+  ],
+  "abuja/gwagwalada": [
+    8.94,
+    7.08
+  ],
+  "abuja/kuje": [
+    8.88,
+    7.24
+  ],
+  "abuja/karu": [
+    9,
+    7.59
+  ],
+  "abuja/new-karu": [
+    9,
+    7.59
+  ],
+  "abuja/mararaba": [
+    9.015,
+    7.612
+  ],
+  "lagos/lekki-phase-1": [
+    6.447,
+    3.47
+  ],
+  "lagos/victoria-island": [
+    6.4281,
+    3.4219
+  ],
+  "lagos/ikoyi": [
+    6.45,
+    3.435
+  ],
+  "lagos/ajah": [
+    6.469,
+    3.569
+  ],
+  "lagos/sangotedo": [
+    6.471,
+    3.618
+  ],
+  "lagos/oniru": [
+    6.431,
+    3.454
+  ],
+  "lagos/banana-island": [
+    6.456,
+    3.44
+  ],
+  "lagos/ikeja-gra": [
+    6.58,
+    3.347
+  ],
+  "lagos/allen-avenue": [
+    6.601,
+    3.356
+  ],
+  "lagos/opebi": [
+    6.597,
+    3.35
+  ],
+  "lagos/oregun": [
+    6.61,
+    3.37
+  ],
+  "lagos/alausa": [
+    6.616,
+    3.357
+  ],
+  "lagos/ogba": [
+    6.637,
+    3.34
+  ],
+  "lagos/maryland": [
+    6.57,
+    3.364
+  ],
+  "lagos/surulere": [
+    6.5,
+    3.355
+  ],
+  "lagos/aguda": [
+    6.489,
+    3.343
+  ],
+  "lagos/yaba": [
+    6.51,
+    3.379
+  ],
+  "lagos/ebute-metta": [
+    6.485,
+    3.38
+  ],
+  "lagos/egbeda": [
+    6.61,
+    3.29
+  ],
+  "lagos/ikotun": [
+    6.55,
+    3.27
+  ],
+  "lagos/igando": [
+    6.54,
+    3.25
+  ],
+  "lagos/ipaja": [
+    6.6,
+    3.27
+  ],
+  "lagos/ketu": [
+    6.59,
+    3.39
+  ],
+  "lagos/ojota": [
+    6.59,
+    3.38
+  ],
+  "lagos/magodo": [
+    6.615,
+    3.39
+  ],
+  "lagos/gbagada": [
+    6.55,
+    3.39
+  ],
+  "lagos/ikorodu": [
+    6.619,
+    3.51
+  ],
+  "lagos/festac-town": [
+    6.465,
+    3.28
+  ],
+  "lagos/apapa": [
+    6.448,
+    3.359
+  ],
+  "lagos/oshodi": [
+    6.555,
+    3.346
+  ],
+  "lagos/isolo": [
+    6.53,
+    3.32
+  ],
+  "lagos/mushin": [
+    6.533,
+    3.356
+  ],
+  "lagos/agege": [
+    6.619,
+    3.32
+  ],
+  "lagos/ajegunle": [
+    6.46,
+    3.33
+  ],
+  "lagos/ojo": [
+    6.468,
+    3.18
+  ],
+  "lagos/badagry": [
+    6.415,
+    2.88
+  ],
+  "lagos/bariga": [
+    6.54,
+    3.39
+  ],
+  "lagos/shomolu": [
+    6.542,
+    3.385
+  ],
+  "lagos/lagos-island": [
+    6.454,
+    3.39
+  ],
+  "lagos/epe": [
+    6.584,
+    3.975
+  ],
+  "port harcourt/old-gra": [
+    4.79,
+    7
+  ],
+  "port harcourt/d-line": [
+    4.797,
+    7.007
+  ],
+  "port harcourt/diobu": [
+    4.795,
+    6.995
+  ],
+  "port harcourt/mile-1": [
+    4.794,
+    6.998
+  ],
+  "port harcourt/mile-3": [
+    4.81,
+    6.995
+  ],
+  "port harcourt/borokiri": [
+    4.76,
+    7.02
+  ],
+  "port harcourt/rumuola": [
+    4.823,
+    7.023
+  ],
+  "port harcourt/rumuokoro": [
+    4.87,
+    7.02
+  ],
+  "port harcourt/rumuigbo": [
+    4.835,
+    7.045
+  ],
+  "port harcourt/ada-george": [
+    4.836,
+    7.025
+  ],
+  "port harcourt/eliozu": [
+    4.88,
+    7.06
+  ],
+  "port harcourt/woji": [
+    4.8,
+    7.06
+  ],
+  "port harcourt/trans-amadi": [
+    4.81,
+    7.04
+  ],
+  "port harcourt/rumuokwuta": [
+    4.83,
+    6.99
+  ],
+  "port harcourt/choba": [
+    4.897,
+    6.92
+  ],
+  "port harcourt/aluu": [
+    4.91,
+    6.9
+  ],
+  "port harcourt/oyigbo": [
+    4.89,
+    7.13
+  ],
+  "ibadan/bodija": [
+    7.432,
+    3.912
+  ],
+  "ibadan/agodi": [
+    7.409,
+    3.906
+  ],
+  "ibadan/samonda": [
+    7.445,
+    3.91
+  ],
+  "ibadan/sango": [
+    7.445,
+    3.919
+  ],
+  "ibadan/university-of-ibadan": [
+    7.443,
+    3.9
+  ],
+  "ibadan/iwo-road": [
+    7.392,
+    3.938
+  ],
+  "ibadan/ring-road": [
+    7.36,
+    3.87
+  ],
+  "ibadan/mokola": [
+    7.4,
+    3.89
+  ],
+  "ibadan/challenge": [
+    7.356,
+    3.88
+  ],
+  "ibadan/dugbe": [
+    7.39,
+    3.89
+  ],
+  "ibadan/mapo": [
+    7.381,
+    3.906
+  ],
+  "ibadan/molete": [
+    7.365,
+    3.89
+  ],
+  "ibadan/apata": [
+    7.35,
+    3.85
+  ],
+  "ibadan/akobo": [
+    7.42,
+    3.99
+  ],
+  "ibadan/egbeda": [
+    7.38,
+    4
+  ],
+  "ibadan/eleyele": [
+    7.4,
+    3.85
+  ],
+  "kano/kofar-mata": [
+    12,
+    8.52
+  ],
+  "kano/bompai": [
+    11.998,
+    8.541
+  ],
+  "kano/sabon-gari": [
+    12,
+    8.53
+  ],
+  "kano/nassarawa-gra": [
+    11.978,
+    8.54
+  ],
+  "kano/tarauni": [
+    11.96,
+    8.54
+  ],
+  "kano/hotoro": [
+    11.96,
+    8.57
+  ],
+  "kano/gwale": [
+    11.983,
+    8.5
+  ],
+  "kano/dala": [
+    12.02,
+    8.52
+  ],
+  "kano/kumbotso": [
+    11.93,
+    8.5
+  ],
+  "kaduna/ungwan-rimi": [
+    10.53,
+    7.45
+  ],
+  "kaduna/kawo": [
+    10.575,
+    7.44
+  ],
+  "kaduna/barnawa": [
+    10.47,
+    7.43
+  ],
+  "kaduna/kakuri": [
+    10.45,
+    7.41
+  ],
+  "kaduna/television": [
+    10.48,
+    7.44
+  ],
+  "kaduna/rigasa": [
+    10.54,
+    7.4
+  ],
+  "zaria/samaru": [
+    11.16,
+    7.65
+  ],
+  "zaria/zaria-city": [
+    11.08,
+    7.71
+  ],
+  "enugu/gra-enugu": [
+    6.46,
+    7.51
+  ],
+  "enugu/ogui": [
+    6.46,
+    7.5
+  ],
+  "enugu/independence-layout": [
+    6.45,
+    7.52
+  ],
+  "enugu/achara-layout": [
+    6.44,
+    7.51
+  ],
+  "enugu/uwani": [
+    6.44,
+    7.49
+  ],
+  "enugu/trans-ekulu": [
+    6.46,
+    7.54
+  ],
+  "enugu/abakpa-nike": [
+    6.458,
+    7.553
+  ],
+  "nsukka/nsukka": [
+    6.857,
+    7.395
+  ],
+  "benin city/gra-benin": [
+    6.33,
+    5.62
+  ],
+  "benin city/sapele-road": [
+    6.32,
+    5.63
+  ],
+  "benin city/ring-road-benin": [
+    6.34,
+    5.63
+  ],
+  "benin city/uselu": [
+    6.38,
+    5.6
+  ],
+  "benin city/ugbowo": [
+    6.398,
+    5.61
+  ],
+  "benin city/egor": [
+    6.375,
+    5.605
+  ],
+  "benin city/ikpoba-hill": [
+    6.33,
+    5.65
+  ],
+  "benin city/okha": [
+    6.297,
+    5.65
+  ],
+  "jos/terminus": [
+    9.92,
+    8.89
+  ],
+  "jos/angwan-rukuba": [
+    9.95,
+    8.88
+  ],
+  "jos/tudun-wada-jos": [
+    9.92,
+    8.9
+  ],
+  "jos/rayfield": [
+    9.87,
+    8.88
+  ],
+  "jos/bukuru": [
+    9.79,
+    8.87
+  ],
+  "abeokuta/oke-ilewo": [
+    7.15,
+    3.34
+  ],
+  "abeokuta/kuto": [
+    7.13,
+    3.34
+  ],
+  "abeokuta/sapon": [
+    7.14,
+    3.35
+  ],
+  "abeokuta/idi-aba": [
+    7.14,
+    3.36
+  ],
+  "abeokuta/lafenwa": [
+    7.167,
+    3.33
+  ],
+  "ota/ota": [
+    6.68,
+    3.23
+  ],
+  "ota/sango-ota": [
+    6.685,
+    3.23
+  ],
+  "ifo/ifo": [
+    6.82,
+    3.2
+  ],
+  "mowe/mowe": [
+    6.81,
+    3.45
+  ],
+  "mowe/ofada": [
+    6.8,
+    3.42
+  ],
+  "sagamu/sagamu": [
+    6.84,
+    3.64
+  ],
+  "ijebu ode/ijebu-ode": [
+    6.82,
+    3.92
+  ],
+  "warri/effurun": [
+    5.55,
+    5.78
+  ],
+  "warri/okumagba": [
+    5.53,
+    5.75
+  ],
+  "warri/airport-road-warri": [
+    5.57,
+    5.8
+  ],
+  "warri/dsc-express": [
+    5.56,
+    5.77
+  ],
+  "warri/ovwian": [
+    5.5,
+    5.81
+  ],
+  "asaba/asaba-gra": [
+    6.2,
+    6.72
+  ],
+  "asaba/cable-point": [
+    6.19,
+    6.73
+  ],
+  "asaba/okpanam-road": [
+    6.23,
+    6.7
+  ],
+  "sapele/sapele": [
+    5.89,
+    5.68
+  ],
+  "ughelli/ughelli": [
+    5.5,
+    6
+  ],
+  "onitsha/fegge": [
+    6.15,
+    6.78
+  ],
+  "onitsha/gra-onitsha": [
+    6.143,
+    6.79
+  ],
+  "awka/awka": [
+    6.21,
+    7.07
+  ],
+  "awka/amawbia": [
+    6.23,
+    7.05
+  ],
+  "nnewi/nnewi": [
+    6.01,
+    6.91
+  ],
+  "owerri/ikenegbu": [
+    5.48,
+    7.02
+  ],
+  "owerri/new-owerri": [
+    5.49,
+    7.03
+  ],
+  "owerri/aladinma": [
+    5.46,
+    7.04
+  ],
+  "owerri/orji": [
+    5.54,
+    7.07
+  ],
+  "owerri/umuguma": [
+    5.43,
+    6.98
+  ],
+  "calabar/marian": [
+    4.964,
+    8.322
+  ],
+  "calabar/state-housing": [
+    4.968,
+    8.343
+  ],
+  "calabar/calabar-south": [
+    4.94,
+    8.33
+  ],
+  "uyo/ikot-ekpene-road": [
+    5.03,
+    7.94
+  ],
+  "uyo/aka-road": [
+    5.03,
+    7.93
+  ],
+  "uyo/ewet-housing": [
+    5.02,
+    7.93
+  ],
+  "eket/eket": [
+    4.64,
+    7.93
+  ],
+  "ilorin/gra-ilorin": [
+    8.49,
+    4.56
+  ],
+  "ilorin/ipata": [
+    8.49,
+    4.55
+  ],
+  "ilorin/challenge-ilorin": [
+    8.47,
+    4.55
+  ],
+  "ilorin/fate": [
+    8.48,
+    4.63
+  ],
+  "ilorin/tanke": [
+    8.43,
+    4.63
+  ],
+  "ilorin/adewole": [
+    8.46,
+    4.57
+  ],
+  "akure/alagbaka": [
+    7.26,
+    5.2
+  ],
+  "akure/oba-ile": [
+    7.29,
+    5.19
+  ],
+  "akure/ijapo": [
+    7.28,
+    5.15
+  ],
+  "akure/oke-aro": [
+    7.26,
+    5.22
+  ],
+  "maiduguri/gra-maiduguri": [
+    11.83,
+    13.15
+  ],
+  "maiduguri/bulumkutu": [
+    11.83,
+    13.13
+  ],
+  "maiduguri/gwange": [
+    11.83,
+    13.16
+  ],
+  "maiduguri/polo": [
+    11.823,
+    13.145
+  ],
+  "sokoto/mabera": [
+    13.06,
+    5.23
+  ],
+  "sokoto/gidan-igwai": [
+    13.04,
+    5.24
+  ],
+  "minna/tunga": [
+    9.61,
+    6.54
+  ],
+  "minna/maitumbi": [
+    9.61,
+    6.57
+  ],
+  "minna/bosso": [
+    9.65,
+    6.52
+  ],
+  "makurdi/high-level": [
+    7.73,
+    8.53
+  ],
+  "makurdi/wadata": [
+    7.74,
+    8.53
+  ],
+  "makurdi/north-bank": [
+    7.76,
+    8.54
+  ],
+  "lokoja/felele": [
+    7.8,
+    6.74
+  ],
+  "lokoja/adankolo": [
+    7.79,
+    6.75
+  ],
+  "yola/jimeta": [
+    9.27,
+    12.46
+  ],
+  "yola/karewa": [
+    9.23,
+    12.45
+  ],
+  "yola/bachure": [
+    9.21,
+    12.45
+  ],
+  "bauchi/wunti": [
+    10.3,
+    9.85
+  ],
+  "bauchi/yelwa": [
+    10.32,
+    9.84
+  ],
+  "gombe/pantami": [
+    10.29,
+    11.17
+  ],
+  "gombe/jekadafari": [
+    10.29,
+    11.18
+  ],
+  "osogbo/dugbe-osogbo": [
+    7.77,
+    4.56
+  ],
+  "ado-ekiti/ajilosun": [
+    7.62,
+    5.21
+  ],
+  "ado-ekiti/okeyinmi": [
+    7.63,
+    5.23
+  ],
+  "katsina/kofar-marusa": [
+    12.99,
+    7.6
+  ],
+  "aba/ariaria": [
+    5.11,
+    7.36
+  ],
+  "aba/osusu": [
+    5.12,
+    7.37
+  ],
+  "umuahia/isi-gate": [
+    5.53,
+    7.49
+  ],
+  "abakaliki/presco": [
+    6.33,
+    8.11
+  ],
+  "yenagoa/ovom": [
+    4.92,
+    6.25
+  ],
+  "yenagoa/swali": [
+    4.93,
+    6.28
+  ],
+  "lafia/shabu": [
+    8.49,
+    8.52
+  ],
+  "abuja/garki-2": [
+    9.031,
+    7.488
+  ],
+  "abuja/sabon-lugbe": [
+    8.975,
+    7.4
+  ],
+  "abuja/dawaki": [
+    9.088,
+    7.416
+  ],
+  "abuja/karmo": [
+    9.056,
+    7.415
+  ],
+  "abuja/galadimawa": [
+    8.997,
+    7.46
+  ],
+  "abuja/gaduwa": [
+    8.989,
+    7.444
+  ],
+  "abuja/idu": [
+    9.064,
+    7.372
+  ],
+  "abuja/karshi": [
+    8.82,
+    7.6
+  ],
+  "abuja/kabusa": [
+    8.997,
+    7.38
+  ],
+  "abuja/dakibiyu": [
+    9.078,
+    7.413
+  ],
+  "abuja/dutse": [
+    9.122,
+    7.377
+  ],
+  "abuja/ushafa": [
+    9.159,
+    7.433
+  ],
+  "abuja/dei-dei": [
+    9.095,
+    7.327
+  ],
+  "abuja/gwagwa": [
+    9.14,
+    7.35
+  ],
+  "abuja/zuba": [
+    9.087,
+    7.213
+  ],
+  "abuja/abaji": [
+    8.472,
+    6.942
+  ],
+  "abuja/kwali": [
+    8.876,
+    7.027
+  ],
+  "abuja/masaka": [
+    9.095,
+    7.536
+  ],
+  "lagos/lekki-phase-2": [
+    6.456,
+    3.54
+  ],
+  "lagos/ikate": [
+    6.45,
+    3.48
+  ],
+  "lagos/chevron": [
+    6.443,
+    3.53
+  ],
+  "lagos/ikota": [
+    6.45,
+    3.52
+  ],
+  "lagos/osapa-london": [
+    6.445,
+    3.5
+  ],
+  "lagos/agungi": [
+    6.443,
+    3.505
+  ],
+  "lagos/jakande": [
+    6.47,
+    3.535
+  ],
+  "lagos/awoyaya": [
+    6.477,
+    3.715
+  ],
+  "lagos/abijo": [
+    6.466,
+    3.665
+  ],
+  "lagos/lakowe": [
+    6.47,
+    3.76
+  ],
+  "lagos/agidingbi": [
+    6.605,
+    3.36
+  ],
+  "lagos/itire": [
+    6.51,
+    3.33
+  ],
+  "lagos/ijeshatedo": [
+    6.5,
+    3.35
+  ],
+  "lagos/oyingbo": [
+    6.48,
+    3.39
+  ],
+  "lagos/iddo": [
+    6.483,
+    3.38
+  ],
+  "lagos/idimu": [
+    6.58,
+    3.26
+  ],
+  "lagos/iyana-ipaja": [
+    6.605,
+    3.26
+  ],
+  "lagos/akowonjo": [
+    6.605,
+    3.29
+  ],
+  "lagos/ayobo": [
+    6.617,
+    3.222
+  ],
+  "lagos/shasha": [
+    6.595,
+    3.285
+  ],
+  "lagos/mile-12": [
+    6.605,
+    3.39
+  ],
+  "lagos/ogudu": [
+    6.57,
+    3.39
+  ],
+  "lagos/alapere": [
+    6.592,
+    3.379
+  ],
+  "lagos/igbogbo": [
+    6.63,
+    3.52
+  ],
+  "lagos/majidun": [
+    6.627,
+    3.501
+  ],
+  "lagos/ijede": [
+    6.569,
+    3.607
+  ],
+  "lagos/mile-2": [
+    6.465,
+    3.31
+  ],
+  "lagos/satellite-town": [
+    6.465,
+    3.27
+  ],
+  "lagos/amuwo-odofin": [
+    6.46,
+    3.29
+  ],
+  "lagos/ejigbo": [
+    6.55,
+    3.3
+  ],
+  "lagos/idi-oro": [
+    6.54,
+    3.36
+  ],
+  "lagos/papa-ajao": [
+    6.545,
+    3.35
+  ],
+  "lagos/dopemu": [
+    6.62,
+    3.31
+  ],
+  "lagos/ojodu-berger": [
+    6.64,
+    3.36
+  ],
+  "lagos/ifako": [
+    6.67,
+    3.33
+  ],
+  "lagos/fagba": [
+    6.67,
+    3.32
+  ],
+  "lagos/alaba-international": [
+    6.49,
+    3.2
+  ],
+  "lagos/iba": [
+    6.48,
+    3.19
+  ],
+  "lagos/okokomaiko": [
+    6.47,
+    3.19
+  ],
+  "lagos/pedro": [
+    6.54,
+    3.37
+  ],
+  "lagos/marina": [
+    6.45,
+    3.4
+  ],
+  "lagos/obalende": [
+    6.45,
+    3.41
+  ],
+  "lagos/idumota": [
+    6.453,
+    3.39
+  ]
 }

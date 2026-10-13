@@ -83,5 +83,12 @@
     "terms": "Terms",
     "myData": "My data"
   },
-  "moreDetails": "More details"
+  "moreDetails": "More details",
+  "share": {
+    "button": "Share",
+    "copied": "Link copied",
+    "text": "{spot}: {status}. Check on Light Dey?",
+    "invite": "Invite friends",
+    "inviteText": "Join me on Light Dey?: tell your neighbours if light dey."
+  }
 }

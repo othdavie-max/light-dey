@@ -10,7 +10,7 @@ const add = (level, title, detail = "") => results.push({ level, title, detail }
 const url = process.env.NEXT_PUBLIC_SUPABASE_URL, anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY, serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
 // ---- 1. Your keys ----
-for (const k of ["NEXT_PUBLIC_SUPABASE_URL", "NEXT_PUBLIC_SUPABASE_ANON_KEY", "SUPABASE_SERVICE_ROLE_KEY", "TURNSTILE_SECRET_KEY", "IP_HASH_SALT"]) {
+for (const k of ["NEXT_PUBLIC_SUPABASE_URL", "NEXT_PUBLIC_SUPABASE_ANON_KEY", "SUPABASE_SERVICE_ROLE_KEY", "TURNSTILE_SECRET_KEY", "IP_HASH_SALT", "NEXT_PUBLIC_VAPID_PUBLIC_KEY", "VAPID_PRIVATE_KEY"]) {
   if (!process.env[k]) add("BLOCKER", `Missing key in .env.local: ${k}`);
 }
 if ((process.env.IP_HASH_SALT ?? "").length > 0 && process.env.IP_HASH_SALT.length < 20) add("WARN", "IP_HASH_SALT is short", "Use a long random phrase (30+ characters).");

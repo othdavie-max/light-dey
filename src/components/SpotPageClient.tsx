@@ -9,6 +9,8 @@ import Bulb, { type Status } from "./Bulb";
 import Timeline from "./Timeline";
 import WeekChart from "./WeekChart";
 import ConnectionStatus from "./ConnectionStatus";
+import FollowCard from "./FollowCard";
+import { shareWithCard } from "@/lib/share";
 import { supabase, ensureSession } from "@/lib/supabase/browser";
 import { useLang } from "@/lib/prefs";
 import { useSpotLive } from "@/lib/useSpotLive";
@@ -111,14 +113,9 @@ export default function SpotPageClient({ id }: { id: string }) {
   }
 
   async function share() {
-    const url = window.location.href;
-    const text = fmt(p.shareText, { area: spot?.areaName ?? "" });
-    try {
-      if (navigator.share) { await navigator.share({ title: "Light Dey?", text, url }); return; }
-      await navigator.clipboard.writeText(url);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2500);
-    } catch { /* the person closed the share sheet */ }
+    const text = fmt(t.share.text, { spot: spot ? shortName(spot.name) : "", status: t.status[shown.status] });
+    const out = await shareWithCard({ path: `/spot/${id}`, text, cardQuery: `spot=${id}&lang=${lang}` });
+    if (out === "copied") { setCopied(true); setTimeout(() => setCopied(false), 2500); }
   }
 
   // ---- words ----
@@ -282,12 +279,8 @@ export default function SpotPageClient({ id }: { id: string }) {
         )}
       </Section>
 
-      {/* Follow / share */}
-      <div className="mt-4 grid grid-cols-2 gap-3">
-        <button disabled title={p.followSoon} className="press panel min-h-14 rounded-2xl text-[16px] font-medium opacity-60">🔔 {p.follow}</button>
-        <button onClick={share} className="press panel min-h-14 rounded-2xl text-[16px] font-medium">{copied ? p.copied : `↗ ${p.share}`}</button>
-      </div>
-      <p className="mt-2 text-center text-xs text-muted">{p.followSoon}</p>
+      <FollowCard spotId={id} t={t.follow} />
+      <button onClick={share} className="press panel mt-4 min-h-14 w-full rounded-2xl text-[16px] font-medium">{copied ? t.share.copied : `↗ ${t.share.button}`}</button>
 
       {spot && (
         <Link href={`/area/${spot.areaId}`} className="press panel mt-4 flex min-h-14 items-center justify-between rounded-2xl px-5 text-[15px] font-medium">

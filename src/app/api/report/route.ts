@@ -4,7 +4,7 @@
 // Reports made while the phone had no network arrive later, with the time of the tap (reportedAt) and a
 // phone-made id (clientId). The id makes retries safe; the time makes the report count as of when it happened.
 import { createHash } from "node:crypto";
-import { NextResponse } from "next/server";
+import { NextResponse, after } from "next/server";
 import { appConfig } from "../../../../config/app.config";
 import { adminClient } from "@/lib/supabase/admin";
 import { verifyTurnstile } from "@/lib/turnstile";
@@ -15,6 +15,8 @@ import { reporterTrust } from "@/lib/status/trust";
 import { resolveReportTime } from "@/lib/status/reportTime";
 import { applyReport } from "@/lib/rewards";
 import { badgesQualified } from "@/lib/badges";
+import { notifyFollowers } from "@/lib/push/send";
+import { payReferralBonus } from "@/lib/referralServer";
 import type { ReportInput, ReportStatus, SpotState, SupplySession } from "@/lib/status/types";
 
 const STATUSES: ReportStatus[] = ["on", "off", "weak"];
@@ -70,7 +72,7 @@ export async function POST(req: Request) {
 
   // 5. Does the spot exist, and is this person allowed?
   const [{ data: spot }, { data: profile }] = await Promise.all([
-    db.from("spots").select("id,status_flag").eq("id", spotId).maybeSingle(),
+    db.from("spots").select("id,name,status_flag").eq("id", spotId).maybeSingle(),
     db.from("profiles").select("trust_score,is_banned,points,streak_current,streak_best,last_report_day").eq("id", user.id).maybeSingle(),
   ]);
   if (!spot || spot.status_flag === "rejected") return fail(404, "spot_not_found");
@@ -159,6 +161,12 @@ export async function POST(req: Request) {
     updated_at: now.toISOString(),
   });
 
+  // Tell the people following this spot (after the reply is sent, so the reporter never waits for it).
+  if (changed && !late) {
+    const spotName = spot.name ?? "your spot";
+    after(() => notifyFollowers({ spotId, spotName, oldStatus: current.status, newStatus: computed.status as SpotState, reporterId: user.id, now }));
+  }
+
   // 9. Supply sessions (the source of truth for hours of light). Late reports never rewrite history.
   if (!late) {
     const { data: openRow } = await db.from("supply_sessions").select("*").eq("spot_id", spotId).is("ended_at", null).maybeSingle();
@@ -186,6 +194,9 @@ export async function POST(req: Request) {
   await db.from("profiles").update({
     points: reward.points, streak_current: reward.streakCurrent, streak_best: reward.streakBest, last_report_day: reward.lastReportDay,
   }).eq("id", user.id);
+
+  // Invited by a friend? The first report pays both of them a bonus.
+  const referral = await payReferralBonus(db, user.id);
 
   // 11. Badges. Never allowed to fail the report itself.
   let newBadges: string[] = [];
@@ -215,7 +226,8 @@ export async function POST(req: Request) {
     isConfirmation: confirmation,
     delayed: when.delayed,
     pointsAwarded: reward.pointsAwarded,
-    points: reward.points,
+    points: reward.points + referral.bonus,
+    referralBonus: referral.bonus,
     streak: reward.streakCurrent,
   });
 }

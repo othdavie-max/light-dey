@@ -4,6 +4,10 @@ import Link from "next/link";
 import en from "@/i18n/en/tabs.json";
 import pcm from "@/i18n/pcm/tabs.json";
 import BottomNav from "./BottomNav";
+import AccountCard from "./AccountCard";
+import { useTurnstile } from "@/lib/useTurnstile";
+import { shareWithCard } from "@/lib/share";
+import { appConfig } from "../../config/app.config";
 import { supabase } from "@/lib/supabase/browser";
 import { useMyStats } from "@/lib/useMyStats";
 import { useLang, useTheme } from "@/lib/prefs";
@@ -16,8 +20,17 @@ export default function ProfileClient() {
   const [lang, setLang] = useLang();
   const [theme, setTheme] = useTheme();
   const t = dict[lang].profile;
+  const acct = dict[lang].account;
+  const inv = dict[lang].invite;
+  const copiedWord = lang === "en" ? "Link copied" : "Link don copy";
+  async function invite() {
+    const out = await shareWithCard({ path: "/", text: lang === "en" ? "Join me on Light Dey?: tell your neighbours if there is light." : "Join me for Light Dey?: tell your neighbours if light dey." });
+    if (out === "copied") { setCopied(true); setTimeout(() => setCopied(false), 2500); }
+  }
   const { points, streak, nickname } = useMyStats();
+  const { box: captchaBox, getToken } = useTurnstile(process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY || appConfig.turnstileSiteKey);
   const [badges, setBadges] = useState<Badge[] | null>(null);
+  const [copied, setCopied] = useState(false);
   useEffect(() => { document.documentElement.dataset.theme = theme; }, [theme]);
   useEffect(() => {
     (async () => {
@@ -56,6 +69,14 @@ export default function ProfileClient() {
         </ul>
       </section>
 
+      <AccountCard t={acct} getToken={getToken} />
+
+      <section className="panel mt-5 rounded-[24px] p-4">
+        <h2 className="text-[16px] font-medium">{inv.title}</h2>
+        <p className="mt-1 text-sm text-muted">{inv.body.replace("{n}", String(appConfig.points.referralBonus))}</p>
+        <button onClick={invite} className="press mt-3 min-h-12 w-full rounded-2xl text-[15px] font-semibold" style={{ background: "var(--panel-strong)", border: "1px solid var(--panel-border)" }}>{copied ? copiedWord : inv.button}</button>
+      </section>
+
       <section className="mt-5 space-y-3">
         <div className="panel rounded-2xl p-3">
           <p className="px-1 pb-2 text-sm text-muted">{t.language}</p>
@@ -80,6 +101,7 @@ export default function ProfileClient() {
         <Link href="/privacy" className={row}>{t.privacy}{arrow}</Link>
         <Link href="/terms" className={row}>{t.terms}{arrow}</Link>
       </div>
+      <div ref={captchaBox} className="mt-4 flex justify-center" />
       <BottomNav />
     </main>
   );

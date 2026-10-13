@@ -30,7 +30,7 @@ if (!up) { server.kill(); console.error(`Could not start the app on port ${PORT}
 
 console.log("3/3 Running the tests...\n");
 let failed = 0;
-for (const name of ["test-report", "test-onboarding", "test-admin", "test-me"]) {
+for (const name of ["test-report", "test-onboarding", "test-admin", "test-me", "test-growth"]) {
   console.log(`=== ${name} ===`);
   const r = spawnSync(process.execPath, ["--env-file=.env.local", `scripts/${name}.mjs`], { env, stdio: "inherit" });
   if (r.status !== 0) failed++;
