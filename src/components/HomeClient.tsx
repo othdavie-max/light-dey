@@ -1,23 +1,22 @@
 "use client";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import en from "@/i18n/en.json";
 import pcm from "@/i18n/pcm.json";
 import Bulb, { type Status } from "./Bulb";
-import { supabase, ensureSession, deviceId } from "@/lib/supabase/browser";
-import { useTurnstile } from "@/lib/useTurnstile";
+import { supabase, ensureSession } from "@/lib/supabase/browser";
 import { useLang, useTheme, getActiveSpot, setActiveSpot } from "@/lib/prefs";
+import { useSpotLive } from "@/lib/useSpotLive";
+import { useReport } from "@/lib/useReport";
 import { computeStatus } from "@/lib/status/compute";
-import { dailyTotals, lagosDayStart } from "@/lib/status/hours";
-import type { ReportStatus, SpotState, SupplySession } from "@/lib/status/types";
+import { dailyTotals } from "@/lib/status/hours";
 import { formatAgo, formatDuration, formatLagosTime } from "@/lib/format";
 import { appConfig } from "../../config/app.config";
 
 const dict = { en, pcm } as const;
 
-interface SpotInfo { id: string; name: string; city: string | null; disco: string | null; band: string | null }
 interface SavedSpot { id: string; label: string | null; name: string }
-interface StatusRow { status: SpotState; since: Date | null; lastReportAt: Date | null }
 
 function fmt(s: string, vars: Record<string, string>) {
   return s.replace(/\{(\w+)\}/g, (_, k) => vars[k] ?? "");
@@ -57,17 +56,16 @@ export default function HomeClient() {
   const [saved, setSaved] = useState<SavedSpot[]>([]);
   const [activeId, setActiveId] = useState<string | null>(null);
   const [sheet, setSheet] = useState(false);
-  const [spot, setSpot] = useState<SpotInfo | null>(null);
-  const [row, setRow] = useState<StatusRow>({ status: "unknown", since: null, lastReportAt: null });
-  const [sessions, setSessions] = useState<SupplySession[]>([]);
-  const [loaded, setLoaded] = useState(false);
   const [now, setNow] = useState(0);
-  const [message, setMessage] = useState<string | null>(null);
-  const [busy, setBusy] = useState(false);
   const [streak, setStreak] = useState(0);
   const [points, setPoints] = useState(0);
   const t = dict[lang];
-  const { box: turnstileBox, getToken } = useTurnstile(process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY || appConfig.turnstileSiteKey);
+
+  const { loaded, spot, row, sessions, setRow } = useSpotLive(activeId);
+  const { report, busy, message, turnstileBox } = useReport({
+    spot, row, setRow, t,
+    onAwarded: (r) => { setPoints(r.points); setStreak(r.streak); },
+  });
 
   // A ticking clock (updated from timers, never during render)
   useEffect(() => {
@@ -79,7 +77,7 @@ export default function HomeClient() {
 
   useEffect(() => { document.documentElement.dataset.theme = theme; }, [theme]);
 
-  // 1. Who is this, which spots have they saved, and which one are we showing?
+  // Who is this, which spots have they saved, and which one are we showing?
   useEffect(() => {
     let cancelled = false;
     (async () => {
@@ -107,59 +105,11 @@ export default function HomeClient() {
     return () => { cancelled = true; };
   }, [router]);
 
-  // 2. Load the active spot's status and today's hours, then listen for live changes.
-  useEffect(() => {
-    if (!activeId) return;
-    const sb = supabase();
-    let channel: ReturnType<typeof sb.channel> | null = null;
-    let cancelled = false;
-
-    (async () => {
-      const dayStart = lagosDayStart(new Date()).toISOString();
-      const [spotRes, statusRes, sessRes] = await Promise.all([
-        sb.from("spots").select("id,name,band,discos(code),areas(city)").eq("id", activeId).single(),
-        sb.from("spot_status").select("status,since,last_report_at").eq("spot_id", activeId).maybeSingle(),
-        sb.from("supply_sessions").select("status,started_at,ended_at,last_confirmed_at").eq("spot_id", activeId).or(`ended_at.is.null,ended_at.gte.${dayStart}`),
-      ]);
-      if (cancelled) return;
-
-      if (spotRes.data) {
-        const s = spotRes.data as unknown as { id: string; name: string; band: string | null; discos: { code: string } | null; areas: { city: string | null } | null };
-        setSpot({ id: s.id, name: s.name, band: s.band, disco: s.discos?.code ?? null, city: s.areas?.city ?? null });
-      }
-      setRow(statusRes.data ? {
-        status: statusRes.data.status as SpotState,
-        since: statusRes.data.since ? new Date(statusRes.data.since) : null,
-        lastReportAt: statusRes.data.last_report_at ? new Date(statusRes.data.last_report_at) : null,
-      } : { status: "unknown", since: null, lastReportAt: null });
-      setSessions((sessRes.data ?? []).map((s) => ({
-        status: s.status as ReportStatus, startedAt: new Date(s.started_at),
-        endedAt: s.ended_at ? new Date(s.ended_at) : null, lastConfirmedAt: new Date(s.last_confirmed_at),
-      })));
-      setLoaded(true);
-
-      // Live updates: when anyone's report changes this spot, it changes here too.
-      channel = sb.channel(`spot-${activeId}`)
-        .on("postgres_changes", { event: "*", schema: "public", table: "spot_status", filter: `spot_id=eq.${activeId}` }, (p) => {
-          const n = p.new as { status: SpotState; since: string | null; last_report_at: string | null };
-          setRow({ status: n.status, since: n.since ? new Date(n.since) : null, lastReportAt: n.last_report_at ? new Date(n.last_report_at) : null });
-        })
-        .subscribe();
-    })();
-
-    return () => { cancelled = true; if (channel) sb.removeChannel(channel); };
-  }, [activeId]);
-
   function switchTo(id: string) {
-    if (id === activeId) { setSheet(false); return; }
-    setLoaded(false);
-    setSpot(null);
-    setRow({ status: "unknown", since: null, lastReportAt: null });
-    setSessions([]);
-    setMessage(null);
+    setSheet(false);
+    if (id === activeId) return;
     setActiveSpot(id);
     setActiveId(id);
-    setSheet(false);
   }
 
   async function removeSpot(id: string) {
@@ -186,43 +136,6 @@ export default function HomeClient() {
     return d.on + d.weak + d.off === 0 ? null : (d.on + d.weak) / 60;
   }, [sessions, now]);
 
-  const report = useCallback(async (s: ReportStatus) => {
-    if (busy || !spot) return;
-    setBusy(true);
-    setMessage(null);
-    navigator.vibrate?.(30);
-    const before = row;
-    // Instant feedback: show the new status straight away, then settle on what the server decides.
-    setRow({ status: s, since: before.status === s ? before.since : new Date(), lastReportAt: new Date() });
-    try {
-      const [access, captcha] = await Promise.all([ensureSession(), getToken()]);
-      const res = await fetch("/api/report", {
-        method: "POST",
-        headers: { "content-type": "application/json", authorization: `Bearer ${access ?? ""}`, "x-device-id": deviceId() },
-        body: JSON.stringify({ spotId: spot.id, status: s, turnstileToken: captcha ?? undefined }),
-      });
-      const json = await res.json();
-      if (res.ok && json.ok) {
-        setRow({ status: json.status, since: new Date(json.since), lastReportAt: new Date() });
-        setPoints(json.points);
-        setStreak(json.streak);
-        setMessage(json.isConfirmation ? t.thanks.confirm : t.thanks[s]);
-      } else {
-        setRow(before);
-        if (json.error === "cooldown") setMessage(fmt(t.errors.cooldown, { mins: String(Math.max(1, Math.ceil((json.retryAfterSeconds ?? 60) / 60))) }));
-        else if (json.error === "bot_check_failed") setMessage(t.errors.bot);
-        else if (["user", "device", "ip"].includes(json.error)) setMessage(t.errors.limit);
-        else setMessage(t.errors.generic);
-      }
-    } catch {
-      setRow(before);
-      setMessage(t.errors.offline);
-    } finally {
-      setBusy(false);
-      setTimeout(() => setMessage(null), 5000);
-    }
-  }, [busy, spot, row, t, getToken]);
-
   // ---- Words on screen ----
   const duration = row.since && now ? formatDuration(now - row.since.getTime()) : "";
   const time = row.since ? formatLagosTime(row.since) : "";
@@ -232,7 +145,7 @@ export default function HomeClient() {
     sinceText = fmt(t.since.stale, { ago: formatAgo(now - row.lastReportAt.getTime()) });
   }
   const word = t.status[shown.status];
-  const dot = shown.status === "on" ? "var(--ok)" : shown.status === "weak" ? "var(--warn, var(--weak))" : "var(--off)";
+  const dot = shown.status === "on" ? "var(--ok)" : shown.status === "weak" ? "var(--weak)" : "var(--off)";
   const activeSaved = saved.find((s) => s.id === activeId);
   const title = spot ? shortName(spot.name) : "…";
   const subline = spot ? [spot.city, spot.disco, spot.band ? `Band ${spot.band}` : null].filter(Boolean).join(" · ") : "";
@@ -303,6 +216,13 @@ export default function HomeClient() {
           </div>
         ))}
       </section>
+
+      {spot && (
+        <Link href={`/spot/${spot.id}`} className="press panel mt-6 flex min-h-14 items-center justify-between rounded-2xl px-5 text-[16px] font-medium">
+          {t.spotPage.details}
+          <span aria-hidden="true" className="text-muted">→</span>
+        </Link>
+      )}
 
       {/* Invisible bot check (Cloudflare Turnstile). Takes no space unless Cloudflare needs to ask something. */}
       <div ref={turnstileBox} className="mt-4 flex justify-center" />

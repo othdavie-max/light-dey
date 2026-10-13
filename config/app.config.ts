@@ -56,6 +56,14 @@ export const appConfig = {
 
   // Data quality: fewer reporters than this in a week = "limited data"
   minReportersForConfidentStats: 3,
+  dataQuality: {
+    goodReporters: 10,               // this many people in a week (and enough coverage) = "good"
+    goodCoverage: 0.7,               // share of the week we actually know about
+    lowCoverage: 0.4,                // below this share = "low", however many people reported
+  },
+
+  // An area is "mostly on" or "mostly off" when this share of its spots (that we know about) agree.
+  areaRollup: { mostlyShare: 0.7 },
 };
 
 export type AppConfig = typeof appConfig;

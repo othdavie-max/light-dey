@@ -14,6 +14,10 @@
   --off: #55627f;
   --weak: #ff9a4d;
   --ok: #34d399;
+  /* Timeline: light = amber, no light = deep navy, not reported = grey hatching */
+  --seg-off: #1a2342;
+  --seg-unknown-a: #6d7592;
+  --seg-unknown-b: #565d78;
 }
 :root[data-theme="light"] {
   --bg: #f4efe6;
@@ -24,6 +28,9 @@
   --text: #171b30;
   --muted: #5d6685;
   --off: #6b7699;
+  --seg-off: #3a4570;
+  --seg-unknown-a: #c4c9d8;
+  --seg-unknown-b: #adb3c6;
 }
 
 /* Background shifts subtly with status */
