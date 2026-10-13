@@ -1,11 +1,30 @@
 {
   "app": { "name": "Light Dey?", "tagline": "Light dey? Tell your neighbours." },
-  "status": { "on": "Light dey", "off": "No light", "weak": "Light dey but e weak", "unknown": "Nobody don talk" },
-  "since": { "on": "Light don stay {duration}", "off": "NEPA don take light since {time}", "weak": "Light dey weak for {duration}", "unknown": "Be the first to report" },
+  "status": { "on": "Light dey", "off": "No light", "weak": "Light dey but e weak", "mixed": "Reports no gree", "unknown": "Nobody don talk" },
+  "since": {
+    "on": "Light don stay {duration}",
+    "off": "NEPA don take light since {time}",
+    "weak": "Light dey weak for {duration}",
+    "mixed": "Your neighbours dey talk different tins",
+    "unknown": "Be the first to report",
+    "stale": "Last confirm na {ago} ago",
+    "loading": "I dey check the light…"
+  },
   "buttons": { "on": "Light dey", "off": "No light", "weak": "Light dey but e weak" },
-  "thanks": { "on": "Oya, thank you! Your neighbours go dey happy.", "off": "NEPA don do am again 😩 Thanks for the gist.", "weak": "Weak light? Wahala. Thank you o." },
+  "thanks": {
+    "on": "Oya, thank you! Your neighbours go dey happy.",
+    "off": "NEPA don do am again 😩 Thanks for the gist.",
+    "weak": "Weak light? Wahala. Thank you o.",
+    "confirm": "Thanks for confirm am!"
+  },
+  "errors": {
+    "cooldown": "Easy o! Wait {mins} min before you report here again.",
+    "limit": "Too many reports from this phone. Try again later.",
+    "offline": "No network now. Try again.",
+    "bot": "We no sure say na person. Refresh the page and try again.",
+    "generic": "Something happen. Try again."
+  },
   "stats": { "today": "Light today", "streak": "Days for row", "points": "Points" },
   "nav": { "home": "Home", "explore": "Find area", "board": "Board", "profile": "Me" },
-  "lang": "English",
-  "demo": "Demo data"
+  "lang": "English"
 }

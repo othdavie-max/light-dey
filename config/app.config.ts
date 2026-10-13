@@ -36,6 +36,13 @@ export const appConfig = {
     signedInMultiplier: 1.15,        // small boost for signed-in users
   },
 
+  // Points (payouts come in Phase 4; this only counts)
+  points: {
+    report: 10,
+    confirmation: 2,                 // same status as already showing
+    firstToReportChange: 5,          // bonus for being the one whose report changed the status
+  },
+
   // Rate limits. Each rule: at most `max` reports per `windowSeconds`.
   rateLimits: {
     perUser:   { windowSeconds: 3600, max: 30 },

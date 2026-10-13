@@ -1,11 +1,30 @@
 {
   "app": { "name": "Light Dey?", "tagline": "Is there light? Tell your neighbours." },
-  "status": { "on": "There is light", "off": "No light", "weak": "Light, but weak", "unknown": "No reports yet" },
-  "since": { "on": "Light has been on for {duration}", "off": "No light since {time}", "weak": "Weak light for {duration}", "unknown": "Be the first to report" },
+  "status": { "on": "There is light", "off": "No light", "weak": "Light, but weak", "mixed": "Mixed reports", "unknown": "No reports yet" },
+  "since": {
+    "on": "Light has been on for {duration}",
+    "off": "No light since {time}",
+    "weak": "Weak light for {duration}",
+    "mixed": "Neighbours are reporting different things",
+    "unknown": "Be the first to report",
+    "stale": "Last confirmed {ago} ago",
+    "loading": "Checking the light…"
+  },
   "buttons": { "on": "Light is on", "off": "No light", "weak": "Light is on but weak" },
-  "thanks": { "on": "Thank you! Your neighbours will be happy.", "off": "NEPA has done it again. Thanks for letting us know.", "weak": "Weak light? Thanks for reporting." },
+  "thanks": {
+    "on": "Thank you! Your neighbours will be happy.",
+    "off": "NEPA has done it again. Thanks for letting us know.",
+    "weak": "Weak light? Thanks for reporting.",
+    "confirm": "Thanks for confirming!"
+  },
+  "errors": {
+    "cooldown": "Thanks! You can report here again in {mins} min.",
+    "limit": "Too many reports from this phone. Please try again later.",
+    "offline": "No network right now. Please try again.",
+    "bot": "We could not confirm you are a person. Refresh the page and try again.",
+    "generic": "Something went wrong. Please try again."
+  },
   "stats": { "today": "Light today", "streak": "Day streak", "points": "Points" },
   "nav": { "home": "Home", "explore": "Explore", "board": "Board", "profile": "Profile" },
-  "lang": "Pidgin",
-  "demo": "Demo data"
+  "lang": "Pidgin"
 }
