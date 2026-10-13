@@ -9,6 +9,7 @@ import { computeStatus } from "@/lib/status/compute";
 import { dailyTotals, lagosDayStart } from "@/lib/status/hours";
 import type { ReportStatus, SpotState, SupplySession } from "@/lib/status/types";
 import { formatAgo, formatDuration, formatLagosTime } from "@/lib/format";
+import { appConfig } from "../../config/app.config";
 
 const dict = { en, pcm } as const;
 type Lang = keyof typeof dict;
@@ -60,7 +61,7 @@ export default function HomeClient() {
   const [streak, setStreak] = useState(0);
   const [points, setPoints] = useState(0);
   const t = dict[lang];
-  const { box: turnstileBox, getToken } = useTurnstile(process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY);
+  const { box: turnstileBox, getToken } = useTurnstile(process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY || appConfig.turnstileSiteKey);
 
   // A ticking clock (updated from timers, never during render)
   useEffect(() => {

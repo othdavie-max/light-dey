@@ -17,16 +17,24 @@ export function supabase(): SupabaseClient {
  * Everyone gets a real (anonymous) account the first time they open the app, so the first report is
  * instant and streaks/points have somewhere to live. Signing in later upgrades the same account.
  */
-export async function ensureSession(): Promise<string | null> {
-  const sb = supabase();
-  const { data } = await sb.auth.getSession();
-  if (data.session) return data.session.access_token;
-  const { data: anon, error } = await sb.auth.signInAnonymously();
-  if (error) {
-    console.error("Anonymous sign-in failed. Is 'Allow anonymous sign-ins' switched on in Supabase?", error.message);
-    return null;
+let pending: Promise<string | null> | null = null;
+
+export function ensureSession(): Promise<string | null> {
+  // Callers that arrive together (React strict mode, a quick tap) share one sign-in instead of making several accounts.
+  if (!pending) {
+    pending = (async () => {
+      const sb = supabase();
+      const { data } = await sb.auth.getSession();
+      if (data.session) return data.session.access_token;
+      const { data: anon, error } = await sb.auth.signInAnonymously();
+      if (error) {
+        console.error("Anonymous sign-in failed. Is 'Allow anonymous sign-ins' switched on in Supabase?", error.message);
+        return null;
+      }
+      return anon.session?.access_token ?? null;
+    })().finally(() => { pending = null; });
   }
-  return anon.session?.access_token ?? null;
+  return pending;
 }
 
 /** A random id for this phone, kept on the phone. Only a hash of it is ever stored on the server. */

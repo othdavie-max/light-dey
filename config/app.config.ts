@@ -1,5 +1,9 @@
 // Every limit and threshold lives here so you can change it without touching logic.
 export const appConfig = {
+  // Cloudflare Turnstile SITE key. Public by design (it sits in the web page); the SECRET key never goes here.
+  // NEXT_PUBLIC_TURNSTILE_SITE_KEY, if set, takes priority.
+  turnstileSiteKey: "0x4AAAAAAFVjYUjMWxYVwnFa",
+
   // Reporting
   reportCooldownMinutes: 10,         // same person, same spot
   maxSavedSpots: 3,
