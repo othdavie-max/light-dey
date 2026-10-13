@@ -1,10 +1,12 @@
 "use client";
 import { useCallback, useEffect, useMemo, useState } from "react";
+import { useRouter } from "next/navigation";
 import en from "@/i18n/en.json";
 import pcm from "@/i18n/pcm.json";
 import Bulb, { type Status } from "./Bulb";
 import { supabase, ensureSession, deviceId } from "@/lib/supabase/browser";
 import { useTurnstile } from "@/lib/useTurnstile";
+import { useLang, useTheme, getActiveSpot, setActiveSpot } from "@/lib/prefs";
 import { computeStatus } from "@/lib/status/compute";
 import { dailyTotals, lagosDayStart } from "@/lib/status/hours";
 import type { ReportStatus, SpotState, SupplySession } from "@/lib/status/types";
@@ -12,17 +14,15 @@ import { formatAgo, formatDuration, formatLagosTime } from "@/lib/format";
 import { appConfig } from "../../config/app.config";
 
 const dict = { en, pcm } as const;
-type Lang = keyof typeof dict;
-
-// TEMPORARY until onboarding exists (next step): everyone starts on Wuye, Abuja.
-const DEFAULT_SPOT_NAME = "Wuye (whole area)";
 
 interface SpotInfo { id: string; name: string; city: string | null; disco: string | null; band: string | null }
+interface SavedSpot { id: string; label: string | null; name: string }
 interface StatusRow { status: SpotState; since: Date | null; lastReportAt: Date | null }
 
 function fmt(s: string, vars: Record<string, string>) {
   return s.replace(/\{(\w+)\}/g, (_, k) => vars[k] ?? "");
 }
+const shortName = (n: string) => n.replace(/ \(whole area\)$/, "");
 
 const Icon = {
   home: <path d="M4 11l8-7 8 7v8a1 1 0 0 1-1 1h-4v-6H9v6H5a1 1 0 0 1-1-1z" />,
@@ -38,6 +38,8 @@ const Icon = {
   clock: <><circle cx="12" cy="12" r="8.5" /><path d="M12 7.5V12l3 2" /></>,
   flame: <path d="M12 3c1 3.5 5 5.5 5 10a5 5 0 0 1-10 0c0-2 1-3 2-4 .3 1.5 1 2 1.5 2C10.5 8.5 11 6 12 3z" />,
   star: <path d="M12 3.5l2.6 5.4 5.9.8-4.3 4.1 1 5.8L12 16.8l-5.2 2.8 1-5.8L3.5 9.7l5.9-.8z" />,
+  plus: <path d="M12 5v14M5 12h14" />,
+  trash: <path d="M5 7h14M10 7V5h4v2M7 7l1 12h8l1-12" />,
 };
 
 function Ico({ d, size = 22 }: { d: React.ReactNode; size?: number }) {
@@ -49,8 +51,12 @@ function Ico({ d, size = 22 }: { d: React.ReactNode; size?: number }) {
 }
 
 export default function HomeClient() {
-  const [lang, setLang] = useState<Lang>("pcm");
-  const [theme, setTheme] = useState<"dark" | "light">("dark");
+  const router = useRouter();
+  const [lang, setLang] = useLang();
+  const [theme, setTheme] = useTheme();
+  const [saved, setSaved] = useState<SavedSpot[]>([]);
+  const [activeId, setActiveId] = useState<string | null>(null);
+  const [sheet, setSheet] = useState(false);
   const [spot, setSpot] = useState<SpotInfo | null>(null);
   const [row, setRow] = useState<StatusRow>({ status: "unknown", since: null, lastReportAt: null });
   const [sessions, setSessions] = useState<SupplySession[]>([]);
@@ -73,30 +79,47 @@ export default function HomeClient() {
 
   useEffect(() => { document.documentElement.dataset.theme = theme; }, [theme]);
 
-  // Load the spot, its status, today's sessions and the person's points. Then listen for live changes.
+  // 1. Who is this, which spots have they saved, and which one are we showing?
   useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      const sb = supabase();
+      const token = await ensureSession();
+      const { data: u } = await sb.auth.getUser();
+      if (cancelled) return;
+      let list: SavedSpot[] = [];
+      if (token && u.user) {
+        const [{ data: rows }, prof] = await Promise.all([
+          sb.from("saved_spots").select("spot_id,label,position,spots(name)").eq("user_id", u.user.id).order("position"),
+          sb.from("profiles").select("points,streak_current").eq("id", u.user.id).maybeSingle(),
+        ]);
+        list = (rows ?? []).map((r) => ({ id: r.spot_id, label: r.label, name: (r.spots as unknown as { name: string } | null)?.name ?? "" }));
+        if (prof.data) { setPoints(prof.data.points); setStreak(prof.data.streak_current); }
+      }
+      if (cancelled) return;
+      setSaved(list);
+      const remembered = getActiveSpot();
+      const pick = list.find((s) => s.id === remembered)?.id ?? list[0]?.id ?? null;
+      if (!pick) { router.replace("/onboarding"); return; }
+      setActiveSpot(pick);
+      setActiveId(pick);
+    })();
+    return () => { cancelled = true; };
+  }, [router]);
+
+  // 2. Load the active spot's status and today's hours, then listen for live changes.
+  useEffect(() => {
+    if (!activeId) return;
     const sb = supabase();
     let channel: ReturnType<typeof sb.channel> | null = null;
     let cancelled = false;
 
     (async () => {
-      const token = await ensureSession();
-      const { data: u } = await sb.auth.getUser();
-
-      let spotId: string | null = null;
-      try { spotId = localStorage.getItem("ld_spot"); } catch { /* storage blocked: fall back to default */ }
-      if (!spotId) {
-        const { data } = await sb.from("spots").select("id").eq("name", DEFAULT_SPOT_NAME).maybeSingle();
-        spotId = data?.id ?? null;
-      }
-      if (!spotId || cancelled) return;
-
       const dayStart = lagosDayStart(new Date()).toISOString();
-      const [spotRes, statusRes, sessRes, profRes] = await Promise.all([
-        sb.from("spots").select("id,name,band,discos(code),areas(city)").eq("id", spotId).single(),
-        sb.from("spot_status").select("status,since,last_report_at").eq("spot_id", spotId).maybeSingle(),
-        sb.from("supply_sessions").select("status,started_at,ended_at,last_confirmed_at").eq("spot_id", spotId).or(`ended_at.is.null,ended_at.gte.${dayStart}`),
-        token && u.user ? sb.from("profiles").select("points,streak_current").eq("id", u.user.id).maybeSingle() : Promise.resolve({ data: null }),
+      const [spotRes, statusRes, sessRes] = await Promise.all([
+        sb.from("spots").select("id,name,band,discos(code),areas(city)").eq("id", activeId).single(),
+        sb.from("spot_status").select("status,since,last_report_at").eq("spot_id", activeId).maybeSingle(),
+        sb.from("supply_sessions").select("status,started_at,ended_at,last_confirmed_at").eq("spot_id", activeId).or(`ended_at.is.null,ended_at.gte.${dayStart}`),
       ]);
       if (cancelled) return;
 
@@ -104,23 +127,20 @@ export default function HomeClient() {
         const s = spotRes.data as unknown as { id: string; name: string; band: string | null; discos: { code: string } | null; areas: { city: string | null } | null };
         setSpot({ id: s.id, name: s.name, band: s.band, disco: s.discos?.code ?? null, city: s.areas?.city ?? null });
       }
-      if (statusRes.data) {
-        setRow({
-          status: statusRes.data.status as SpotState,
-          since: statusRes.data.since ? new Date(statusRes.data.since) : null,
-          lastReportAt: statusRes.data.last_report_at ? new Date(statusRes.data.last_report_at) : null,
-        });
-      }
+      setRow(statusRes.data ? {
+        status: statusRes.data.status as SpotState,
+        since: statusRes.data.since ? new Date(statusRes.data.since) : null,
+        lastReportAt: statusRes.data.last_report_at ? new Date(statusRes.data.last_report_at) : null,
+      } : { status: "unknown", since: null, lastReportAt: null });
       setSessions((sessRes.data ?? []).map((s) => ({
         status: s.status as ReportStatus, startedAt: new Date(s.started_at),
         endedAt: s.ended_at ? new Date(s.ended_at) : null, lastConfirmedAt: new Date(s.last_confirmed_at),
       })));
-      if (profRes.data) { setPoints(profRes.data.points); setStreak(profRes.data.streak_current); }
       setLoaded(true);
 
       // Live updates: when anyone's report changes this spot, it changes here too.
-      channel = sb.channel(`spot-${spotId}`)
-        .on("postgres_changes", { event: "*", schema: "public", table: "spot_status", filter: `spot_id=eq.${spotId}` }, (p) => {
+      channel = sb.channel(`spot-${activeId}`)
+        .on("postgres_changes", { event: "*", schema: "public", table: "spot_status", filter: `spot_id=eq.${activeId}` }, (p) => {
           const n = p.new as { status: SpotState; since: string | null; last_report_at: string | null };
           setRow({ status: n.status, since: n.since ? new Date(n.since) : null, lastReportAt: n.last_report_at ? new Date(n.last_report_at) : null });
         })
@@ -128,14 +148,35 @@ export default function HomeClient() {
     })();
 
     return () => { cancelled = true; if (channel) sb.removeChannel(channel); };
-  }, []);
+  }, [activeId]);
+
+  function switchTo(id: string) {
+    if (id === activeId) { setSheet(false); return; }
+    setLoaded(false);
+    setSpot(null);
+    setRow({ status: "unknown", since: null, lastReportAt: null });
+    setSessions([]);
+    setMessage(null);
+    setActiveSpot(id);
+    setActiveId(id);
+    setSheet(false);
+  }
+
+  async function removeSpot(id: string) {
+    const sb = supabase();
+    const { data: u } = await sb.auth.getUser();
+    if (!u.user) return;
+    await sb.from("saved_spots").delete().eq("user_id", u.user.id).eq("spot_id", id);
+    const rest = saved.filter((s) => s.id !== id);
+    setSaved(rest);
+    if (id === activeId) {
+      if (rest[0]) switchTo(rest[0].id);
+      else router.replace("/onboarding");
+    }
+  }
 
   // What to show: the stored status, aged by the clock (stale / unknown after long silence)
-  const shown = useMemo(() => {
-    const at = new Date(now || 0);
-    return computeStatus([], row, at);
-  }, [row, now]);
-
+  const shown = useMemo(() => computeStatus([], row, new Date(now || 0)), [row, now]);
   const bulb: Status = shown.status === "mixed" ? "unknown" : shown.status;
   useEffect(() => { document.body.dataset.status = bulb; }, [bulb]);
 
@@ -191,8 +232,9 @@ export default function HomeClient() {
     sinceText = fmt(t.since.stale, { ago: formatAgo(now - row.lastReportAt.getTime()) });
   }
   const word = t.status[shown.status];
-  const dot = shown.status === "on" ? "var(--ok)" : shown.status === "weak" ? "var(--weak)" : "var(--off)";
-  const title = spot ? spot.name.replace(/ \(whole area\)$/, "") : "…";
+  const dot = shown.status === "on" ? "var(--ok)" : shown.status === "weak" ? "var(--warn, var(--weak))" : "var(--off)";
+  const activeSaved = saved.find((s) => s.id === activeId);
+  const title = spot ? shortName(spot.name) : "…";
   const subline = spot ? [spot.city, spot.disco, spot.band ? `Band ${spot.band}` : null].filter(Boolean).join(" · ") : "";
 
   const stats: [React.ReactNode, string, string][] = [
@@ -206,13 +248,13 @@ export default function HomeClient() {
 
   return (
     <main className="mx-auto flex min-h-dvh max-w-md flex-col px-5 pb-40 pt-4">
-      <header className="flex items-center justify-between">
-        <button className="press panel flex min-h-12 items-center gap-2 rounded-full pl-3.5 pr-3 text-[15px] font-medium">
+      <header className="flex items-center justify-between gap-2">
+        <button onClick={() => setSheet(true)} aria-haspopup="dialog" className="press panel flex min-h-12 min-w-0 items-center gap-2 rounded-full pl-3.5 pr-3 text-[15px] font-medium">
           <Ico d={Icon.home} size={20} />
-          {title}
+          <span className="truncate">{activeSaved?.label ? `${activeSaved.label} · ${title}` : title}</span>
           <Ico d={Icon.chevron} size={16} />
         </button>
-        <div className="flex gap-2">
+        <div className="flex shrink-0 gap-2">
           <button onClick={() => setLang(lang === "en" ? "pcm" : "en")} aria-label={t.lang} className="press panel grid h-12 min-w-12 place-items-center rounded-full px-3 text-[13px] font-semibold">
             {lang === "en" ? "EN" : "PGN"}
           </button>
@@ -277,6 +319,40 @@ export default function HomeClient() {
           ))}
         </ul>
       </nav>
+
+      {sheet && (
+        <div className="fixed inset-0 z-50 flex items-end bg-black/60" onClick={() => setSheet(false)} onKeyDown={(e) => e.key === "Escape" && setSheet(false)}>
+          <div role="dialog" aria-modal="true" aria-label={t.spots.title} onClick={(e) => e.stopPropagation()}
+            className="mx-auto w-full max-w-md rounded-t-[28px] p-5 pb-8" style={{ background: "var(--bg)", border: "1px solid var(--panel-border)" }}>
+            <div className="flex items-center justify-between">
+              <h3 className="text-[20px] font-medium">{t.spots.title}</h3>
+              <button onClick={() => setSheet(false)} className="press min-h-12 px-3 text-[15px] text-muted">{t.spots.close}</button>
+            </div>
+            <ul className="mt-3 space-y-2">
+              {saved.length === 0 && <li className="text-muted">{t.spots.empty}</li>}
+              {saved.map((s) => (
+                <li key={s.id} className="flex gap-2">
+                  <button onClick={() => switchTo(s.id)} className="press panel min-h-14 flex-1 rounded-2xl px-4 text-left"
+                    style={s.id === activeId ? { borderColor: "var(--on)", boxShadow: "0 0 0 1px var(--on)" } : undefined}>
+                    <span className="block text-[16px] font-medium">{shortName(s.name)}</span>
+                    {s.label && <span className="text-sm text-muted">{s.label}</span>}
+                  </button>
+                  <button onClick={() => removeSpot(s.id)} aria-label={`${t.spots.remove} ${shortName(s.name)}`} className="press panel grid h-14 w-14 place-items-center rounded-2xl text-muted">
+                    <Ico d={Icon.trash} size={20} />
+                  </button>
+                </li>
+              ))}
+            </ul>
+            {saved.length < appConfig.maxSavedSpots ? (
+              <button onClick={() => router.push("/onboarding?add=1")} className="press mt-4 flex min-h-14 w-full items-center justify-center gap-2 rounded-2xl text-[16px] font-medium" style={{ background: "var(--panel-strong)", border: "1px solid var(--panel-border)" }}>
+                <Ico d={Icon.plus} size={20} /> {t.spots.add}
+              </button>
+            ) : (
+              <p className="mt-4 text-sm text-muted">{t.spots.full}</p>
+            )}
+          </div>
+        </div>
+      )}
     </main>
   );
 }

@@ -54,11 +54,15 @@ const lgaId = new Map(lgas.map((l) => [`${l.state_id}:${l.slug}`, l.id]));
 
 // Areas
 const { entries } = read("areas.json");
+const coords = read("area-coords.json");   // approximate centres, used to suggest nearby areas
 const areaRows = entries.flatMap((e) => {
   const sid = stateId.get(slugify(e.state));
   const lid = lgaId.get(`${sid}:${slugify(e.lga)}`);
   if (!lid) throw new Error(`Unknown LGA in areas.json: ${e.state} / ${e.lga}`);
-  return e.areas.map((name) => ({ lga_id: lid, name, slug: slugify(name), city: e.city ?? null }));
+  return e.areas.map((name) => {
+    const c = coords[`${(e.city ?? "").toLowerCase()}/${slugify(name)}`];
+    return { lga_id: lid, name, slug: slugify(name), city: e.city ?? null, lat: c ? c[0] : null, lng: c ? c[1] : null };
+  });
 });
 await upsert("areas", areaRows, "lga_id,slug");
 

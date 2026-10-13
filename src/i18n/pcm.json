@@ -26,5 +26,67 @@
   },
   "stats": { "today": "Light today", "streak": "Days for row", "points": "Points" },
   "nav": { "home": "Home", "explore": "Find area", "board": "Board", "profile": "Me" },
-  "lang": "English"
+  "lang": "English",
+  "spots": {
+    "title": "Your spots",
+    "add": "Add another spot",
+    "remove": "Remove",
+    "full": "You fit save 3 spots. Remove one before you add another.",
+    "empty": "You never save any spot yet.",
+    "close": "Close"
+  },
+  "onboarding": {
+    "back": "Go back",
+    "welcome": {
+      "title": "Light dey? Tell your neighbours.",
+      "body": "Use two taps to report if light dey for your area. As we dey do am together, everybody go see wetin really dey happen: when light come, when e go, and how many hours your area dey get.",
+      "language": "Choose your language",
+      "next": "Oya, make we go"
+    },
+    "spot": {
+      "title": "Which place you want make we dey track light?",
+      "search": "Search your area (like Wuye, Lekki)",
+      "useLocation": "Use my location show me areas",
+      "locationNote": "Na only your phone go use am to suggest areas near you. We no dey save or share where you dey.",
+      "locating": "I dey find areas near you…",
+      "locationDenied": "No wahala. Just search your area.",
+      "locationNone": "We never see area near you. Search yours.",
+      "nearby": "Near you",
+      "results": "Areas",
+      "noResults": "We no see the area. Try another spelling, or browse by state.",
+      "browse": "Browse by state",
+      "pickState": "Choose state",
+      "pickLga": "Choose your LGA",
+      "noAreasYet": "We never reach {lga} yet. Light Dey? dey start for Abuja and Lagos, more places dey come.",
+      "spots": "Pick spot for {area}",
+      "wholeArea": "Whole area (e good for most people)",
+      "pending": "New, we dey check am",
+      "addSpot": "My street or estate no dey here",
+      "newName": "Street, estate, close or compound",
+      "newHint": "Like: Sunshine Estate",
+      "create": "Add am and use am",
+      "didYouMean": "You mean one of these?",
+      "createAnyway": "No, mine na different",
+      "exists": "That spot don dey this area already. Choose am from the list.",
+      "nameShort": "Type at least 3 letters abeg.",
+      "label": "Save am as",
+      "labels": { "home": "Home", "office": "Office", "family": "Mama house", "other": "Other" },
+      "full": "You don save 3 spots already. Remove one for home screen first.",
+      "continue": "Continue",
+      "saving": "I dey save…",
+      "error": "E no save. Try again."
+    },
+    "extras": {
+      "title": "Small extra details (you fit skip)",
+      "disco": "Who dey bring your light? (DisCo)",
+      "discoUnknown": "I no know",
+      "band": "Your tariff band",
+      "bandHelp": "You fit see am for your light bill or meter. If you no sure, skip am.",
+      "alreadySet": "This spot don get these details already. Thank you!",
+      "notify": "Make we ping you when light come back",
+      "notifyNote": "Light alerts dey come soon. If you get iPhone, you go first add the app to Home Screen.",
+      "skip": "Skip",
+      "done": "Start to report"
+    }
+  }
 }

@@ -13,7 +13,11 @@ export const viewport: Viewport = { themeColor: "#060a14", width: "device-width"
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={inter.variable}>
+    <html lang="en" className={inter.variable} suppressHydrationWarning>
+      <head>
+        {/* Apply the saved theme before the first paint so there is no dark/light flash. */}
+        <script dangerouslySetInnerHTML={{ __html: "try{document.documentElement.dataset.theme=localStorage.getItem('ld_theme')||'dark'}catch(e){}" }} />
+      </head>
       <body data-status="unknown" className="min-h-dvh">{children}</body>
     </html>
   );
