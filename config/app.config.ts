@@ -71,6 +71,17 @@ export const appConfig = {
     lowCoverage: 0.4,                // below this share = "low", however many people reported
   },
 
+  // The admin "Reporters" tab highlights people who look like they could be abusing the app.
+  admin: {
+    suspicious: {
+      maxPerHour: 12,                // this many reports in a single hour
+      devices: 4,                    // this many different phones on one account
+      networks: 5,                   // this many different internet connections
+      minReportsForOneSidedCheck: 15,// with at least this many reports...
+      oneSidedShare: 0.95,           // ...nearly all saying the same thing is odd
+    },
+  },
+
   // An area is "mostly on" or "mostly off" when this share of its spots (that we know about) agree.
   areaRollup: { mostlyShare: 0.7 },
 };

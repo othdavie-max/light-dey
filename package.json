@@ -10,7 +10,8 @@
     "seed": "node --env-file=.env.local scripts/seed.mjs",
     "test": "vitest run",
     "demo:seed": "node --env-file=.env.local scripts/demo-data.mjs seed",
-    "demo:clear": "node --env-file=.env.local scripts/demo-data.mjs clear"
+    "demo:clear": "node --env-file=.env.local scripts/demo-data.mjs clear",
+    "make-admin": "node --env-file=.env.local scripts/make-admin.mjs"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.117.3",

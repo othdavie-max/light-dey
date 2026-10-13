@@ -59,7 +59,9 @@ export async function POST(req: Request) {
     if (error) return fail(500, "could_not_save");
     await db.from("flags").insert({
       kind: "attributes", target_type: "spot", target_id: spotId,
-      reason: `Suggested ${Object.entries(update).map(([k, v]) => `${k}=${v}`).join(", ")}`, created_by: user.id,
+      reason: `Suggested ${Object.entries(update).map(([k, v]) => `${k}=${v}`).join(", ")}`,
+      details: update,                  // exactly what was filled in, so an admin can undo it
+      created_by: user.id,
     });
   }
 
