@@ -15,7 +15,7 @@ export default function Bulb({ status }: { status: Status }) {
     <div className="relative mx-auto h-[270px] w-[180px]" aria-hidden="true">
       {/* Floor glow: warm when lit, faint cool haze when off */}
       <div
-        className="pointer-events-none absolute -bottom-4 left-1/2 h-10 w-72 -translate-x-1/2 rounded-full blur-xl transition-all duration-700"
+        className="pointer-events-none absolute -bottom-4 left-1/2 h-10 w-72 -translate-x-1/2 rounded-full transition-all duration-700"
         style={{
           background: lit
             ? "radial-gradient(closest-side, rgba(255,186,90,.6), transparent)"

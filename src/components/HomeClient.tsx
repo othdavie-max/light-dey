@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import en from "@/i18n/en/common.json";
 import pcm from "@/i18n/pcm/common.json";
 import Bulb, { type Status } from "./Bulb";
+import BottomNav from "./BottomNav";
 import ConnectionStatus from "./ConnectionStatus";
 import InstallPrompt from "./InstallPrompt";
 import LegalLinks from "./LegalLinks";
@@ -43,9 +44,6 @@ const shortName = (n: string) => n.replace(/ \(whole area\)$/, "");
 
 const Icon = {
   home: <path d="M4 11l8-7 8 7v8a1 1 0 0 1-1 1h-4v-6H9v6H5a1 1 0 0 1-1-1z" />,
-  search: <><circle cx="11" cy="11" r="6.5" /><path d="M16 16l4.5 4.5" /></>,
-  board: <path d="M5 20V11M12 20V4M19 20v-6" />,
-  user: <><circle cx="12" cy="8" r="4" /><path d="M4.5 20c.8-4 3.8-6 7.5-6s6.7 2 7.5 6" /></>,
   chevron: <path d="M6 9l6 6 6-6" />,
   sun: <><circle cx="12" cy="12" r="4" /><path d="M12 3v2M12 19v2M3 12h2M19 12h2M5.6 5.6L7 7M17 17l1.4 1.4M5.6 18.4L7 17M17 7l1.4-1.4" /></>,
   moon: <path d="M20 14.5A8 8 0 0 1 9.5 4 8 8 0 1 0 20 14.5z" />,
@@ -192,9 +190,6 @@ export default function HomeClient() {
     [<Ico key="f" d={Icon.flame} />, String(streak), t.stats.streak],
     [<Ico key="s" d={Icon.star} />, String(points), t.stats.points],
   ];
-  const nav: [React.ReactNode, string][] = [
-    [Icon.home, t.nav.home], [Icon.search, t.nav.explore], [Icon.board, t.nav.board], [Icon.user, t.nav.profile],
-  ];
 
   return (
     <main className="mx-auto flex min-h-dvh max-w-md flex-col px-5 pb-40 pt-4">
@@ -272,18 +267,7 @@ export default function HomeClient() {
       {/* Invisible bot check (Cloudflare Turnstile). Takes no space unless Cloudflare needs to ask something. */}
       <div ref={turnstileBox} className="mt-4 flex justify-center" />
 
-      <nav className="panel fixed inset-x-4 bottom-4 mx-auto max-w-md rounded-[28px]" style={{ background: "color-mix(in srgb, var(--bg) 70%, var(--panel-strong))" }}>
-        <ul className="flex justify-around px-2 py-1.5">
-          {nav.map(([d, l], idx) => (
-            <li key={l}>
-              <button className="flex min-h-14 min-w-16 flex-col items-center justify-center gap-0.5 text-[11px] font-medium" style={{ color: idx === 0 ? "var(--text)" : "var(--muted)" }}>
-                <Ico d={d} size={23} />
-                {l}
-              </button>
-            </li>
-          ))}
-        </ul>
-      </nav>
+      <BottomNav />
 
       {sheet && (
         <div className="fixed inset-0 z-50 flex items-end bg-black/60" onClick={() => setSheet(false)} onKeyDown={(e) => e.key === "Escape" && setSheet(false)}>

@@ -1,0 +1,30 @@
+{
+  "explore": {
+    "title": "Find an area",
+    "placeholder": "Search area, city or state",
+    "none": "No area found. Try another spelling.",
+    "loading": "Loading areas…",
+    "all": "All areas"
+  },
+  "board": {
+    "title": "Board",
+    "soon": "Leaderboards are coming soon.",
+    "body": "Soon you will see the most helpful reporters and the areas with the most light. Keep reporting: your points and streak already count.",
+    "yourPoints": "Your points",
+    "yourStreak": "Day streak"
+  },
+  "profile": {
+    "title": "Profile",
+    "points": "Points",
+    "streak": "Day streak",
+    "language": "Language",
+    "theme": "Theme",
+    "dark": "Dark",
+    "light": "Light",
+    "spots": "My spots",
+    "myData": "My data: download or delete",
+    "about": "How it works",
+    "privacy": "Privacy Policy",
+    "terms": "Terms of Use"
+  }
+}

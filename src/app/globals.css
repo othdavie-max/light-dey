@@ -62,8 +62,6 @@ body {
 .panel {
   background: var(--panel);
   border: 1px solid var(--panel-border);
-  backdrop-filter: blur(18px);
-  -webkit-backdrop-filter: blur(18px);
 }
 
 /* Real-bulb behaviour: a quick warm-up stutter when power returns, then a barely-there breathing */
@@ -71,12 +69,12 @@ body {
 @keyframes breathe { 0%,100%{opacity:1} 50%{opacity:.94} }
 @keyframes bloom-breathe { 0%,100%{transform:scale(1)} 50%{transform:scale(1.04)} }
 @keyframes weak-flicker { 0%,100%{opacity:.8} 6%{opacity:.5} 10%{opacity:.85} 38%{opacity:.7} 41%{opacity:.4} 46%{opacity:.8} 72%{opacity:.75} 75%{opacity:.55} 80%{opacity:.82} }
-.lit-on { animation: ignite .9s ease-out, breathe 5s ease-in-out .9s infinite; }
+.lit-on { animation: ignite .9s ease-out; }
 .weak-flicker { animation: weak-flicker 2.6s linear infinite; }
 /* Gentler version for the bulb glass itself, so the dark glass never shows through */
 @keyframes weak-shimmer { 0%,100%{opacity:1} 6%{opacity:.86} 10%{opacity:1} 41%{opacity:.82} 46%{opacity:1} 75%{opacity:.9} 80%{opacity:1} }
-.weak-shimmer { animation: weak-shimmer 2.6s linear infinite; }
-.bloom-breathe { animation: bloom-breathe 5s ease-in-out infinite; }
+.weak-shimmer { }
+.bloom-breathe { animation: bloom-breathe 5s ease-in-out infinite; will-change: transform; }
 .press { transition: transform .12s ease, background-color .2s ease; }
 .press:active { transform: scale(.96); }
 
