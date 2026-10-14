@@ -26,7 +26,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en" className={inter.variable} suppressHydrationWarning>
       <head>
         {/* Apply the saved theme before the first paint so there is no dark/light flash. */}
-        <script dangerouslySetInnerHTML={{ __html: "try{document.documentElement.dataset.theme=localStorage.getItem('ld_theme')||'dark'}catch(e){}try{var g=localStorage.getItem('ld_gfx');if(!g){g='full';var c=document.createElement('canvas').getContext('webgl');var x=c&&c.getExtension('WEBGL_debug_renderer_info');var r=x?String(c.getParameter(x.UNMASKED_RENDERER_WEBGL)):'';if(/Mali|PowerVR|Adreno \\(TM\\) [1-5]\\d\\d\\b/i.test(r))g='safe';localStorage.setItem('ld_gfx',g)}if(location.search.indexOf('gfx=safe')>-1){g='safe';localStorage.setItem('ld_gfx',g)}if(location.search.indexOf('gfx=full')>-1){g='full';localStorage.setItem('ld_gfx',g)}document.documentElement.dataset.gfx=g}catch(e){}" }} />
+        <script dangerouslySetInnerHTML={{ __html: "try{document.documentElement.dataset.theme=localStorage.getItem('ld_theme')||'dark'}catch(e){}try{var g=localStorage.getItem('ld_gfx')||'full';if(location.search.indexOf('gfx=full')>-1){g='full';localStorage.setItem('ld_gfx',g)}document.documentElement.dataset.gfx=g}catch(e){}" }} />
       </head>
       <body data-status="unknown" className="min-h-dvh">
         {children}

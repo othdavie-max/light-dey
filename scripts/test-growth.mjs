@@ -14,7 +14,7 @@ const call = (path, token, body) => fetch(`${BASE}${path}`, {
   body: JSON.stringify(body),
 }).then(async (r) => ({ status: r.status, json: await r.json().catch(() => ({})) }));
 
-const created = { users: [], spot: null };
+const created = { users: [], spot: null, spot2: null };
 try {
   const { data: area } = await admin.from("areas").select("id").eq("slug", "wuye").single();
   const { data: spot } = await admin.from("spots").insert({ area_id: area.id, name: `TEST GROWTH ${Date.now()}`, status_flag: "approved", is_demo: true }).select("id").single();
@@ -54,6 +54,14 @@ try {
   await new Promise((r) => setTimeout(r, 2000));                       // badges are worked out just after the reply
   const { data: myBadges } = await admin.from("user_badges").select("badge_code").eq("user_id", FRIEND.id);
   check("badges: awarded after the report (founding reporter)", (myBadges ?? []).some((b) => b.badge_code === "founding_reporter"), JSON.stringify(myBadges));
+
+  // ---- bot check only for a first report ----
+  const { data: spot2 } = await admin.from("spots").insert({ area_id: area.id, name: `TEST GROWTH TWO ${Date.now()}`, status_flag: "approved", is_demo: true }).select("id").single();
+  created.spot2 = spot2.id;
+  const noToken = await call("/api/report", FRIEND.token, { spotId: spot2.id, status: "off" });
+  check("bot check: someone who has already reported does not need a token (no graphics probing on their phone)", noToken.status === 200 && noToken.json.ok, JSON.stringify(noToken.json));
+  const newcomer = await call("/api/report", OLD.token, { spotId: spot2.id, status: "off" });
+  check("bot check: a first report WITHOUT a token is still refused (403)", newcomer.status === 403 && newcomer.json.error === "bot_check_failed", JSON.stringify(newcomer.json));
 
   // ---- follows (alerts) ----
   const f1 = await FRIEND.client.from("follows").insert({ user_id: FRIEND.id, spot_id: spot.id });
@@ -120,6 +128,10 @@ try {
   console.error("TEST CRASHED:", e);
   failures++;
 } finally {
+  if (created.spot2) {
+    for (const t of ["supply_sessions", "reports", "spot_status"]) await admin.from(t).delete().eq("spot_id", created.spot2);
+    await admin.from("spots").delete().eq("id", created.spot2);
+  }
   if (created.spot) {
     await admin.from("supply_sessions").delete().eq("spot_id", created.spot);
     await admin.from("reports").delete().eq("spot_id", created.spot);

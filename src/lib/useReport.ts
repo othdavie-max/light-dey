@@ -16,6 +16,22 @@ interface Texts {
 const fmt = (s: string, v: Record<string, string>) => s.replace(/\{(\w+)\}/g, (_, k) => v[k] ?? "");
 const storage = () => { try { return window.localStorage; } catch { return null; } };
 
+const VOUCH = "ld_vouched";   // set once the server has accepted a report from this phone: no more bot checks after that
+
+/** Sends a report. Gets a bot-check token only for a phone's first report, or if the server asks for one. */
+async function sendSmart(body: Record<string, unknown>, access: string | null, getToken: () => Promise<string | null>) {
+  const st = storage();
+  let token: string | null = st?.getItem(VOUCH) === "1" ? null : await getToken();
+  let r = await send({ ...body, turnstileToken: token ?? undefined }, access);
+  if (r.kind === "done" && (r.json as { error?: string }).error === "bot_check_failed" && !token) {
+    try { st?.removeItem(VOUCH); } catch { /* storage blocked */ }
+    token = await getToken();
+    if (token) r = await send({ ...body, turnstileToken: token }, access);
+  }
+  if (r.kind === "done" && (r.json as { ok?: boolean }).ok) { try { st?.setItem(VOUCH, "1"); } catch { /* storage blocked */ } }
+  return r;
+}
+
 type Sent =
   | { kind: "done"; json: Record<string, unknown> }      // the server decided (accepted or refused for good)
   | { kind: "retry" };                                    // no network, or the server hiccuped: try again later
@@ -66,10 +82,8 @@ export function useReport(opts: {
     let sent = 0;
     try {
       for (const item of loadQueue(st)) {
-        const captcha = await latest.current.getToken();
-        if (!captcha) break;                                   // bot check not ready yet: try again shortly
         const access = await ensureSession();
-        const r = await send({ spotId: item.spotId, status: item.status, clientId: item.clientId, reportedAt: item.at, turnstileToken: captcha }, access);
+        const r = await sendSmart({ spotId: item.spotId, status: item.status, clientId: item.clientId, reportedAt: item.at }, access, latest.current.getToken);
         if (r.kind === "retry") { recordAttempt(st, item.clientId); break; }
         const json = r.json as { ok?: boolean; error?: string; status?: never };
         if (json.ok) {
@@ -123,8 +137,8 @@ export function useReport(opts: {
 
     try {
       if (!navigator.onLine) { save(); return; }
-      const [access, captcha] = await Promise.all([ensureSession(), getToken()]);
-      const r = await send({ spotId: spot.id, status: s, clientId, reportedAt: at, turnstileToken: captcha ?? undefined }, access);
+      const access = await ensureSession();
+      const r = await sendSmart({ spotId: spot.id, status: s, clientId, reportedAt: at }, access, getToken);
       if (r.kind === "retry") { save(); return; }
 
       const json = r.json as { ok?: boolean; error?: string; retryAfterSeconds?: number; isConfirmation?: boolean; status: StatusRow["status"]; since: string; points: number; streak: number };

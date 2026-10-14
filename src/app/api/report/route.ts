@@ -66,9 +66,7 @@ export async function POST(req: Request) {
   const dupResponse = await alreadyThere();
   if (dupResponse) return dupResponse;
 
-  // 4. Is it a person? (Cloudflare Turnstile, invisible)
   const ip = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || req.headers.get("x-real-ip") || null;
-  if (!(await verifyTurnstile(body.turnstileToken, ip))) return fail(403, "bot_check_failed");
 
   // 5. Does the spot exist, and is this person allowed?
   const [{ data: spot }, { data: profile }] = await Promise.all([
@@ -78,6 +76,11 @@ export async function POST(req: Request) {
   if (!spot || spot.status_flag === "rejected") return fail(404, "spot_not_found");
   if (!profile) return fail(401, "no_profile");
   if (profile.is_banned) return fail(403, "banned");
+
+  // 4. Is it a person? (Cloudflare Turnstile.) Asked only for an account's first report: the phone then never runs
+  // the check again, because it needs the phone's graphics chip and some Android phones mis-draw while it runs.
+  const firstReport = profile.last_report_day === null;
+  if (firstReport && !(await verifyTurnstile(body.turnstileToken, ip))) return fail(403, "bot_check_failed");
 
   // 6. Device record (only a hash of the phone's random id is stored) and rate limits.
   const rawDevice = req.headers.get("x-device-id") ?? "";
