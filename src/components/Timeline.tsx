@@ -39,7 +39,7 @@ export default function Timeline({ sessions, now, legend, summary }: {
         {segments.map((s, i) => (
           <div key={i} className="absolute inset-y-0" style={{ left: `${pct(s.start)}%`, width: `${Math.max(0.2, pct(s.end) - pct(s.start))}%`, ...paint[s.state] }} />
         ))}
-        <div className="absolute inset-y-0 w-0.5" style={{ left: `${nowPct}%`, background: "var(--text)", boxShadow: "0 0 6px var(--text)" }} />
+        <div className="absolute inset-y-0 w-0.5" style={{ left: `${nowPct}%`, background: "var(--text)" }} />
       </div>
       <div className="relative mt-1.5 h-4 text-[11px] text-muted" aria-hidden="true">
         {[["12am", 0], ["6am", 25], ["12pm", 50], ["6pm", 75]].map(([l, p]) => (

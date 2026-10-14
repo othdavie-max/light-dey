@@ -163,7 +163,7 @@ export default function SpotPageClient({ id }: { id: string }) {
         <div className="min-w-0">
           <p className={`font-light leading-[1.05] tracking-tight ${word.length > 12 ? "text-[28px]" : "text-[38px]"}`}>{word}</p>
           <p className="mt-2 flex items-start gap-2 text-sm text-muted" aria-live="polite">
-            <span className="mt-1.5 h-2 w-2 shrink-0 rounded-full" style={{ background: dot, boxShadow: `0 0 8px ${dot}` }} />
+            <span className="mt-1.5 h-2 w-2 shrink-0 rounded-full" style={{ background: dot }} />
             {sinceText}
           </p>
         </div>

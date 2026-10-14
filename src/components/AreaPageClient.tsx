@@ -104,7 +104,7 @@ export default function AreaPageClient({ id }: { id: number }) {
                 <span className="min-w-0">
                   <span className="block truncate text-[16px] font-medium">{s.isDefault ? a.wholeArea : s.name}</span>
                   <span className="flex items-center gap-2 text-sm text-muted">
-                    <span className="h-2 w-2 shrink-0 rounded-full" style={{ background: c, boxShadow: `0 0 6px ${c}` }} />
+                    <span className="h-2 w-2 shrink-0 rounded-full" style={{ background: c }} />
                     {t.status[s.shown.status]}
                     {s.row.lastReportAt && now ? ` · ${formatAgo(now - s.row.lastReportAt.getTime())}` : ""}
                     {s.pending ? ` · ${a.pending}` : ""}

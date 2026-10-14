@@ -29,9 +29,9 @@ export default function StatusSelector({ current, disabled, onReport, t }: {
         disabled={disabled}
         onClick={() => onReport(s)}
         aria-current={active ? "true" : undefined}
-        className="press flex min-h-[84px] flex-col items-center justify-center gap-2 rounded-[22px] text-[16px] font-medium transition-colors disabled:opacity-60"
+        className="press flex min-h-[84px] flex-col items-center justify-center gap-2 rounded-[22px] text-[16px] font-medium transition-colors disabled:cursor-default"
         style={active
-          ? { background: "color-mix(in srgb, var(--gold) 9%, var(--elevated))", border: "1.5px solid var(--gold)", color: "var(--text)", boxShadow: "0 0 0 1px color-mix(in srgb, var(--gold) 18%, transparent), 0 10px 28px -14px color-mix(in srgb, var(--gold) 60%, transparent)" }
+          ? { background: "color-mix(in srgb, var(--gold) 9%, var(--elevated))", border: "1.5px solid var(--gold)", color: "var(--text)", boxShadow: "0 0 0 1px color-mix(in srgb, var(--gold) 22%, transparent)" }
           : { background: "var(--elevated)", border: "1px solid var(--panel-border)", color: "var(--muted)" }}
       >
         <span style={{ color: active ? "var(--gold)" : "var(--muted)" }}><Ico d={icon} /></span>
@@ -51,7 +51,7 @@ export default function StatusSelector({ current, disabled, onReport, t }: {
         disabled={disabled}
         onClick={() => onReport("weak")}
         aria-current={weakActive ? "true" : undefined}
-        className="press mt-2.5 flex min-h-12 w-full items-center justify-center gap-2 rounded-2xl text-[14px] font-medium transition-colors disabled:opacity-60"
+        className="press mt-2.5 flex min-h-12 w-full items-center justify-center gap-2 rounded-2xl text-[14px] font-medium transition-colors disabled:cursor-default"
         style={weakActive
           ? { border: "1.5px solid var(--weak)", background: "color-mix(in srgb, var(--weak) 10%, var(--elevated))", color: "var(--text)" }
           : { border: "1px solid var(--panel-border)", background: "transparent", color: "var(--muted)" }}

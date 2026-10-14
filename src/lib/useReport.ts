@@ -113,6 +113,7 @@ export function useReport(opts: {
     const clientId = crypto.randomUUID();
     const at = Date.now();
     setRow({ status: s, since: before.status === s ? before.since : new Date(), lastReportAt: new Date() });
+    setMessage(before.status === s ? t.thanks.confirm : t.thanks[s]);   // instant thanks; corrected below if the server refuses
 
     const save = () => {
       const q = enqueue(storage(), { clientId, spotId: spot.id, status: s, at });
@@ -130,7 +131,6 @@ export function useReport(opts: {
       if (json.ok) {
         setRow({ status: json.status, since: new Date(json.since), lastReportAt: new Date() });
         onAwarded?.({ points: json.points, streak: json.streak });
-        setMessage(json.isConfirmation ? t.thanks.confirm : t.thanks[s]);
       } else {
         setRow(before);
         if (json.error === "cooldown") setMessage(fmt(t.errors.cooldown, { mins: String(Math.max(1, Math.ceil((json.retryAfterSeconds ?? 60) / 60))) }));

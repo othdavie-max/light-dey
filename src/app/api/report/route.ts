@@ -198,28 +198,28 @@ export async function POST(req: Request) {
   // Invited by a friend? The first report pays both of them a bonus.
   const referral = await payReferralBonus(db, user.id);
 
-  // 11. Badges. Never allowed to fail the report itself.
-  let newBadges: string[] = [];
-  try {
-    const [on, changes, held, me] = await Promise.all([
-      db.from("reports").select("id", { count: "exact", head: true }).eq("user_id", user.id).eq("status", "on"),
-      db.from("reports").select("id", { count: "exact", head: true }).eq("user_id", user.id).eq("is_confirmation", false),
-      db.from("user_badges").select("badge_code").eq("user_id", user.id),
-      db.from("profiles").select("created_at").eq("id", user.id).maybeSingle(),
-    ]);
-    const joined = me.data?.created_at;
-    const rank = joined ? ((await db.from("profiles").select("id", { count: "exact", head: true }).lte("created_at", joined)).count ?? 0) : 0;
-    const have = new Set((held.data ?? []).map((x) => x.badge_code));
-    newBadges = badgesQualified({
-      streakCurrent: reward.streakCurrent, onReports: on.count ?? 0, changeReports: changes.count ?? 0,
-      lastReport: { status: reported, at }, joinRank: rank,
-    }).filter((c) => !have.has(c));
-    if (newBadges.length) await db.from("user_badges").upsert(newBadges.map((badge_code) => ({ user_id: user.id, badge_code })), { onConflict: "user_id,badge_code", ignoreDuplicates: true });
-  } catch { newBadges = []; }
+  // 11. Badges: worked out after the reply is sent, so the reporter never waits for them.
+  after(async () => {
+    try {
+      const [on, changes, held, me] = await Promise.all([
+        db.from("reports").select("id", { count: "exact", head: true }).eq("user_id", user.id).eq("status", "on"),
+        db.from("reports").select("id", { count: "exact", head: true }).eq("user_id", user.id).eq("is_confirmation", false),
+        db.from("user_badges").select("badge_code").eq("user_id", user.id),
+        db.from("profiles").select("created_at").eq("id", user.id).maybeSingle(),
+      ]);
+      const joined = me.data?.created_at;
+      const rank = joined ? ((await db.from("profiles").select("id", { count: "exact", head: true }).lte("created_at", joined)).count ?? 0) : 0;
+      const have = new Set((held.data ?? []).map((x) => x.badge_code));
+      const fresh = badgesQualified({
+        streakCurrent: reward.streakCurrent, onReports: on.count ?? 0, changeReports: changes.count ?? 0,
+        lastReport: { status: reported, at }, joinRank: rank,
+      }).filter((c) => !have.has(c));
+      if (fresh.length) await db.from("user_badges").upsert(fresh.map((badge_code) => ({ user_id: user.id, badge_code })), { onConflict: "user_id,badge_code", ignoreDuplicates: true });
+    } catch { /* badges never break a report */ }
+  });
 
   return NextResponse.json({
     ok: true,
-    newBadges,
     status: computed.status,
     confidence: computed.confidence,
     since: ((changed && !late ? at : current.since) ?? at).toISOString(),

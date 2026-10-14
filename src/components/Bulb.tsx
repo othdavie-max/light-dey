@@ -1,5 +1,9 @@
 "use client";
+import { useEffect } from "react";
 import { useTheme } from "@/lib/prefs";
+
+const ALL = ["/bulb-glass-off.webp?v=1", "/bulb-lit-on.webp?v=1", "/bulb-lit-weak.webp?v=1", "/bulb-on.webp?v=1", "/bulb-weak.webp?v=1", "/bulb-off.webp?v=1"];
+let preloaded = false;
 
 export type Status = "on" | "off" | "weak" | "unknown";
 
@@ -18,6 +22,11 @@ const ART = {
 
 export default function Bulb({ status, height = 270 }: { status: Status; height?: number }) {
   const [theme] = useTheme();
+  useEffect(() => {
+    if (preloaded) return;
+    preloaded = true;
+    for (const u of ALL) { const i = new Image(); i.decoding = "async"; i.src = u; }
+  }, []);
   const on = status === "on";
   const weak = status === "weak";
   const lit = on || weak;

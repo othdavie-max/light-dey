@@ -94,3 +94,10 @@ body {
 .leaflet-container img, .leaflet-container .leaflet-tile { max-width: none !important; max-height: none !important; }
 .leaflet-container { font-family: inherit; }
 .leaflet-popup-content a { color: #1b4fd8; }
+
+/* Safe graphics mode (set automatically on phones whose graphics chips mis-draw soft effects; force with ?gfx=safe):
+   solid background instead of a full-screen gradient, solid panels instead of see-through ones. */
+:root[data-gfx="safe"] body { background: var(--bg); }
+:root[data-gfx="safe"] .panel { background: var(--elevated); }
+:root[data-gfx="safe"] .press { transition: none; }
+:root[data-gfx="safe"] .press:active { transform: none; opacity: .85; }
