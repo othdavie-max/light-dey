@@ -6,6 +6,7 @@ import pcm from "@/i18n/pcm/tabs.json";
 import BottomNav from "./BottomNav";
 import AccountCard from "./AccountCard";
 import AlertsCard from "./AlertsCard";
+import DisplayModeCard from "./DisplayModeCard";
 import { useTurnstile } from "@/lib/useTurnstile";
 import { shareWithCard } from "@/lib/share";
 import { appConfig } from "../../config/app.config";
@@ -94,6 +95,7 @@ export default function ProfileClient() {
             <button className="press min-h-12 rounded-xl text-[15px] font-medium" style={seg(theme === "light")} onClick={() => setTheme("light")}>{t.light}</button>
           </div>
         </div>
+        <DisplayModeCard t={dict[lang].display} seg={seg} />
       </section>
 
       <div className="mt-5 space-y-2">

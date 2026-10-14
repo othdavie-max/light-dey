@@ -84,5 +84,12 @@
     "quietTo": "Till",
     "remove": "Remove",
     "saved": "Saved"
+  },
+  "display": {
+    "title": "Display",
+    "full": "Full effects",
+    "safe": "Safe display",
+    "note": "If you dey see lines or rough rough tins for your screen, choose Safe display.",
+    "chip": "Your phone graphics"
   }
 }

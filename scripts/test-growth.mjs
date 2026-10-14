@@ -51,7 +51,9 @@ try {
   const dev2 = { spotId: spot.id, status: "off", turnstileToken: "XXXX.DUMMY.TOKEN.XXXX" };
   const r2 = await call("/api/report", FRIEND.token, dev2);
   check("bonus: only the FIRST report pays (no second bonus)", (r2.json.referralBonus ?? 0) === 0 && (await pointsOf(INV)) === before.inv + 20, JSON.stringify(r2.json));
-  check("report reply lists new badges (an array)", Array.isArray(r1.json.newBadges), JSON.stringify(r1.json));
+  await new Promise((r) => setTimeout(r, 2000));                       // badges are worked out just after the reply
+  const { data: myBadges } = await admin.from("user_badges").select("badge_code").eq("user_id", FRIEND.id);
+  check("badges: awarded after the report (founding reporter)", (myBadges ?? []).some((b) => b.badge_code === "founding_reporter"), JSON.stringify(myBadges));
 
   // ---- follows (alerts) ----
   const f1 = await FRIEND.client.from("follows").insert({ user_id: FRIEND.id, spot_id: spot.id });

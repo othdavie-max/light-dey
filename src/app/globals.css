@@ -99,5 +99,6 @@ body {
    solid background instead of a full-screen gradient, solid panels instead of see-through ones. */
 :root[data-gfx="safe"] body { background: var(--bg); }
 :root[data-gfx="safe"] .panel { background: var(--elevated); }
-:root[data-gfx="safe"] .press { transition: none; }
 :root[data-gfx="safe"] .press:active { transform: none; opacity: .85; }
+/* Nothing moves or fades in safe mode: animations make the graphics chip juggle extra layers, which is when some phones glitch */
+:root[data-gfx="safe"] *, :root[data-gfx="safe"] *::before, :root[data-gfx="safe"] *::after { animation: none !important; transition: none !important; }
