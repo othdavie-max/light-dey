@@ -5,6 +5,7 @@ import en from "@/i18n/en/tabs.json";
 import pcm from "@/i18n/pcm/tabs.json";
 import BottomNav from "./BottomNav";
 import AccountCard from "./AccountCard";
+import AlertsCard from "./AlertsCard";
 import { useTurnstile } from "@/lib/useTurnstile";
 import { shareWithCard } from "@/lib/share";
 import { appConfig } from "../../config/app.config";
@@ -69,6 +70,7 @@ export default function ProfileClient() {
         </ul>
       </section>
 
+      <AlertsCard t={dict[lang].alerts} />
       <AccountCard t={acct} getToken={getToken} />
 
       <section className="panel mt-5 rounded-[24px] p-4">

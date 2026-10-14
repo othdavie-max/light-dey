@@ -75,5 +75,14 @@
       "mixed": "Mixed",
       "unknown": "No reports"
     }
+  },
+  "alerts": {
+    "title": "My alerts",
+    "none": "You are not following any spot yet. Open a spot and tap \"Alert me when light comes\".",
+    "quiet": "No alerts at night (quiet hours)",
+    "quietFrom": "From",
+    "quietTo": "Until",
+    "remove": "Remove",
+    "saved": "Saved"
   }
 }
