@@ -15,6 +15,16 @@ const nextConfig: NextConfig = {
   async headers() {
     return [
       {
+        // Safety headers on every page: no sniffing, no framing by other sites, minimal referrer, only the permissions the app uses.
+        source: "/:path*",
+        headers: [
+          { key: "X-Content-Type-Options", value: "nosniff" },
+          { key: "X-Frame-Options", value: "DENY" },
+          { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
+          { key: "Permissions-Policy", value: "geolocation=(self), camera=(), microphone=(), payment=(), usb=()" },
+        ],
+      },
+      {
         // The service worker must never be cached by the browser, so updates reach people quickly.
         source: "/sw.js",
         headers: [

@@ -2,6 +2,7 @@
 import type { Instrumentation } from "next";
 
 export const onRequestError: Instrumentation.onRequestError = async (err, request) => {
+  if (process.env.NEXT_RUNTIME !== "nodejs") return;                 // the error log needs Node (hashing, database)
   const { logError } = await import("@/lib/errorLog");
   const e = err as Error & { digest?: string };
   await logError({ source: "server", message: `${e.message ?? String(err)} (${request.method} ${request.path})`, stack: e.stack, path: request.path });
