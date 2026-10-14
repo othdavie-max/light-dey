@@ -10,6 +10,7 @@ import Timeline from "./Timeline";
 import WeekChart from "./WeekChart";
 import ConnectionStatus from "./ConnectionStatus";
 import FollowCard from "./FollowCard";
+import StatusSelector from "./StatusSelector";
 import { shareWithCard } from "@/lib/share";
 import { supabase, ensureSession } from "@/lib/supabase/browser";
 import { useLang } from "@/lib/prefs";
@@ -169,19 +170,7 @@ export default function SpotPageClient({ id }: { id: string }) {
       </section>
 
       {/* Report */}
-      <section className="panel mt-4 rounded-[28px] p-3">
-        <div className="grid grid-cols-2 gap-3">
-          <button disabled={busy || !spot} onClick={() => report("on")} className="press min-h-[72px] rounded-[22px] text-[16px] font-semibold disabled:opacity-60" style={{ background: "linear-gradient(180deg,#ffd75e,#ffbf24)", color: "var(--on-text)", boxShadow: "0 8px 24px -8px rgba(255,190,40,.55), inset 0 1px 0 rgba(255,255,255,.5)" }}>
-            {t.buttons.on}
-          </button>
-          <button disabled={busy || !spot} onClick={() => report("off")} className="press panel min-h-[72px] rounded-[22px] text-[16px] font-semibold disabled:opacity-60" style={{ background: "var(--panel-strong)" }}>
-            {t.buttons.off}
-          </button>
-        </div>
-        <button disabled={busy || !spot} onClick={() => report("weak")} className="press mt-3 min-h-12 w-full rounded-2xl text-[15px] font-semibold text-weak disabled:opacity-60" style={{ border: "1px solid color-mix(in srgb, var(--weak) 45%, transparent)", background: "color-mix(in srgb, var(--weak) 8%, transparent)" }}>
-          ⚡ {t.buttons.weak}
-        </button>
-      </section>
+      <StatusSelector current={shown.status} disabled={busy || !spot} onReport={report} t={t.buttons} />
       <p className="mt-3 min-h-6 text-center text-sm text-muted" role="status">{message}</p>
 
       {/* Today */}

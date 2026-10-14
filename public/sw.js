@@ -22,8 +22,8 @@ self.addEventListener("install", (event) => {
   event.waitUntil((async () => {
     const cache = await caches.open(PAGES);
     try { await cache.add(new Request(OFFLINE_URL, { cache: "reload" })); } catch { /* installs anyway */ }
-    // The three bulb pictures, so the home screen looks right offline whatever the status
-    try { const assets = await caches.open(ASSETS); await Promise.all(["on", "weak", "off"].map((s) => assets.add(new Request(`/bulb-${s}.webp?v=1`)).catch(() => {}))); } catch { /* installs anyway */ }
+    // The bulb pictures (both styles, every state), so the home screen looks right offline whatever the status
+    try { const assets = await caches.open(ASSETS); await Promise.all(["on", "weak", "off"].flatMap((s) => [`/bulb-${s}.webp?v=1`, `/bulb-glass-${s}.webp?v=1`]).map((u) => assets.add(new Request(u)).catch(() => {}))); } catch { /* installs anyway */ }
     await self.skipWaiting();
   })());
 });

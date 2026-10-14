@@ -22,7 +22,8 @@
   "buttons": {
     "on": "Light dey",
     "off": "No light",
-    "weak": "Light dey but e weak"
+    "weak": "Light dey but e weak",
+    "hint": "Tap wetin you see make you tell your neighbours"
   },
   "thanks": {
     "on": "Oya, thank you! Your neighbours go dey happy.",

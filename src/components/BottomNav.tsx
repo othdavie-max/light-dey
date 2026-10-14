@@ -31,7 +31,7 @@ export default function BottomNav() {
           return (
             <li key={key}>
               <Link href={href} aria-current={active ? "page" : undefined} className="press flex min-h-14 min-w-16 flex-col items-center justify-center gap-0.5 text-[11px] font-medium" style={{ color: active ? "var(--text)" : "var(--muted)" }}>
-                <svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">{ICONS[key]}</svg>
+                <svg width="23" height="23" viewBox="0 0 24 24" fill={active && key === "home" ? "currentColor" : "none"} stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">{ICONS[key]}</svg>
                 {t[key]}
               </Link>
             </li>

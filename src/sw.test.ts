@@ -77,11 +77,11 @@ describe("service worker: install and update", () => {
     expect(sw.stores.get("ld-pages-v1")?.entries.has(`${ORIGIN}/offline`)).toBe(true);
     expect(sw.state.skipWaiting).toBe(1);
   });
-  it("saves the three bulb pictures so the home screen works offline whatever the status", async () => {
+  it("saves every bulb picture so the home screen works offline whatever the status", async () => {
     const sw = setup();
     await sw.lifecycle("install");
     const saved = [...(sw.stores.get("ld-assets-v1")?.entries.keys() ?? [])].map((u) => u.replace(ORIGIN, "")).sort();
-    expect(saved).toEqual(["/bulb-off.webp?v=1", "/bulb-on.webp?v=1", "/bulb-weak.webp?v=1"]);
+    expect(saved).toEqual(["/bulb-glass-off.webp?v=1", "/bulb-glass-on.webp?v=1", "/bulb-glass-weak.webp?v=1", "/bulb-off.webp?v=1", "/bulb-on.webp?v=1", "/bulb-weak.webp?v=1"]);
   });
   it("deletes caches from older versions but keeps the current ones and other sites' caches alone", async () => {
     const sw = setup();

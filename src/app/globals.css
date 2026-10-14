@@ -2,14 +2,17 @@
 
 /* Light Dey? design tokens. Dark is the default theme. */
 :root {
-  --bg: #060a14;
-  --bg-glow: #0b1426;
-  --panel: rgba(255, 255, 255, 0.045);
-  --panel-strong: rgba(255, 255, 255, 0.08);
-  --panel-border: rgba(255, 255, 255, 0.08);
-  --text: #f5f7ff;
-  --muted: #8d97b5;
-  --on: #ffc933;
+  --bg: #050a14;
+  --bg-glow: #0b1424;
+  --surface: #0b1424;
+  --elevated: #101a2b;
+  --panel: rgba(16, 26, 43, 0.72);
+  --panel-strong: #142036;
+  --panel-border: rgba(146, 157, 180, 0.14);
+  --text: #f5f7fc;
+  --muted: #929db4;
+  --gold: #ffc247;
+  --on: #ffc247;
   --on-text: #1a1200;
   --off: #55627f;
   --weak: #ff9a4d;
@@ -20,6 +23,9 @@
   --seg-unknown-b: #565d78;
 }
 :root[data-theme="light"] {
+  --surface: #fbf7ef;
+  --elevated: #ffffff;
+  --gold: #c98a00;
   --bg: #f4efe6;
   --bg-glow: #fbf6ea;
   --panel: rgba(255, 255, 255, 0.7);
@@ -36,7 +42,7 @@
 /* Background shifts subtly with status */
 body[data-status="on"] { --bg-glow: #261c08; }
 body[data-status="weak"] { --bg-glow: #26150a; }
-body[data-status="off"] { --bg-glow: #0b1426; }
+body[data-status="off"] { --bg-glow: #0b1830; }
 :root[data-theme="light"] body[data-status="on"] { --bg-glow: #ffefb8; }
 :root[data-theme="light"] body[data-status="weak"] { --bg-glow: #ffe2c6; }
 :root[data-theme="light"] body[data-status="off"] { --bg-glow: #dfe4f3; }
@@ -75,11 +81,13 @@ body {
 @keyframes weak-shimmer { 0%,100%{opacity:1} 6%{opacity:.86} 10%{opacity:1} 41%{opacity:.82} 46%{opacity:1} 75%{opacity:.9} 80%{opacity:1} }
 .weak-shimmer { }
 .bloom-breathe { }
+@keyframes bulb-fade { from { opacity: 0 } to { opacity: 1 } }
+.bulb-fade { animation: bulb-fade .45s ease-out; }
 .press { transition: transform .12s ease, background-color .2s ease; }
 .press:active { transform: scale(.96); }
 
 @media (prefers-reduced-motion: reduce) {
-  .lit-on, .weak-flicker, .weak-shimmer, .bloom-breathe { animation: none; }
+  .lit-on, .weak-flicker, .weak-shimmer, .bloom-breathe, .bulb-fade { animation: none; }
 }
 
 /* Leaflet map tiles must not be shrunk by the page's image reset */

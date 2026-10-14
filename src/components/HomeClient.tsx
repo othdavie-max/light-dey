@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import en from "@/i18n/en/common.json";
 import pcm from "@/i18n/pcm/common.json";
 import Bulb, { type Status } from "./Bulb";
+import StatusSelector from "./StatusSelector";
 import BottomNav from "./BottomNav";
 import ConnectionStatus from "./ConnectionStatus";
 import InstallPrompt from "./InstallPrompt";
@@ -49,9 +50,6 @@ const Icon = {
   chevron: <path d="M6 9l6 6 6-6" />,
   sun: <><circle cx="12" cy="12" r="4" /><path d="M12 3v2M12 19v2M3 12h2M19 12h2M5.6 5.6L7 7M17 17l1.4 1.4M5.6 18.4L7 17M17 7l1.4-1.4" /></>,
   moon: <path d="M20 14.5A8 8 0 0 1 9.5 4 8 8 0 1 0 20 14.5z" />,
-  bulbOn: <><path d="M9 18h6M10 21h4" /><path d="M12 3a6 6 0 0 0-3.5 10.9c.6.5 1 1.2 1 2.1h5c0-.9.4-1.6 1-2.1A6 6 0 0 0 12 3z" /></>,
-  bulbOff: <><path d="M9 18h6M10 21h4" /><path d="M12 3a6 6 0 0 0-3.5 10.9c.6.5 1 1.2 1 2.1h5c0-.9.4-1.6 1-2.1A6 6 0 0 0 12 3z" /><path d="M4 4l16 16" /></>,
-  bolt: <path d="M13 3L5 13.5h6L10 21l8-10.5h-6z" />,
   clock: <><circle cx="12" cy="12" r="8.5" /><path d="M12 7.5V12l3 2" /></>,
   flame: <path d="M12 3c1 3.5 5 5.5 5 10a5 5 0 0 1-10 0c0-2 1-3 2-4 .3 1.5 1 2 1.5 2C10.5 8.5 11 6 12 3z" />,
   star: <path d="M12 3.5l2.6 5.4 5.9.8-4.3 4.1 1 5.8L12 16.8l-5.2 2.8 1-5.8L3.5 9.7l5.9-.8z" />,
@@ -226,31 +224,16 @@ export default function HomeClient() {
       />
 
       <section className="mt-3 text-center">
-        <Bulb status={bulb} />
-        <p className="mt-5 min-h-[22px] text-[15px] text-muted">{subline}</p>
-        <h2 className={`mt-1 font-light leading-[1.05] tracking-tight ${word.length > 12 ? "text-[38px]" : "text-[56px]"}`}>{word}</h2>
+        <div className="pt-6"><Bulb status={bulb} height={300} /></div>
+        <p className="mt-9 min-h-[22px] text-[15px] tracking-wide text-muted">{subline}</p>
+        <h2 className={`mt-2 font-light leading-[1.05] tracking-[-0.02em] ${word.length > 12 ? "text-[40px]" : "text-[58px]"}`}>{word}</h2>
         <p className="mt-3 flex items-center justify-center gap-2 text-[15px] text-muted" aria-live="polite">
-          <span className="h-2 w-2 rounded-full" style={{ background: dot, boxShadow: `0 0 8px ${dot}` }} />
+          <span className="h-2 w-2 rounded-full" style={{ background: dot }} />
           {sinceText}
         </p>
       </section>
 
-      <section className="panel mt-6 rounded-[28px] p-3">
-        <div className="grid grid-cols-2 gap-3">
-          <button disabled={busy || !spot} onClick={() => report("on")} className="press flex min-h-[92px] flex-col items-center justify-center gap-2 rounded-[22px] text-[17px] font-semibold disabled:opacity-60" style={{ background: "linear-gradient(180deg,#ffd75e,#ffbf24)", color: "var(--on-text)", boxShadow: "0 8px 24px -8px rgba(255,190,40,.55), inset 0 1px 0 rgba(255,255,255,.5)" }}>
-            <Ico d={Icon.bulbOn} size={26} />
-            {t.buttons.on}
-          </button>
-          <button disabled={busy || !spot} onClick={() => report("off")} className="press panel flex min-h-[92px] flex-col items-center justify-center gap-2 rounded-[22px] text-[17px] font-semibold disabled:opacity-60" style={{ background: "var(--panel-strong)" }}>
-            <Ico d={Icon.bulbOff} size={26} />
-            {t.buttons.off}
-          </button>
-        </div>
-        <button disabled={busy || !spot} onClick={() => report("weak")} className="press mt-3 flex min-h-12 w-full items-center justify-center gap-2 rounded-2xl text-[15px] font-semibold text-weak disabled:opacity-60" style={{ border: "1px solid color-mix(in srgb, var(--weak) 45%, transparent)", background: "color-mix(in srgb, var(--weak) 8%, transparent)" }}>
-          <Ico d={Icon.bolt} size={18} />
-          {t.buttons.weak}
-        </button>
-      </section>
+      <StatusSelector current={shown.status} disabled={busy || !spot} onReport={report} t={t.buttons} />
       <p className="mt-3 min-h-10 text-center text-sm text-muted" role="status">{message}</p>
 
       <section className="mt-1 grid grid-cols-3 text-center">

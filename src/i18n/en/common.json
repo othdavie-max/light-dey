@@ -22,7 +22,8 @@
   "buttons": {
     "on": "Light is on",
     "off": "No light",
-    "weak": "Light is on but weak"
+    "weak": "Light is on but weak",
+    "hint": "Tap what you see to tell your neighbours"
   },
   "thanks": {
     "on": "Thank you! Your neighbours will be happy.",
