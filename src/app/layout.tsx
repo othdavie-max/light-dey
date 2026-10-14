@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import ServiceWorkerRegister from "@/components/ServiceWorkerRegister";
 import InviteCapture from "@/components/InviteCapture";
+import ErrorReporter from "@/components/ErrorReporter";
 import { appConfig } from "../../config/app.config";
 
 // One variable font, so thin (300) through bold (800) cost a single download.
@@ -31,6 +32,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         {children}
         <ServiceWorkerRegister />
         <InviteCapture />
+        <ErrorReporter />
       </body>
     </html>
   );

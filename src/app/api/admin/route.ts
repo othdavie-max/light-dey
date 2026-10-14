@@ -47,6 +47,13 @@ export async function GET(req: Request) {
   const demo = url.searchParams.get("demo") === "1";
   const q = (url.searchParams.get("q") ?? "").replace(/[%_,()]/g, " ").trim().slice(0, 60);
 
+  if (view === "errors") {
+    const { data, error } = await db.from("client_errors")
+      .select("id,source,message,stack,path,user_agent,count,first_seen,last_seen,resolved").order("resolved").order("last_seen", { ascending: false }).limit(100);
+    if (error) return bad("db_error", 500);
+    return json({ ok: true, errors: data ?? [] });
+  }
+
   if (view === "overview") {
     const [ov, log] = await Promise.all([
       db.rpc("admin_overview", { p_include_demo: demo }),
@@ -170,6 +177,19 @@ export async function POST(req: Request) {
       if (error) return bad(error.message.slice(0, 120), 400);
       await audit(db, adminId, action, "spot", b.fromId, { into: b.intoId });
       return json({ ok: true });
+    }
+
+    case "error.resolve": {
+      if (typeof b.id !== "number" || !Number.isInteger(b.id) || typeof b.resolved !== "boolean") return bad("bad_request");
+      await db.from("client_errors").update({ resolved: b.resolved }).eq("id", b.id);
+      await audit(db, adminId, action, "client_error", String(b.id), { resolved: b.resolved });
+      return json({ ok: true });
+    }
+
+    case "error.clearResolved": {
+      const { count } = await db.from("client_errors").delete({ count: "exact" }).eq("resolved", true);
+      await audit(db, adminId, action, "client_error", "resolved", { removed: count ?? 0 });
+      return json({ ok: true, removed: count ?? 0 });
     }
 
     case "flag.resolve": {

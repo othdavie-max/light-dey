@@ -7,7 +7,8 @@ import { agoShort, suspicionReasons } from "@/lib/admin";
 import { useTurnstile } from "@/lib/useTurnstile";
 import { appConfig } from "../../config/app.config";
 
-type Tab = "overview" | "spots" | "flags" | "reporters" | "reference";
+type Tab = "overview" | "spots" | "flags" | "reporters" | "errors" | "reference";
+interface ErrorRow { id: number; source: string; message: string; stack: string | null; path: string | null; user_agent: string | null; count: number; first_seen: string; last_seen: string; resolved: boolean }
 type Gate = "loading" | "out" | "denied" | "ok";
 
 interface Overview {
@@ -67,6 +68,7 @@ export default function AdminClient() {
   const [spotQuery, setSpotQuery] = useState("");
   const [flags, setFlags] = useState<FlagRow[]>([]);
   const [reporters, setReporters] = useState<ReporterRow[]>([]);
+  const [errors, setErrors] = useState<ErrorRow[]>([]);
   const [days, setDays] = useState(7);
   const [discos, setDiscos] = useState<Disco[]>([]);
   const [bands, setBands] = useState<Band[]>([]);
@@ -106,6 +108,9 @@ export default function AdminClient() {
     } else if (which === "flags") {
       const r = await api("GET", "?view=flags");
       if (r.json.ok) setFlags(r.json.flags as FlagRow[]);
+    } else if (which === "errors") {
+      const r = await api("GET", "?view=errors");
+      if (r.json.ok) setErrors(r.json.errors as ErrorRow[]);
     } else if (which === "reporters") {
       const r = await api("GET", `?view=reporters&days=${days}${d}`);
       if (r.json.ok) setReporters(r.json.reporters as ReporterRow[]);
@@ -171,7 +176,7 @@ export default function AdminClient() {
   }
 
   // ---------------------------------------------------------------- the dashboard
-  const tabs: [Tab, string][] = [["overview", "Overview"], ["spots", "Spots"], ["flags", "Flags"], ["reporters", "Reporters"], ["reference", "Data"]];
+  const tabs: [Tab, string][] = [["overview", "Overview"], ["spots", "Spots"], ["flags", "Flags"], ["reporters", "Reporters"], ["errors", "Errors"], ["reference", "Data"]];
   const pendingBadge = overview?.totals.pending_spots ?? 0, flagBadge = overview?.totals.open_flags ?? 0;
   const maxReports = Math.max(1, ...(overview?.per_day.map((d) => d.reports) ?? [1]));
 
@@ -308,6 +313,25 @@ export default function AdminClient() {
               </div>
             );
           })}
+        </section>
+      )}
+
+      {/* ---------------- Errors ---------------- */}
+      {tab === "errors" && (
+        <section className="mt-4 space-y-3">
+          <p className="text-xs text-muted">Crashes reported by phones and by the server. The same crash is grouped and counted. No names, emails or locations are stored.</p>
+          {errors.length === 0 && <p className="text-muted">No errors recorded. 🎉</p>}
+          {errors.some((e) => e.resolved) && <button className={btn} style={btnPlain} onClick={() => act({ action: "error.clearResolved" }, "Cleared", "Remove all errors marked fixed?")}>Clear fixed ones</button>}
+          {errors.map((e) => (
+            <div key={e.id} className={card} style={e.resolved ? { opacity: 0.6 } : undefined}>
+              <p className="text-sm text-muted">{e.source} · seen {e.count}× · last {agoShort(e.last_seen, now)} ago{e.path ? ` · ${e.path}` : ""}{e.user_agent ? ` · ${e.user_agent}` : ""}</p>
+              <p className="mt-1 break-words text-[15px] font-medium">{e.message}</p>
+              {e.stack && <details className="mt-1 text-xs text-muted"><summary className="cursor-pointer">Details</summary><pre className="mt-1 overflow-x-auto whitespace-pre-wrap">{e.stack}</pre></details>}
+              <div className="mt-3 flex gap-2">
+                <button className={btn} style={e.resolved ? btnPlain : btnGold} onClick={() => act({ action: "error.resolve", id: e.id, resolved: !e.resolved }, e.resolved ? "Reopened" : "Marked fixed")}>{e.resolved ? "Reopen" : "Mark fixed"}</button>
+              </div>
+            </div>
+          ))}
         </section>
       )}
 

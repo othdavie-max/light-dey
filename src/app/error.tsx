@@ -1,8 +1,11 @@
 "use client";
+import { useEffect } from "react";
 import Link from "next/link";
+import { reportError } from "@/lib/reportError";
 
 // Shown if a page crashes, instead of a blank screen.
-export default function ErrorPage({ reset }: { error: Error & { digest?: string }; reset: () => void }) {
+export default function ErrorPage({ error, reset }: { error: Error & { digest?: string }; reset: () => void }) {
+  useEffect(() => { reportError(error.message, error.stack); }, [error]);
   return (
     <main className="mx-auto flex min-h-dvh max-w-md flex-col items-center justify-center px-5 text-center">
       <h1 className="text-[22px] font-medium">Something went wrong</h1>

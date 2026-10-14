@@ -82,6 +82,33 @@ try {
   check("preview: the spot page carries a preview picture", /og:image/.test(html) && html.includes("/api/card?spot="), html.slice(0, 0));
   check("preview: and a title naming the place", /Is there light in TEST GROWTH/.test(html));
 
+  // ---- error log ----
+  const tag = `TEST-ERR-${Date.now()}`;
+  const logIt = (message) => fetch(`${BASE}/api/log-error`, { method: "POST", headers: { "content-type": "application/json", "user-agent": "Mozilla/5.0 (Linux; Android 13) Chrome/120 Mobile Safari/537.36" }, body: JSON.stringify(message === null ? { nope: 1 } : { message, stack: "Error: x\n at f (a.js:1:1)", path: "/spot/abc?ref=12345678" }) });
+  check("errors: a junk report is refused (400)", (await logIt(null)).status === 400);
+  check("errors: a crash report is accepted", (await logIt(`${tag} boom for person@example.com`)).status === 200);
+  await logIt(`${tag} boom for person@example.com`);
+  const { data: errRows } = await admin.from("client_errors").select("message,count,path,user_agent,source").like("message", `${tag}%`);
+  check("errors: the same crash is grouped and counted (one row, count 2)", errRows?.length === 1 && errRows[0].count === 2, JSON.stringify(errRows));
+  check("errors: emails are scrubbed, paths lose their query, phones are described briefly", errRows?.[0] && !errRows[0].message.includes("example.com") && errRows[0].path === "/spot/abc" && errRows[0].user_agent === "Chrome on Android mobile", JSON.stringify(errRows));
+  const peekErr = await anon().from("client_errors").select("message").limit(1);
+  check("errors: the public cannot read the error log", (peekErr.data ?? []).length === 0);
+  const ADM = await makeTestUser("errsadm", created);
+  await admin.from("profiles").update({ is_admin: true }).eq("id", ADM.id);
+  const viewErrors = (token) => fetch(`${BASE}/api/admin?view=errors`, { headers: token ? { authorization: `Bearer ${token}` } : {} });
+  check("errors: admin list refuses no sign-in (401)", (await viewErrors(null)).status === 401);
+  check("errors: admin list refuses a normal user (403)", (await viewErrors(INV.token)).status === 403);
+  const adminView = await viewErrors(ADM.token);
+  const adminJson = await adminView.json();
+  const mine = (adminJson.errors ?? []).find((e) => e.message.startsWith(tag));
+  check("errors: an admin sees the grouped crash", adminView.status === 200 && !!mine && mine.count === 2, JSON.stringify(adminJson).slice(0, 200));
+  const fixed = await fetch(`${BASE}/api/admin`, { method: "POST", headers: { "content-type": "application/json", authorization: `Bearer ${ADM.token}` }, body: JSON.stringify({ action: "error.resolve", id: mine?.id, resolved: true }) });
+  check("errors: an admin can mark it fixed", fixed.status === 200 && (await admin.from("client_errors").select("resolved").eq("id", mine.id).single()).data.resolved === true);
+  await logIt(`${tag} boom for person@example.com`);
+  check("errors: a repeat after 'fixed' reopens it", (await admin.from("client_errors").select("resolved,count").eq("id", mine.id).single()).data.resolved === false);
+  await admin.from("client_errors").delete().like("message", `${tag}%`);
+  await admin.from("rate_limit_hits").delete().like("key", "err:%");
+
   // ---- leaderboards are public but reveal only nicknames ----
   const lb = await anon().rpc("leaderboard_reporters", { p_limit: 5 });
   check("leaderboard: anyone can read it", !lb.error && Array.isArray(lb.data), JSON.stringify(lb.error));
