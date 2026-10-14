@@ -112,8 +112,8 @@ self.addEventListener("push", (event) => {
   try { d = event.data ? event.data.json() : {}; } catch { /* plain text or empty */ }
   event.waitUntil(self.registration.showNotification(d.title || "Light Dey?", {
     body: d.body || "",
-    icon: "/pwa-icon/192",
-    badge: "/pwa-icon/192",
+    icon: "/icon-192.png",
+    badge: "/icon-192.png",
     tag: d.tag || "light-dey",
     data: { url: typeof d.url === "string" && d.url.startsWith("/") ? d.url : "/" },
   }));
