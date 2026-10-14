@@ -143,7 +143,7 @@ function render(mode) {
   return out;
 }
 
-for (const mode of ["off", "on", "weak"]) {
+for (const mode of ["off"]) {          // light on / weak now come from design/bulb-lit-*.webp (npm run make-bulb-lit)
   const raw = render(mode);
   const img = sharp(raw, { raw: { width: W, height: H, channels: 4 } });
   const webp = await img.clone().webp({ quality: 90, alphaQuality: 95 }).toBuffer();

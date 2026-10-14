@@ -5,12 +5,14 @@ export type Status = "on" | "off" | "weak" | "unknown";
 
 // The bulb is a plain picture, never a live layered drawing (layered SVG corrupted the screen on some Android
 // phones, e.g. Infinix with Mali graphics).
-// - Dark theme: realistic glass bulb (public/bulb-glass-*.webp), cut from the design reference and lit in code:
+// - Dark theme, no light: realistic clear glass bulb (public/bulb-glass-off.webp), cut from the design reference:
 //   npm run make-bulb-photo
+// - Dark theme, light on / weak: the lit artworks (public/bulb-lit-*.webp, from design/bulb-lit-*.webp): npm run make-bulb-lit
 // - Light theme: the LED-style bulb (public/bulb-*.webp), from design/BulbSvg.tsx.txt: npm run make-bulbs
 // Each picture has empty room around the bulb for its glow; the numbers below place the bulb itself in the box.
 const ART = {
-  glass: { box: [340, 510], img: [520, 690], pad: [90, 90] },
+  glass: { box: [340, 510], img: [520, 690], pad: [90, 90] },          // dark theme, no light
+  lit: { box: [351, 601], img: [520, 770], pad: [84.5, 84.5] },          // dark theme, light on / weak
   led: { box: [200, 300], img: [300, 380], pad: [50, 40] },
 } as const;
 
@@ -19,12 +21,12 @@ export default function Bulb({ status, height = 270 }: { status: Status; height?
   const on = status === "on";
   const weak = status === "weak";
   const lit = on || weak;
-  const kind = theme === "light" ? "led" : "glass";
+  const kind = theme === "light" ? "led" : lit ? "lit" : "glass";
   const art = ART[kind];
   const k = height / art.box[1];
   const width = Math.round(art.box[0] * k);
   const state = on ? "on" : weak ? "weak" : "off";
-  const src = kind === "glass" ? `/bulb-glass-${state}.webp?v=1` : `/bulb-${state}.webp?v=1`;
+  const src = kind === "lit" ? `/bulb-lit-${state}.webp?v=1` : kind === "glass" ? "/bulb-glass-off.webp?v=1" : `/bulb-${state}.webp?v=1`;
 
   return (
     <div className="relative mx-auto" style={{ width, height }} aria-hidden="true">

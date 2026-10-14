@@ -81,7 +81,7 @@ describe("service worker: install and update", () => {
     const sw = setup();
     await sw.lifecycle("install");
     const saved = [...(sw.stores.get("ld-assets-v1")?.entries.keys() ?? [])].map((u) => u.replace(ORIGIN, "")).sort();
-    expect(saved).toEqual(["/bulb-glass-off.webp?v=1", "/bulb-glass-on.webp?v=1", "/bulb-glass-weak.webp?v=1", "/bulb-off.webp?v=1", "/bulb-on.webp?v=1", "/bulb-weak.webp?v=1"]);
+    expect(saved).toEqual(["/bulb-glass-off.webp?v=1", "/bulb-lit-on.webp?v=1", "/bulb-lit-weak.webp?v=1", "/bulb-off.webp?v=1", "/bulb-on.webp?v=1", "/bulb-weak.webp?v=1"]);
   });
   it("deletes caches from older versions but keeps the current ones and other sites' caches alone", async () => {
     const sw = setup();

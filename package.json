@@ -12,6 +12,7 @@
     "demo:seed": "node --env-file=.env.local scripts/demo-data.mjs seed",
     "demo:clear": "node --env-file=.env.local scripts/demo-data.mjs clear",
     "make-icons": "node scripts/make-icons.mjs",
+    "make-bulb-lit": "node scripts/make-bulb-lit.mjs",
     "make-bulb-photo": "node scripts/make-bulb-photo.mjs",
     "make-bulbs": "node scripts/make-bulbs.mjs",
     "make-admin": "node --env-file=.env.local scripts/make-admin.mjs",
