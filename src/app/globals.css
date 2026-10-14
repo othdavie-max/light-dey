@@ -7,11 +7,16 @@
   --surface: #0b1424;
   --elevated: #101a2b;
   --panel: rgba(16, 26, 43, 0.72);
-  --panel-strong: #142036;
+  --panel-strong: rgba(255, 255, 255, 0.10);
   --panel-border: rgba(146, 157, 180, 0.14);
   --text: #f5f7fc;
   --muted: #929db4;
   --gold: #ffc247;
+  --orb-a: rgba(48, 98, 222, 0.26);
+  --orb-b: rgba(255, 186, 90, 0.11);
+  --glass-fill: rgba(20, 30, 52, 0.34);
+  --glass-edge: rgba(255, 255, 255, 0.15);
+  --glass-shine: rgba(255, 255, 255, 0.28);
   --on: #ffc247;
   --on-text: #1a1200;
   --off: #55627f;
@@ -24,6 +29,11 @@
 }
 :root[data-theme="light"] {
   --surface: #fbf7ef;
+  --orb-a: rgba(120, 160, 255, 0.28);
+  --orb-b: rgba(255, 196, 110, 0.30);
+  --glass-fill: rgba(255, 255, 255, 0.42);
+  --glass-edge: rgba(255, 255, 255, 0.85);
+  --glass-shine: rgba(255, 255, 255, 0.95);
   --elevated: #ffffff;
   --gold: #c98a00;
   --bg: #f4efe6;
@@ -58,16 +68,45 @@ body[data-status="off"] { --bg-glow: #0b1830; }
 }
 
 body {
-  background: radial-gradient(ellipse 90% 55% at 50% 22%, var(--bg-glow) 0%, var(--bg) 78%);
+  background:
+    radial-gradient(ellipse 70% 38% at 8% 88%, var(--orb-a), transparent 70%),
+    radial-gradient(ellipse 60% 34% at 96% 58%, var(--orb-b), transparent 70%),
+    radial-gradient(ellipse 90% 55% at 50% 22%, var(--bg-glow) 0%, var(--bg) 78%);
   color: var(--text);
   font-family: var(--font-inter), system-ui, sans-serif;
   overflow-x: clip;
   -webkit-font-smoothing: antialiased;
 }
 
+/* Liquid-glass surface: see-through, softly blurred, lit along its top-left edge, floating on a faint shadow */
 .panel {
-  background: var(--panel);
-  border: 1px solid var(--panel-border);
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.14) 0%, rgba(255, 255, 255, 0.03) 46%, rgba(255, 255, 255, 0.07) 100%),
+    var(--glass-fill);
+  border: 1px solid var(--glass-edge);
+  -webkit-backdrop-filter: blur(20px) saturate(170%);
+  backdrop-filter: blur(20px) saturate(170%);
+  box-shadow:
+    inset 0 1px 0 var(--glass-shine),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.05),
+    0 12px 32px -14px rgba(0, 0, 0, 0.55);
+}
+/* Chosen button / selected item: gold-tinted glass */
+.glass-gold {
+  background: linear-gradient(135deg, rgba(255, 194, 71, 0.26), rgba(255, 194, 71, 0.07) 60%, rgba(255, 194, 71, 0.14)), rgba(30, 24, 12, 0.35);
+  border: 1.5px solid rgba(255, 194, 71, 0.85);
+  box-shadow: inset 0 1px 0 rgba(255, 236, 190, 0.45), 0 0 0 1px rgba(255, 194, 71, 0.18), 0 10px 26px -12px rgba(255, 194, 71, 0.55);
+}
+/* Quieter glass for things inside a glass card */
+.glass-inner {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.09), rgba(255, 255, 255, 0.02)), rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.14);
+}
+:root[data-theme="light"] .glass-inner { background: rgba(255, 255, 255, 0.45); border-color: rgba(255, 255, 255, 0.8); box-shadow: inset 0 1px 0 #fff; }
+:root[data-theme="light"] .panel { box-shadow: inset 0 1px 0 var(--glass-shine), 0 12px 30px -16px rgba(40, 50, 90, 0.35); }
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .panel { background: var(--elevated); }
 }
 
 /* Real-bulb behaviour: a quick warm-up stutter when power returns, then a barely-there breathing */
@@ -98,7 +137,8 @@ body {
 /* Safe graphics mode (set automatically on phones whose graphics chips mis-draw soft effects; force with ?gfx=safe):
    solid background instead of a full-screen gradient, solid panels instead of see-through ones. */
 :root[data-gfx="safe"] body { background: var(--bg); }
-:root[data-gfx="safe"] .panel { background: var(--elevated); }
+:root[data-gfx="safe"] .panel, :root[data-gfx="safe"] .glass-inner { background: var(--elevated); -webkit-backdrop-filter: none; backdrop-filter: none; box-shadow: none; border-color: var(--panel-border); }
+:root[data-gfx="safe"] .glass-gold { background: color-mix(in srgb, var(--gold) 10%, var(--elevated)); box-shadow: none; }
 :root[data-gfx="safe"] .press:active { transform: none; opacity: .85; }
 /* Nothing moves or fades in safe mode: animations make the graphics chip juggle extra layers, which is when some phones glitch */
 :root[data-gfx="safe"] *, :root[data-gfx="safe"] *::before, :root[data-gfx="safe"] *::after { animation: none !important; transition: none !important; }

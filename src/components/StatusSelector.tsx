@@ -29,10 +29,8 @@ export default function StatusSelector({ current, disabled, onReport, t }: {
         disabled={disabled}
         onClick={() => onReport(s)}
         aria-current={active ? "true" : undefined}
-        className="press flex min-h-[84px] flex-col items-center justify-center gap-2 rounded-[22px] text-[16px] font-medium transition-colors disabled:cursor-default"
-        style={active
-          ? { background: "color-mix(in srgb, var(--gold) 9%, var(--elevated))", border: "1.5px solid var(--gold)", color: "var(--text)", boxShadow: "0 0 0 1px color-mix(in srgb, var(--gold) 22%, transparent)" }
-          : { background: "var(--elevated)", border: "1px solid var(--panel-border)", color: "var(--muted)" }}
+        className={`press flex min-h-[84px] flex-col items-center justify-center gap-2 rounded-[22px] text-[16px] font-medium transition-colors disabled:cursor-default ${active ? "glass-gold" : "glass-inner"}`}
+        style={{ color: active ? "var(--text)" : "var(--muted)" }}
       >
         <span style={{ color: active ? "var(--gold)" : "var(--muted)" }}><Ico d={icon} /></span>
         <span style={{ color: active ? "var(--text)" : "color-mix(in srgb, var(--text) 72%, var(--muted))" }}>{label}</span>
@@ -41,7 +39,7 @@ export default function StatusSelector({ current, disabled, onReport, t }: {
   };
   const weakActive = current === "weak";
   return (
-    <section aria-label={t.hint} className="mt-7 rounded-[30px] p-2.5" style={{ background: "var(--surface)", border: "1px solid var(--panel-border)" }}>
+    <section aria-label={t.hint} className="panel mt-7 rounded-[30px] p-2.5">
       <div className="grid grid-cols-2 gap-2.5">
         {option("on", t.on, bulbOn)}
         {option("off", t.off, bulbOff)}
@@ -51,10 +49,10 @@ export default function StatusSelector({ current, disabled, onReport, t }: {
         disabled={disabled}
         onClick={() => onReport("weak")}
         aria-current={weakActive ? "true" : undefined}
-        className="press mt-2.5 flex min-h-12 w-full items-center justify-center gap-2 rounded-2xl text-[14px] font-medium transition-colors disabled:cursor-default"
+        className="press glass-inner mt-2.5 flex min-h-12 w-full items-center justify-center gap-2 rounded-2xl text-[14px] font-medium transition-colors disabled:cursor-default"
         style={weakActive
-          ? { border: "1.5px solid var(--weak)", background: "color-mix(in srgb, var(--weak) 10%, var(--elevated))", color: "var(--text)" }
-          : { border: "1px solid var(--panel-border)", background: "transparent", color: "var(--muted)" }}
+          ? { borderColor: "var(--weak)", boxShadow: "inset 0 1px 0 rgba(255,255,255,.2), 0 0 0 1px color-mix(in srgb, var(--weak) 30%, transparent)", color: "var(--text)" }
+          : { color: "var(--muted)" }}
       >
         <span style={{ color: "var(--weak)" }}><Ico d={bolt} size={17} /></span>
         {t.weak}

@@ -24,7 +24,7 @@ export default function BottomNav() {
   const [lang] = useLang();
   const t = (lang === "en" ? en : pcm).nav;
   return (
-    <nav aria-label="Main" className="panel fixed inset-x-4 bottom-4 z-40 mx-auto max-w-md rounded-[28px]" style={{ background: "color-mix(in srgb, var(--bg) 96%, var(--panel-strong))" }}>
+    <nav aria-label="Main" className="panel fixed inset-x-4 bottom-4 z-40 mx-auto max-w-md rounded-[28px]" style={{ WebkitBackdropFilter: "blur(28px) saturate(180%)", backdropFilter: "blur(28px) saturate(180%)" }}>
       <ul className="flex justify-around px-2 py-1.5">
         {TABS.map(({ key, href }) => {
           const active = href === "/" ? path === "/" : path.startsWith(href);
